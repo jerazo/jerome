@@ -100,19 +100,19 @@ export const profile = {
       company: 'BitRaider, MMO LLC',
       role: 'Software Engineer / Web Developer',
       location: 'Jacksonville, FL (remote)',
-      start: 'Feb 2012',
+      start: 'Mar 2012',
       end: 'Jun 2017',
       highlights: [
-        'Owned UI skin/design implementation across client sites and delivered core website features for bitraider.com.',
-        'Contributed reporting concepts for very large datasets, emphasizing performance and future scalability.',
-        'Supported legacy PHP components and collaborated on system design decisions with cross-functional stakeholders.',
+        'Implemented UI skins and core site features for bitraider.com and client web properties.',
+        'Developed reporting concepts for very large datasets, prioritizing performance and future scalability.',
+        'Maintained legacy PHP components and partnered on system design decisions with cross-functional stakeholders.',
       ],
     },
     {
       company: 'Xfire Holding, Inc. (acquired by GGN)',
       role: 'Software Engineer / Web Developer',
       location: 'Los Angeles, CA',
-      start: 'Feb 2012',
+      start: 'Mar 2012',
       end: 'Feb 2017',
       highlights: [
         'Built and maintained API functionality and web features for consumer-facing experiences.',
@@ -124,7 +124,7 @@ export const profile = {
       company: 'Island Logic',
       role: 'Senior Web Developer - Web Department',
       location: 'Makati, Philippines',
-      start: 'Mar 2009',
+      start: 'Apr 2009',
       end: 'Feb 2012',
       highlights: [
         'Delivered and maintained multiple high-traffic gaming and e-commerce sites across PHP/JavaScript and ASP/IIS stacks.',
@@ -137,7 +137,7 @@ export const profile = {
       company: 'One Global Contact Center',
       role: 'Supervisor - Web Department',
       location: 'Ortigas, Philippines',
-      start: 'May 2007',
+      start: 'Jun 2007',
       end: 'Mar 2009',
       highlights: [
         'Managed a 40-person web production and programming organization, balancing internal delivery and external client work.',
@@ -148,14 +148,14 @@ export const profile = {
     },
     {
       company: 'Freelance',
-      role: 'Programmer, Marketing (Freelance Programmer & Graphic Artist)',
+      role: 'Freelance Programmer & Graphic Artist',
       location: 'Quezon City, Philippines',
-      start: 'Nov 2005',
+      start: 'Dec 2005',
       end: 'May 2007',
       highlights: [
-        'Delivered websites and marketing assets end-to-end: PHP/SQL development, UI builds, and graphic design for client campaigns.',
-        'Built small business tools and desktop utilities (VB/VB.NET) and produced reports using Crystal Reports.',
-        'Provided IT support and troubleshooting across Windows environments; supported day-to-day operations for the Manila division.',
+        'Delivered marketing sites and campaign assets end-to-end: PHP/MySQL development, UI builds, and graphic design.',
+        'Built small-business utilities and reporting tools (VB/VB.NET) and produced operational reports using Crystal Reports.',
+        'Provided IT support and troubleshooting across Windows environments supporting day-to-day operations.',
       ],
     },
     {

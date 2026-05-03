@@ -7,6 +7,7 @@ import { FeaturedLibrary } from '../components/organisms/FeaturedLibrary'
 import { FeaturedResume } from '../components/organisms/FeaturedResume'
 import { HomeHero } from '../components/organisms/HomeHero'
 import { NewsletterBlock } from '../components/organisms/NewsletterBlock'
+import { RecommendationsSection } from '../components/organisms/RecommendationsSection'
 import { ServicesGrid } from '../components/organisms/ServicesGrid'
 import { TopItems } from '../components/organisms/TopItems'
 
@@ -24,6 +25,7 @@ export function HomePage() {
       <FeaturedLibrary />
       <FeaturedResume />
       <ExperienceTimeline />
+      <RecommendationsSection />
       <NewsletterBlock />
       <AboutTeaser />
       <ContactCta />
