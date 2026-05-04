@@ -75,7 +75,10 @@ export function ContactPage() {
               </p>
               <p className="mt-2 text-sm text-sand/75">
                 Phone:{' '}
-                <a className="font-semibold text-sand hover:text-gold-200" href={`tel:${profile.phone.replace(/\\s+/g, '')}`}>
+                <a
+                  className="font-semibold text-sand hover:text-gold-200"
+                  href={`tel:${profile.phone.replace(/\s+/g, '')}`}
+                >
                   {profile.phone}
                 </a>
               </p>

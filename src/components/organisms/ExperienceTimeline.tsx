@@ -624,19 +624,20 @@ export function ExperienceTimeline() {
   return (
     <section id="work" className="py-16 sm:py-20">
       <Gutter>
-        <SectionHeading
-          eyebrow="Experience"
-          title="Leadership + hands-on delivery"
-          description="I’ve led teams, owned architecture, and shipped production systems across multiple organizations."
-        />
+        <div className="mx-auto w-full max-w-screen-lg">
+          <SectionHeading
+            eyebrow="Experience"
+            title="Leadership + hands-on delivery"
+            description="I’ve led teams, owned architecture, and shipped production systems across multiple organizations."
+          />
 
-        <div className="mt-10">
-          <div
-            className="mx-auto grid w-full max-w-6xl gap-x-8"
-            style={{ height: chartHeight }}
-            ref={chartRef}
-          >
-            <div className="grid h-full grid-cols-[320px_1fr] gap-x-6 lg:grid-cols-[1fr_320px_1fr] lg:gap-x-10">
+          <div className="mt-10">
+            <div
+              className="mx-auto grid w-full max-w-screen-lg gap-x-8"
+              style={{ height: chartHeight }}
+              ref={chartRef}
+            >
+              <div className="grid h-full grid-cols-[280px_1fr] gap-x-6 lg:grid-cols-[1fr_280px_1fr] lg:gap-x-10">
               {/* Left cards */}
               <div className="relative hidden lg:block">
                 {leftEntries.map((e) => {
@@ -647,7 +648,7 @@ export function ExperienceTimeline() {
                   return (
                     <article
                       key={`${e.company}-${e.role}`}
-                      className="group absolute right-0 w-[26rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft"
+                      className="group absolute right-0 w-[22rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft"
                       style={{ top: cardY }}
                       ref={(el) => {
                         desktopRefs.current[id] = el
@@ -1038,7 +1039,7 @@ export function ExperienceTimeline() {
                   return (
                     <article
                       key={`${e.company}-${e.role}-desktop`}
-                      className="group absolute left-0 hidden w-full max-w-[26rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft lg:block"
+                      className="group absolute left-0 hidden w-full max-w-[22rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft lg:block"
                       style={{ top: cardY }}
                       ref={(el) => {
                         desktopRefs.current[id] = el
@@ -1092,6 +1093,7 @@ export function ExperienceTimeline() {
                     </article>
                   )
                 })}
+              </div>
               </div>
             </div>
           </div>

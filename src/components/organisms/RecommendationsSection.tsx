@@ -67,23 +67,24 @@ export function RecommendationsSection({
   return (
     <section id="recommendations" className="py-16 sm:py-20">
       <Gutter>
-        <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
-          <SectionHeading eyebrow={eyebrow} title={title} description={description} />
-          <ButtonAnchor
-            href={linkedInRecommendationsUrl}
-            target="_blank"
-            rel="noreferrer"
-            variant="secondary"
-            size="sm"
-          >
-            <ArrowUpRight size={16} />
-            View on LinkedIn
-          </ButtonAnchor>
-        </div>
+        <div className="mx-auto w-full max-w-screen-lg">
+          <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
+            <SectionHeading eyebrow={eyebrow} title={title} description={description} />
+            <ButtonAnchor
+              href={linkedInRecommendationsUrl}
+              target="_blank"
+              rel="noreferrer"
+              variant="secondary"
+              size="sm"
+            >
+              <ArrowUpRight size={16} />
+              View on LinkedIn
+            </ButtonAnchor>
+          </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-stretch">
-          <div className="lg:col-span-7 lg:h-full">
-            <article className="relative flex flex-col p-6 sm:p-8 lg:h-full">
+          <div className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-stretch">
+            <div className="lg:col-span-7 lg:h-full">
+              <article className="relative flex flex-col p-6 sm:p-8 lg:h-full">
               <div className="absolute right-5 top-5 text-gold-200/25">
                 <Quote size={28} />
               </div>
@@ -164,24 +165,24 @@ export function RecommendationsSection({
                   </p>
                 </div>
               </div>
-            </article>
-          </div>
+              </article>
+            </div>
 
-          <aside className="lg:col-span-5 lg:h-full">
-            <div className="grid gap-3">
-              {mapped.map((r) => {
-                const isActive = r.id === active.id
-                return (
-                  <button
-                    key={r.id}
-                    type="button"
-                    onClick={() => setActiveId(r.id)}
-                    className={[
-                      'group/selector relative flex w-full items-center gap-3 rounded-3xl border border-transparent bg-transparent p-4 text-left transition focus-visible:focus-ring hover:border-sand/10 hover:bg-white/5',
-                      isActive ? 'text-sand' : 'text-sand/85',
-                    ].join(' ')}
-                    aria-current={isActive ? 'true' : undefined}
-                  >
+            <aside className="lg:col-span-5 lg:h-full">
+              <div className="grid gap-3">
+                {mapped.map((r) => {
+                  const isActive = r.id === active.id
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => setActiveId(r.id)}
+                      className={[
+                        'group/selector relative flex w-full items-center gap-3 rounded-3xl border border-transparent bg-transparent p-4 text-left transition focus-visible:focus-ring hover:border-sand/10 hover:bg-white/5',
+                        isActive ? 'text-sand' : 'text-sand/85',
+                      ].join(' ')}
+                      aria-current={isActive ? 'true' : undefined}
+                    >
                     <span
                       aria-hidden
                       className={[
@@ -218,11 +219,12 @@ export function RecommendationsSection({
                         </div>
                       ) : null}
                     </div>
-                  </button>
-                )
-              })}
-            </div>
-          </aside>
+                    </button>
+                  )
+                })}
+              </div>
+            </aside>
+          </div>
         </div>
       </Gutter>
     </section>

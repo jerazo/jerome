@@ -7,31 +7,30 @@ export function FeaturedResume() {
   return (
     <section className="py-16 sm:py-20">
       <Gutter>
-        <div className="grid items-center gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <SectionHeading
-              eyebrow="Resume"
-              title="Get the CV"
-              description="A quick download if you need the full timeline, skills, and highlights."
-            />
-            <div className="mt-7">
-              <ButtonAnchor
-                href="/jerome-erazo-cv.pdf"
-                className="rounded-2xl border-gold-400/70 bg-gradient-to-b from-gold-400 to-gold-600 px-7 py-4 text-[12px] uppercase tracking-[0.28em] text-black shadow-gold-glow hover:from-gold-300 hover:to-gold-500"
-              >
-                Download CV <Download size={16} />
-              </ButtonAnchor>
+        <div className="mx-auto w-full max-w-screen-lg">
+          <SectionHeading
+            eyebrow="Resume"
+            title="Download my CV"
+            description="A PDF download with the full timeline, skills, and highlights."
+          />
+
+          <div className="mt-8 flex flex-col items-start justify-between gap-6 border-t border-sand/10 pt-8 sm:flex-row sm:items-center">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/55">
+                PDF resume
+              </p>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sand/70 sm:text-base">
+                Prefer a quick download? Grab the CV as a PDF—no embedded preview.
+              </p>
             </div>
-          </div>
-          <div className="lg:col-span-6">
-            <div className="overflow-hidden rounded-[2rem] border border-sand/10 bg-white/5 shadow-soft">
-              <img
-                src="/cv-preview.png"
-                alt="CV preview"
-                className="aspect-[4/5] w-full object-cover"
-                loading="lazy"
-              />
-            </div>
+
+            <ButtonAnchor
+              href="/jerome-erazo-cv.pdf"
+              download="Jerome-Erazo-CV.pdf"
+              className="rounded-2xl border-gold-400/70 bg-gradient-to-b from-gold-400 to-gold-600 px-7 py-4 text-[12px] uppercase tracking-[0.28em] text-white shadow-gold-glow hover:from-gold-300 hover:to-gold-500"
+            >
+              Download CV <Download size={16} />
+            </ButtonAnchor>
           </div>
         </div>
       </Gutter>

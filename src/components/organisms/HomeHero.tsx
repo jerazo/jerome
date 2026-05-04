@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react'
-import { ArrowRight, Menu, X } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight, Menu, X } from 'lucide-react'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Gutter } from '../atoms/Gutter'
 import { cn } from '../../lib/cn'
@@ -15,16 +15,60 @@ export function HomeHero() {
   const setMobileNavOpen = useUiStore((s) => s.setMobileNavOpen)
   const heroIndex = useUiStore((s) => s.homeHeroIndex)
   const setHeroIndex = useUiStore((s) => s.setHomeHeroIndex)
+  const desktopCopyRef = useRef<HTMLDivElement | null>(null)
+  const [desktopObjectX, setDesktopObjectX] = useState('54%')
+  const [paused, setPaused] = useState(false)
 
   const slide = useMemo(() => heroSlides[heroIndex % heroSlides.length], [heroIndex])
 
   useEffect(() => {
-    if (reducedMotion) return
+    if (reducedMotion || paused) return
     const id = window.setInterval(() => {
       setHeroIndex((heroIndex + 1) % heroSlides.length)
     }, 6500)
     return () => window.clearInterval(id)
-  }, [heroIndex, reducedMotion, setHeroIndex])
+  }, [heroIndex, paused, reducedMotion, setHeroIndex])
+
+  const totalSlides = heroSlides.length
+  const current = (heroIndex % totalSlides) + 1
+
+  function goPrev() {
+    setHeroIndex((heroIndex - 1 + totalSlides) % totalSlides)
+  }
+
+  function goNext() {
+    setHeroIndex((heroIndex + 1) % totalSlides)
+  }
+
+  useEffect(() => {
+    const node = desktopCopyRef.current
+    if (!node) return
+
+    const compute = () => {
+      const vw = window.innerWidth || 0
+      if (!vw) return
+
+      if (vw < 1024) return
+
+      const rect = node.getBoundingClientRect()
+      const copyLeftPct = (rect.left / vw) * 100
+
+      // Keep the face visually close to the copy block across viewport sizes.
+      // We bias the focal point slightly left of the copy block's left edge.
+      const target = copyLeftPct - 12
+      const clamped = Math.min(72, Math.max(36, target))
+      setDesktopObjectX(`${clamped.toFixed(1)}%`)
+    }
+
+    compute()
+    const ro = new ResizeObserver(compute)
+    ro.observe(node)
+    window.addEventListener('resize', compute, { passive: true })
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', compute)
+    }
+  }, [])
 
   return (
     <section className="relative h-svh overflow-hidden bg-black">
@@ -40,40 +84,27 @@ export function HomeHero() {
           <div className="h-full w-full bg-gradient-to-r from-black/35 via-black/25 to-transparent" />
         </div>
 
-        <div className="absolute inset-y-0 left-0 hidden w-full lg:block lg:w-[56%]">
+        {/* Desktop portrait: full-width behind content */}
+        <div className="absolute inset-0 hidden w-full lg:block">
           <img
             src="/jerome-portrait-hero.jpg"
             alt={profile.name}
             className="h-full w-full object-cover opacity-95"
             style={{
-              objectPosition: '66% 26%',
-              maskImage:
-                'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)',
-              WebkitMaskImage:
-                'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)',
+              objectPosition: `${desktopObjectX} 26%`,
             }}
             loading="eager"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-black/45 to-black/90" />
+          {/* Readability overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-black/55 to-black/90" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20" />
-
-          <div className="absolute bottom-8 left-8">
-            <div className="grid place-items-center rounded-full border border-gold-500/35 bg-black/20 px-5 py-5 text-center">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-gold-100/80">
-                New
-              </p>
-              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.34em] text-gold-100/80">
-                Here?
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
       <div className="absolute inset-x-0 top-0 z-30">
         <div className="h-12 bg-gold-500">
           <div className="flex h-full items-center justify-center px-4">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-black/85">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.34em] text-white/90">
               Rewrite your product from tech debt and instability.
             </p>
           </div>
@@ -81,17 +112,17 @@ export function HomeHero() {
         <div className="bg-black/25 backdrop-blur-sm">
           <Gutter className="flex h-16 items-center justify-between gap-4 sm:h-20">
             <div className="flex items-center gap-3">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-gold-500 text-black">
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-gold-500 text-white">
                 <div className="flex gap-1">
-                  <span className="h-4 w-1 -skew-x-12 bg-black/90" />
-                  <span className="h-4 w-1 -skew-x-12 bg-black/90" />
-                  <span className="h-4 w-1 -skew-x-12 bg-black/90" />
+                  <span className="h-4 w-1 -skew-x-12 bg-white/90" />
+                  <span className="h-4 w-1 -skew-x-12 bg-white/90" />
+                  <span className="h-4 w-1 -skew-x-12 bg-white/90" />
                 </div>
               </div>
               <div className="leading-tight">
                 <p className="text-sm font-semibold tracking-tight text-sand">Jerome Erazo</p>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/55">
-                  Software Engineer • Tech Lead
+                  Software Engineer • Tech Lead • AI Enthusiast
                 </p>
               </div>
             </div>
@@ -151,7 +182,13 @@ export function HomeHero() {
       </div>
 
       {/* Foreground content (offset so it doesn't sit under the overlay header) */}
-      <div className="relative z-10 h-full pt-28 sm:pt-32">
+      <div
+        className="relative z-10 h-full pt-28 sm:pt-32"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocusCapture={() => setPaused(true)}
+        onBlurCapture={() => setPaused(false)}
+      >
         {/* Mobile stack (like the reference phone layout) */}
         <div className="lg:hidden">
           <div className="flex h-full flex-col">
@@ -243,7 +280,7 @@ export function HomeHero() {
           <div className="lg:col-span-7 lg:pl-2">
             <div className="flex items-start gap-4">
               <span className="mt-3 text-4xl text-gold-300">“</span>
-              <div className="min-w-0">
+              <div ref={desktopCopyRef} className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-[0.26em] text-sand/55">
                   {slide.source}
                 </p>
@@ -288,19 +325,56 @@ export function HomeHero() {
                   </ButtonLink>
                 </div>
 
-                <div className="mt-8 flex items-center gap-2">
-                  {heroSlides.map((_, i) => (
+                <div className="mt-8 flex items-center gap-4">
+                  <div className="flex items-center gap-2">
                     <button
-                      key={i}
                       type="button"
-                      aria-label={`Go to slide ${i + 1}`}
-                      className={cn(
-                        'h-2 w-2 rounded-full transition',
-                        i === heroIndex ? 'bg-gold-300' : 'bg-sand/25 hover:bg-sand/40',
-                      )}
-                      onClick={() => setHeroIndex(i)}
-                    />
-                  ))}
+                      onClick={goPrev}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-sand/10 bg-white/5 text-sand/80 transition hover:border-gold-500/30 hover:bg-white/10 focus-visible:focus-ring"
+                      aria-label="Previous slide"
+                    >
+                      <ArrowLeft size={18} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={goNext}
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-sand/10 bg-white/5 text-sand/80 transition hover:border-gold-500/30 hover:bg-white/10 focus-visible:focus-ring"
+                      aria-label="Next slide"
+                    >
+                      <ArrowRight size={18} />
+                    </button>
+                  </div>
+
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <p className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/55">
+                      {String(current).padStart(2, '0')} / {String(totalSlides).padStart(2, '0')}
+                    </p>
+                    <div className="relative h-1 w-full overflow-hidden rounded-full bg-white/10">
+                      <div
+                        key={heroIndex}
+                        className={cn(
+                          'absolute inset-y-0 left-0 w-full origin-left rounded-full bg-gold-400/70',
+                          reducedMotion || paused ? '' : 'animate-[hero-progress_6.5s_linear]',
+                        )}
+                        style={{ transform: reducedMotion || paused ? 'scaleX(0.65)' : undefined }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="hidden items-center gap-2 xl:flex">
+                    {heroSlides.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        aria-label={`Go to slide ${i + 1}`}
+                        className={cn(
+                          'h-2.5 w-2.5 rounded-full transition',
+                          i === heroIndex ? 'bg-gold-300' : 'bg-sand/25 hover:bg-sand/40',
+                        )}
+                        onClick={() => setHeroIndex(i)}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

@@ -27,17 +27,17 @@ export function Header() {
             to="/"
             className="group inline-flex items-center gap-3 focus-visible:focus-ring"
           >
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gold-500 text-black shadow-soft">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gold-500 text-white shadow-soft">
               <span className="flex gap-1">
-                <span className="h-4 w-1 -skew-x-12 bg-black/90" />
-                <span className="h-4 w-1 -skew-x-12 bg-black/90" />
-                <span className="h-4 w-1 -skew-x-12 bg-black/90" />
+                <span className="h-4 w-1 -skew-x-12 bg-white/90" />
+                <span className="h-4 w-1 -skew-x-12 bg-white/90" />
+                <span className="h-4 w-1 -skew-x-12 bg-white/90" />
               </span>
             </span>
             <div className="leading-tight">
               <p className="text-sm font-semibold tracking-tight text-sand">Jerome Erazo</p>
               <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/55">
-                Software Engineer • Tech Lead
+                Software Engineer • Tech Lead • AI Enthusiast
               </p>
             </div>
           </Link>
