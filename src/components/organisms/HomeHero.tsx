@@ -16,6 +16,7 @@ export function HomeHero() {
   const heroIndex = useUiStore((s) => s.homeHeroIndex)
   const setHeroIndex = useUiStore((s) => s.setHomeHeroIndex)
   const desktopCopyRef = useRef<HTMLDivElement | null>(null)
+  const heroParallaxRef = useRef<HTMLDivElement | null>(null)
   const [desktopObjectX, setDesktopObjectX] = useState('54%')
   const [paused, setPaused] = useState(false)
 
@@ -70,12 +71,86 @@ export function HomeHero() {
     }
   }, [])
 
+  useEffect(() => {
+    if (reducedMotion) return
+    const root = heroParallaxRef.current
+    if (!root) return
+
+    let raf = 0
+    let rect = root.getBoundingClientRect()
+
+    const state = {
+      tx: 0,
+      ty: 0,
+      scrollY: 0,
+    }
+
+    const apply = () => {
+      raf = 0
+      root.style.setProperty('--hero-parallax-x', `${state.tx.toFixed(2)}px`)
+      root.style.setProperty('--hero-parallax-y', `${state.ty.toFixed(2)}px`)
+      root.style.setProperty('--hero-parallax-scroll', `${state.scrollY.toFixed(2)}px`)
+    }
+
+    const schedule = () => {
+      if (raf) return
+      raf = window.requestAnimationFrame(apply)
+    }
+
+    const updateRect = () => {
+      rect = root.getBoundingClientRect()
+    }
+
+    const onPointerMove = (e: PointerEvent) => {
+      // Ignore touch; it tends to feel jittery and conflicts with scrolling.
+      if (e.pointerType === 'touch') return
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
+      const nx = rect.width ? (e.clientX - cx) / (rect.width / 2) : 0
+      const ny = rect.height ? (e.clientY - cy) / (rect.height / 2) : 0
+      const clampedX = Math.max(-1, Math.min(1, nx))
+      const clampedY = Math.max(-1, Math.min(1, ny))
+
+      // Stronger than before but still controlled (desktop-only pointer parallax).
+      state.tx = clampedX * 16
+      state.ty = clampedY * 12
+      schedule()
+    }
+
+    const onScroll = () => {
+      // Small downward drift as you scroll away from the hero.
+      const max = Math.max(1, window.innerHeight)
+      const progress = Math.max(0, Math.min(1, window.scrollY / max))
+      // Make scroll parallax clearly noticeable as you move past the hero.
+      state.scrollY = progress * 34
+      schedule()
+    }
+
+    const onResize = () => {
+      updateRect()
+      onScroll()
+    }
+
+    updateRect()
+    onScroll()
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize, { passive: true })
+
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf)
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [reducedMotion])
+
   return (
     <section className="relative h-svh overflow-hidden bg-black">
       <div className="absolute inset-0 -z-10 vignette" />
 
       {/* Full-height hero background (sits behind the overlay header) */}
-      <div className="absolute inset-0">
+      <div ref={heroParallaxRef} className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/25 to-black/80" />
         <div
           className="pointer-events-none absolute inset-0 hidden lg:block"
@@ -84,16 +159,34 @@ export function HomeHero() {
           <div className="h-full w-full bg-gradient-to-r from-black/35 via-black/25 to-transparent" />
         </div>
 
-        {/* Desktop portrait: full-width behind content */}
+        {/* Desktop portrait: layered PNGs with subtle parallax */}
         <div className="absolute inset-0 hidden w-full lg:block">
           <img
-            src="/jerome-portrait-hero.jpg"
-            alt={profile.name}
+            src="/jerome-portrait-hero-background.png"
+            alt=""
             className="h-full w-full object-cover opacity-95"
             style={{
               objectPosition: `${desktopObjectX} 26%`,
+              transform:
+                'translate3d(calc(var(--hero-parallax-x, 0px) * 0.7), calc(var(--hero-parallax-y, 0px) * 0.6 + var(--hero-parallax-scroll, 0px) * 1.05), 0) scale(1.04)',
+              willChange: 'transform',
             }}
             loading="eager"
+            decoding="async"
+            aria-hidden
+          />
+          <img
+            src="/jerome-portrait-hero-subject.png"
+            alt={profile.name}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{
+              objectPosition: `${desktopObjectX} 26%`,
+              transform:
+                'translate3d(calc(var(--hero-parallax-x, 0px) * 1.35), calc(var(--hero-parallax-y, 0px) * 1.1 + var(--hero-parallax-scroll, 0px) * 0.8), 0) scale(1.02)',
+              willChange: 'transform',
+            }}
+            loading="eager"
+            decoding="async"
           />
           {/* Readability overlays */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/35 via-black/55 to-black/90" />

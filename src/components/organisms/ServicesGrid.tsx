@@ -50,7 +50,8 @@ export function ServicesGrid({
                       onClick={() => setActiveIdx(s.idx)}
                       className={[
                         'group relative flex w-full items-start gap-4 rounded-3xl p-5 text-left transition focus-visible:focus-ring',
-                        isActive ? 'bg-white/10' : 'bg-white/5 hover:bg-white/10',
+                        // No default "card" container: only show a surface on hover/active.
+                        isActive ? 'bg-white/10' : 'bg-transparent hover:bg-white/5',
                       ].join(' ')}
                       aria-current={isActive ? 'true' : undefined}
                     >
@@ -83,10 +84,7 @@ export function ServicesGrid({
 
             {/* Detail */}
             <div className="lg:col-span-7 lg:pl-8">
-              <article className="relative flex h-full flex-col overflow-hidden rounded-3xl bg-white/5 p-6 shadow-soft sm:p-8">
-                <div className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full bg-gold-500/10 blur-3xl" />
-                <div className="pointer-events-none absolute -bottom-14 -left-12 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
-
+              <article className="relative flex h-full flex-col p-1 sm:p-2">
                 <header className="relative flex items-start gap-4">
                   <span className="inline-flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-ink2 text-gold-300 ring-1 ring-white/5">
                     <ActiveIcon size={22} />

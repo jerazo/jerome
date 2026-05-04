@@ -242,7 +242,7 @@ export function ExperienceTimeline() {
   const chartEndMs = oldestStartMs
   const chartEndYear = new Date(chartEndMs).getFullYear()
 
-  const chartPaddingTop = 28
+  const chartPaddingTop = 0
   const chartPaddingBottom = 28
   // Time-to-pixels scale (higher = more accurate/visible longevity differences).
   // Short roles still expand to the card height minimum via constraints.
@@ -648,7 +648,7 @@ export function ExperienceTimeline() {
                   return (
                     <article
                       key={`${e.company}-${e.role}`}
-                      className="group absolute right-0 w-[22rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft"
+                      className="group absolute right-0 w-full max-w-[22rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft"
                       style={{ top: cardY }}
                       ref={(el) => {
                         desktopRefs.current[id] = el
@@ -710,6 +710,7 @@ export function ExperienceTimeline() {
                   aria-hidden
                   className="absolute inset-0 h-full w-full overflow-visible"
                   viewBox={`0 0 ${graphWidth} ${chartHeight}`}
+                  preserveAspectRatio="none"
                   style={{ overflow: 'visible' }}
                 >
                   <defs>
@@ -821,12 +822,16 @@ export function ExperienceTimeline() {
 
                   {(() => {
                     const pillYOffset = -18
-                    const nowPillYOffset = -36
                     const topNowY =
                       yByMonthKey.get(monthKeyFromMs(chartStartMs)) ?? chartPaddingTop + 10
                     const timelineEndY = yByMonthKey.get(monthKeyFromMs(chartEndMs)) ?? yForTime(chartEndMs)
                     const bottomYearY = Math.min(chartHeight - chartPaddingBottom - 10, timelineEndY)
-                    const nowPillY = Math.max(12, topNowY + nowPillYOffset)
+                    const NOW_NODE_RADIUS = 5.5
+                    const NOW_PILL_HEIGHT = 20
+                    const NOW_PILL_GAP = 6
+                    // Place the pill just above the Now node (instead of anchoring it to an arbitrary offset),
+                    // and let it overflow past the top if needed (the SVG is overflow-visible).
+                    const nowPillY = topNowY - (NOW_NODE_RADIUS + NOW_PILL_GAP + NOW_PILL_HEIGHT / 2)
                     const raw = [
                       // Keep Now/End year in the stream too, but we'll also force-render them so they never disappear.
                       { text: 'NOW', y: nowPillY },
@@ -865,11 +870,19 @@ export function ExperienceTimeline() {
                       return { t, width, height: 20 }
                     }
 
-                    function renderPill(text: string, y: number) {
+                    function renderPill(
+                      text: string,
+                      y: number,
+                      opts?: { allowOverflowTop?: boolean },
+                    ) {
                       const p = pill(text)
                       const x = trunkX
                       const half = p.height / 2
-                      const clampedY = Math.max(half + 2, Math.min(chartHeight - chartPaddingBottom - half - 2, y))
+                      const topLimit = half + 2
+                      const bottomLimit = chartHeight - chartPaddingBottom - half - 2
+                      const clampedY = opts?.allowOverflowTop
+                        ? Math.min(bottomLimit, y)
+                        : Math.max(topLimit, Math.min(bottomLimit, y))
                       const rx = 10
                       const fill = 'rgba(11, 18, 32, 0.92)'
                       const stroke = 'rgba(226, 232, 240, 0.16)'
@@ -911,7 +924,7 @@ export function ExperienceTimeline() {
 
                     return (
                       <>
-                        {renderPill('NOW', nowPillY)}
+                        {renderPill('NOW', nowPillY, { allowOverflowTop: true })}
                         {out
                           .filter((p) => p.text !== 'NOW' && p.text !== String(chartEndYear))
                           .map((p) => renderPill(p.text, p.y))}

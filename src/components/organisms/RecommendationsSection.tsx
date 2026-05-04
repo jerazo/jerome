@@ -169,7 +169,7 @@ export function RecommendationsSection({
             </div>
 
             <aside className="lg:col-span-5 lg:h-full">
-              <div className="grid gap-3">
+              <div className="grid gap-2 sm:gap-3">
                 {mapped.map((r) => {
                   const isActive = r.id === active.id
                   return (
@@ -178,7 +178,10 @@ export function RecommendationsSection({
                       type="button"
                       onClick={() => setActiveId(r.id)}
                       className={[
-                        'group/selector relative flex w-full items-center gap-3 rounded-3xl border border-transparent bg-transparent p-4 text-left transition focus-visible:focus-ring hover:border-sand/10 hover:bg-white/5',
+                        'group/selector relative flex w-full items-center gap-3 rounded-3xl border border-transparent p-4 text-left transition focus-visible:focus-ring',
+                        // Mobile: give each row a subtle surface so the list doesn't feel crammed.
+                        'bg-white/[0.03] hover:bg-white/[0.05] sm:bg-transparent sm:hover:bg-white/5',
+                        'hover:border-sand/10',
                         isActive ? 'text-sand' : 'text-sand/85',
                       ].join(' ')}
                       aria-current={isActive ? 'true' : undefined}
@@ -214,8 +217,16 @@ export function RecommendationsSection({
                       ) : null}
                       {r.relationship || r.date ? (
                         <div className="mt-2 flex flex-wrap gap-2">
-                          {r.relationship ? <Tag>{r.relationship}</Tag> : null}
-                          {r.date ? <Tag className="text-sand/65">{r.date}</Tag> : null}
+                          {r.relationship ? (
+                            <Tag className="px-2 py-0.5 text-[11px] leading-none text-sand/75">
+                              {r.relationship}
+                            </Tag>
+                          ) : null}
+                          {r.date ? (
+                            <Tag className="px-2 py-0.5 text-[11px] leading-none text-sand/60">
+                              {r.date}
+                            </Tag>
+                          ) : null}
                         </div>
                       ) : null}
                     </div>
