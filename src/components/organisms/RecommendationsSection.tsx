@@ -83,10 +83,7 @@ export function RecommendationsSection({
 
         <div className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-stretch">
           <div className="lg:col-span-7 lg:h-full">
-            <article className="relative flex flex-col overflow-hidden rounded-3xl border border-sand/10 bg-white/5 p-6 shadow-soft sm:p-8 lg:h-full">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full bg-gold-500/10 blur-3xl" />
-              <div className="pointer-events-none absolute -bottom-14 -left-12 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
-
+            <article className="relative flex flex-col p-6 sm:p-8 lg:h-full">
               <div className="absolute right-5 top-5 text-gold-200/25">
                 <Quote size={28} />
               </div>
@@ -180,13 +177,18 @@ export function RecommendationsSection({
                     type="button"
                     onClick={() => setActiveId(r.id)}
                     className={[
-                      'flex w-full items-center gap-3 rounded-3xl border p-4 text-left transition focus-visible:focus-ring',
-                      isActive
-                        ? 'border-gold-500/35 bg-white/10'
-                        : 'border-sand/10 bg-white/5 hover:border-gold-500/20 hover:bg-white/10',
+                      'group/selector relative flex w-full items-center gap-3 rounded-3xl border border-transparent bg-transparent p-4 text-left transition focus-visible:focus-ring hover:border-sand/10 hover:bg-white/5',
+                      isActive ? 'text-sand' : 'text-sand/85',
                     ].join(' ')}
                     aria-current={isActive ? 'true' : undefined}
                   >
+                    <span
+                      aria-hidden
+                      className={[
+                        'absolute left-2 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-gold-400/0 transition-colors',
+                        isActive ? 'bg-gold-400/65' : 'group-hover/selector:bg-gold-400/35',
+                      ].join(' ')}
+                    />
                     {r.authorImageSrc ? (
                       <img
                         src={r.authorImageSrc}
