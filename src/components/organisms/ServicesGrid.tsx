@@ -31,7 +31,10 @@ export function ServicesGrid({
   const ActiveIcon = icons[active?.idx % icons.length] ?? Code2
 
   return (
-    <section id="services" className="py-16 sm:py-20">
+    <section
+      id="services"
+      className="section-surface section-bg-services py-16 sm:py-20"
+    >
       <Gutter>
         <div className="mx-auto w-full max-w-screen-lg">
           <SectionHeading eyebrow={eyebrow} title={title} description={description} />

@@ -65,7 +65,7 @@ export function RecommendationsSection({
   }
 
   return (
-    <section id="recommendations" className="py-16 sm:py-20">
+    <section id="recommendations" className="section-surface section-bg-recommendations py-16 sm:py-20">
       <Gutter>
         <div className="mx-auto w-full max-w-screen-lg">
           <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">

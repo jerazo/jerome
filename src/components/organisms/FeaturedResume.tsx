@@ -5,7 +5,7 @@ import { SectionHeading } from '../molecules/SectionHeading'
 
 export function FeaturedResume() {
   return (
-    <section className="py-16 sm:py-20">
+    <section className="section-surface section-bg-resume py-28 sm:py-29">
       <Gutter>
         <div className="mx-auto w-full max-w-screen-lg">
           <SectionHeading

@@ -6,7 +6,7 @@ import { SectionHeading } from '../molecules/SectionHeading'
 
 export function ContactCta() {
   return (
-    <section className="py-16 sm:py-20">
+    <section className="section-surface section-bg-contact section-slant-rev py-16 sm:py-20">
       <Gutter>
         <div className="mx-auto w-full max-w-screen-lg">
           <div className="grid gap-8 lg:grid-cols-12 lg:items-start">

@@ -5,7 +5,7 @@ import { profile } from '../../content/profile'
 
 export function AboutTeaser() {
   return (
-    <section className="py-16 sm:py-20">
+    <section className="section-surface section-bg-about section-slant-rev py-16 sm:py-20">
       <Gutter>
         <div className="grid items-center gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">

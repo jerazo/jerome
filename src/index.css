@@ -55,4 +55,107 @@
       radial-gradient(900px 700px at 50% 92%, rgba(0, 0, 0, 0.7), transparent 66%),
       linear-gradient(to bottom, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.92));
   }
+
+  /* Section surfaces + angled dividers for the homepage. */
+  .section-surface {
+    position: relative;
+    isolation: isolate;
+    /* Controls the diagonal cut size (bigger on desktop). */
+    --section-slant: clamp(18px, 3vw, 38px);
+    /* Solid base so diagonals fully cover the previous section. */
+    --section-solid: #000;
+  }
+
+  /* Stitch sections: overlap diagonals instead of drawing borders. */
+  .section-surface + .section-surface {
+    margin-top: calc(var(--section-slant) * -1);
+    padding-top: calc(var(--section-slant));
+  }
+
+  /* For sections that should feel vertically centered, balance the stitch padding. */
+  .section-surface.section-stitch-balanced {
+    padding-bottom: calc(var(--section-slant));
+  }
+
+  .section-surface::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(var(--section-slant) * -1);
+    bottom: calc(var(--section-slant) * -1);
+    z-index: -1;
+    pointer-events: none;
+    background:
+      var(--section-bg, transparent),
+      linear-gradient(var(--section-solid), var(--section-solid));
+    clip-path: polygon(
+      0 var(--section-slant),
+      100% 0,
+      100% 100%,
+      0 calc(100% - var(--section-slant))
+    );
+  }
+
+  /* When the previous block isn't a slanted section (e.g., the hero), still overlap cleanly. */
+  .section-surface.section-stitch-top {
+    margin-top: calc(var(--section-slant) * -1);
+    padding-top: calc(var(--section-slant));
+  }
+
+  /* Reverse slant (used to alternate cuts between sections). */
+  .section-surface.section-slant-rev::before {
+    clip-path: polygon(
+      0 0,
+      100% var(--section-slant),
+      100% 100%,
+      0 calc(100% - var(--section-slant))
+    );
+  }
+
+  .section-bg-featured {
+    --section-bg:
+      radial-gradient(900px 520px at 75% 15%, rgba(139, 92, 246, 0.12), transparent 62%),
+      radial-gradient(820px 520px at 15% 55%, rgba(255, 255, 255, 0.05), transparent 60%),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02), transparent 30%, rgba(0, 0, 0, 0.65));
+  }
+
+  .section-bg-services {
+    /* Solid graphite-gray band */
+    --section-bg: none;
+    --section-solid: #121212;
+  }
+
+  .section-bg-experience {
+    --section-bg:
+      radial-gradient(980px 520px at 70% 30%, rgba(56, 189, 248, 0.10), transparent 60%),
+      radial-gradient(760px 520px at 20% 70%, rgba(139, 92, 246, 0.08), transparent 62%),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.92));
+  }
+
+  .section-bg-recommendations {
+    /* Midnight indigo: distinct from black/gray, still on-brand with purple. */
+    --section-bg: none;
+    --section-solid: #0b1220;
+  }
+
+  .section-bg-about {
+    --section-bg:
+      radial-gradient(960px 520px at 75% 30%, rgba(16, 185, 129, 0.08), transparent 62%),
+      radial-gradient(740px 520px at 18% 70%, rgba(109, 40, 217, 0.10), transparent 62%),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.92));
+  }
+
+  .section-bg-resume {
+    --section-bg:
+      radial-gradient(980px 520px at 25% 25%, rgba(196, 181, 253, 0.08), transparent 62%),
+      radial-gradient(760px 520px at 80% 70%, rgba(109, 40, 217, 0.12), transparent 62%),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.92));
+  }
+
+  .section-bg-contact {
+    /* Solid purple contact band (no gradient) */
+    --section-bg: none;
+    --section-solid: #4c1d95;
+  }
 }

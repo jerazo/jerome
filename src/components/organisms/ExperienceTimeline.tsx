@@ -622,7 +622,7 @@ export function ExperienceTimeline() {
   })()
 
   return (
-    <section id="work" className="py-16 sm:py-20">
+    <section id="work" className="section-surface section-bg-experience section-slant-rev py-16 sm:py-20">
       <Gutter>
         <div className="mx-auto w-full max-w-screen-lg">
           <SectionHeading
