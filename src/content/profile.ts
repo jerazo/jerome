@@ -100,7 +100,7 @@ export const profile = {
       company: 'BitRaider, MMO LLC',
       role: 'Software Engineer / Web Developer',
       location: 'Jacksonville, FL (remote)',
-      start: 'Mar 2012',
+      start: 'Feb 2012',
       end: 'Jun 2017',
       highlights: [
         'Implemented UI skins and core site features for bitraider.com and client web properties.',
@@ -112,7 +112,7 @@ export const profile = {
       company: 'Xfire Holding, Inc. (acquired by GGN)',
       role: 'Software Engineer / Web Developer',
       location: 'Los Angeles, CA',
-      start: 'Mar 2012',
+      start: 'Feb 2012',
       end: 'Feb 2017',
       highlights: [
         'Built and maintained API functionality and web features for consumer-facing experiences.',
@@ -124,7 +124,7 @@ export const profile = {
       company: 'Island Logic',
       role: 'Senior Web Developer - Web Department',
       location: 'Makati, Philippines',
-      start: 'Apr 2009',
+      start: 'Mar 2009',
       end: 'Feb 2012',
       highlights: [
         'Delivered and maintained multiple high-traffic gaming and e-commerce sites across PHP/JavaScript and ASP/IIS stacks.',
@@ -137,7 +137,7 @@ export const profile = {
       company: 'One Global Contact Center',
       role: 'Supervisor - Web Department',
       location: 'Ortigas, Philippines',
-      start: 'Jun 2007',
+      start: 'May 2007',
       end: 'Mar 2009',
       highlights: [
         'Managed a 40-person web production and programming organization, balancing internal delivery and external client work.',
@@ -150,7 +150,7 @@ export const profile = {
       company: 'Freelance',
       role: 'Freelance Programmer & Graphic Artist',
       location: 'Quezon City, Philippines',
-      start: 'Dec 2005',
+      start: 'Nov 2005',
       end: 'May 2007',
       highlights: [
         'Delivered marketing sites and campaign assets end-to-end: PHP/MySQL development, UI builds, and graphic design.',

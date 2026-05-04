@@ -11,6 +11,20 @@ const SIDE_OVERRIDES: Record<string, 'left' | 'right'> = {
 }
 const CARD_LINE_PAD_PX = 5
 
+function monthKeyFromMs(ms: number) {
+  const d = new Date(ms)
+  // Use UTC to avoid DST causing the local date to drift into the prior month.
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth()).padStart(2, '0')}`
+}
+
+function monthStartMsFromKey(key: string) {
+  const [y, m] = key.split('-')
+  const year = Number(y)
+  const month = Number(m)
+  // Use UTC to ensure consistent month boundaries regardless of locale.
+  return Date.UTC(year, month, 1)
+}
+
 function splitRole(role: string) {
   const trimmed = role.trim()
   const paren = /^(.*)\(([^)]+)\)\s*$/.exec(trimmed)
@@ -55,18 +69,17 @@ function parseExperienceDate(value: string, kind: 'start' | 'end') {
     const month = monthIndexFromLabel(monthYear[1])
     const year = Number(monthYear[2])
     if (month == null || Number.isNaN(year)) return NaN
-    // Use half-open interval semantics: start is inclusive, end is exclusive.
-    return kind === 'start'
-      ? new Date(year, month, 1).getTime()
-      : new Date(year, month + 1, 1).getTime()
+    // Snap to the labeled month (visual timeline uses month boundaries as markers).
+    // This keeps nodes aligned to the month shown in the CV (e.g., "May 2018" sits on May).
+    return Date.UTC(year, month, 1)
   }
 
   const yearOnly = /^(\d{4})$/.exec(v)
   if (yearOnly) {
     const year = Number(yearOnly[1])
     if (Number.isNaN(year)) return NaN
-    // Use half-open interval semantics: end is Jan 1 of the following year.
-    return kind === 'start' ? new Date(year, 0, 1).getTime() : new Date(year + 1, 0, 1).getTime()
+    // Year-only labels snap to January of that year.
+    return Date.UTC(year, 0, 1)
   }
 
   // Fallback: try native parsing.
@@ -231,12 +244,14 @@ export function ExperienceTimeline() {
 
   const chartPaddingTop = 28
   const chartPaddingBottom = 28
-  const pxPerMonth = 4
+  // Time-to-pixels scale (higher = more accurate/visible longevity differences).
+  // Short roles still expand to the card height minimum via constraints.
+  const pxPerMonth = 14
 
   function monthsBetween(olderMs: number, newerMs: number) {
     const older = new Date(olderMs)
     const newer = new Date(newerMs)
-    return (newer.getFullYear() - older.getFullYear()) * 12 + (newer.getMonth() - older.getMonth())
+    return (newer.getUTCFullYear() - older.getUTCFullYear()) * 12 + (newer.getUTCMonth() - older.getUTCMonth())
   }
 
   const spanMonths = Math.max(1, monthsBetween(chartEndMs, chartStartMs))
@@ -376,55 +391,71 @@ export function ExperienceTimeline() {
   const activeSizes = isLargeLayout ? desktopSizes : mobileSizes
   const fallbackCardHeight = 280
 
-  const yByMs = (() => {
-    const timepoints = new Set<number>()
-    const constraintsByStart = new Map<number, Array<{ endMs: number; minSpan: number }>>()
+  const yByMonthKey = (() => {
+    const monthKeys = new Set<string>()
+    const constraintsByStartKey = new Map<string, Array<{ endKey: string; minSpan: number }>>()
 
-    timepoints.add(chartStartMs)
-    timepoints.add(chartEndMs)
+    // Add every month boundary so month markers and nodes share the same coordinate system.
+    const now = new Date(chartStartMs)
+    const startMonthMs = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)
+    const end = new Date(chartEndMs)
+    const endMonthMs = Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1)
+    const totalMonths = Math.max(0, monthsBetween(endMonthMs, startMonthMs))
+    for (let i = 0; i <= totalMonths; i++) {
+      const d = new Date(startMonthMs)
+      d.setUTCMonth(d.getUTCMonth() - i)
+      const ms = d.getTime()
+      if (ms < endMonthMs) break
+      monthKeys.add(monthKeyFromMs(ms))
+    }
+
+    monthKeys.add(monthKeyFromMs(chartStartMs))
+    monthKeys.add(monthKeyFromMs(chartEndMs))
 
     for (const e of prelim) {
       const endMs = Math.min(e.finiteEndMs, NOW_MS)
-      timepoints.add(endMs)
-      timepoints.add(e.startMs)
+      const startKey = monthKeyFromMs(e.startMs)
+      const endKey = monthKeyFromMs(endMs)
+      monthKeys.add(startKey)
+      monthKeys.add(endKey)
 
       const id = `${e.company}::${e.role}`
       const cardHeight = activeSizes[id] ?? fallbackCardHeight
-      const existing = constraintsByStart.get(e.startMs) ?? []
-      existing.push({ endMs, minSpan: cardHeight + CARD_LINE_PAD_PX * 2 })
-      constraintsByStart.set(e.startMs, existing)
+      const existing = constraintsByStartKey.get(startKey) ?? []
+      existing.push({ endKey, minSpan: cardHeight + CARD_LINE_PAD_PX * 2 })
+      constraintsByStartKey.set(startKey, existing)
     }
 
-    const msSorted = [...timepoints]
-      .filter((ms) => Number.isFinite(ms))
+    const keySorted = [...monthKeys]
+      .map((k) => ({ k, ms: monthStartMsFromKey(k) }))
       // Newest -> oldest (NOW at the top, past increases Y).
-      .sort((a, b) => b - a)
+      .sort((a, b) => b.ms - a.ms)
 
-    const baseYs = msSorted.map((ms) => yForTime(ms))
-    const y = new Map<number, number>()
+    const baseYs = keySorted.map(({ ms }) => yForTime(ms))
+    const y = new Map<string, number>()
 
-    for (let i = 0; i < msSorted.length; i++) {
-      const ms = msSorted[i]!
+    for (let i = 0; i < keySorted.length; i++) {
+      const key = keySorted[i]!.k
       let yi = baseYs[i]!
 
       if (i > 0) {
-        const prevMs = msSorted[i - 1]!
-        const prevY = y.get(prevMs) ?? baseYs[i - 1]!
+        const prevKey = keySorted[i - 1]!.k
+        const prevY = y.get(prevKey) ?? baseYs[i - 1]!
         const baseGap = baseYs[i]! - baseYs[i - 1]!
         yi = Math.max(yi, prevY + baseGap)
       }
 
       // Enforce minimum vertical span for any experience that starts at this timepoint:
-      // startY >= endY + (cardHeight + padding). Since endMs is newer, its Y has already been computed.
-      const constraints = constraintsByStart.get(ms)
+      // startY >= endY + (cardHeight + padding). Since endKey is newer, its Y has already been computed.
+      const constraints = constraintsByStartKey.get(key)
       if (constraints) {
         for (const c of constraints) {
-          const endY = y.get(c.endMs) ?? yForTime(c.endMs)
+          const endY = y.get(c.endKey) ?? yForTime(monthStartMsFromKey(c.endKey))
           yi = Math.max(yi, endY + c.minSpan)
         }
       }
 
-      y.set(ms, yi)
+      y.set(key, yi)
     }
 
     return y
@@ -433,8 +464,8 @@ export function ExperienceTimeline() {
   const withCardSpan: Array<LaneInterval & { cardHeight: number }> = prelim
     .map((e) => {
       const endMs = Math.min(e.finiteEndMs, NOW_MS)
-      const recentY = yByMs.get(endMs) ?? yForTime(endMs)
-      const pastY = yByMs.get(e.startMs) ?? yForTime(e.startMs)
+      const recentY = yByMonthKey.get(monthKeyFromMs(endMs)) ?? yForTime(endMs)
+      const pastY = yByMonthKey.get(monthKeyFromMs(e.startMs)) ?? yForTime(e.startMs)
       const midY = (recentY + pastY) / 2
 
       const id = `${e.company}::${e.role}`
@@ -676,8 +707,9 @@ export function ExperienceTimeline() {
               <div className="relative">
                 <svg
                   aria-hidden
-                  className="absolute inset-0 h-full w-full"
+                  className="absolute inset-0 h-full w-full overflow-visible"
                   viewBox={`0 0 ${graphWidth} ${chartHeight}`}
+                  style={{ overflow: 'visible' }}
                 >
                   <defs>
                     <filter id="trunk-pill-glow" x="-40%" y="-60%" width="180%" height="220%">
@@ -696,14 +728,107 @@ export function ExperienceTimeline() {
                     strokeWidth="2"
                   />
 
+                  {/* month markers (visual scale reference) */}
+                  {(() => {
+                    // Render the month scale on its own axis so the year "pills" on the trunk
+                    // don't visually punch holes in the tick marks.
+                    const scaleX = trunkX
+                    const start = new Date(chartStartMs)
+                    const startMonthMs = Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1)
+                    const end = new Date(chartEndMs)
+                    const endMonthMs = Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), 1)
+
+                    const totalMonths = Math.max(0, monthsBetween(endMonthMs, startMonthMs))
+                    const maxY = chartHeight - chartPaddingBottom - 2
+
+                    const majorLen = 16
+                    const minorLen = 9
+                    const quarterLen = 12
+
+                    const monthAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+                    const ticks: Array<{ ms: number; y: number; kind: 'major' | 'quarter' | 'minor'; label: string | null }> =
+                      []
+
+                    for (let i = 0; i <= totalMonths; i++) {
+                      const d = new Date(startMonthMs)
+                      d.setUTCMonth(d.getUTCMonth() - i)
+                      const ms = d.getTime()
+                      if (ms < endMonthMs) break
+                      const y = yByMonthKey.get(monthKeyFromMs(ms))
+                      if (y == null) continue
+                      if (!Number.isFinite(y) || y < chartPaddingTop - 2 || y > maxY) continue
+
+                      const m = d.getUTCMonth()
+                      const isMajor = m === 0
+                      const isQuarter = m === 0 || m === 3 || m === 6 || m === 9
+                      const kind: 'major' | 'quarter' | 'minor' = isMajor ? 'major' : isQuarter ? 'quarter' : 'minor'
+
+                      // Label only quarters (and always January) to avoid clutter.
+                      const label = isQuarter ? monthAbbr[m] ?? null : null
+                      ticks.push({ ms, y, kind, label })
+                    }
+
+                    return (
+                      <g opacity="0.55">
+                        <line
+                          x1={scaleX}
+                          x2={scaleX}
+                          y1={chartPaddingTop}
+                          y2={chartHeight - chartPaddingBottom}
+                          stroke="rgba(226, 232, 240, 0.16)"
+                          strokeWidth="1.5"
+                        />
+                        {ticks.map((t) => {
+                          const len = t.kind === 'major' ? majorLen : t.kind === 'quarter' ? quarterLen : minorLen
+                          const stroke =
+                            t.kind === 'major'
+                              ? 'rgba(226, 232, 240, 0.24)'
+                              : t.kind === 'quarter'
+                                ? 'rgba(226, 232, 240, 0.18)'
+                                : 'rgba(226, 232, 240, 0.12)'
+                          return (
+                            <g key={`tick-${t.ms}`}>
+                              <line
+                                x1={scaleX - len / 2}
+                                x2={scaleX + len / 2}
+                                y1={t.y}
+                                y2={t.y}
+                                stroke={stroke}
+                                strokeWidth="1"
+                              />
+                              {t.label ? (
+                                <text
+                                  x={scaleX + len / 2 + 10}
+                                  y={t.y}
+                                  dominantBaseline="middle"
+                                  textAnchor="start"
+                                  fill="rgba(226, 232, 240, 0.38)"
+                                  fontSize="9"
+                                  fontWeight="700"
+                                  letterSpacing="0.14em"
+                                >
+                                  {t.label.toUpperCase()}
+                                </text>
+                              ) : null}
+                            </g>
+                          )
+                        })}
+                      </g>
+                    )
+                  })()}
+
                   {(() => {
                     const pillYOffset = -18
-                    const topNowY = chartPaddingTop + 10
-                    const timelineEndY = yByMs.get(chartEndMs) ?? yForTime(chartEndMs)
+                    const nowPillYOffset = -36
+                    const topNowY =
+                      yByMonthKey.get(monthKeyFromMs(chartStartMs)) ?? chartPaddingTop + 10
+                    const timelineEndY = yByMonthKey.get(monthKeyFromMs(chartEndMs)) ?? yForTime(chartEndMs)
                     const bottomYearY = Math.min(chartHeight - chartPaddingBottom - 10, timelineEndY)
+                    const nowPillY = Math.max(12, topNowY + nowPillYOffset)
                     const raw = [
                       // Keep Now/End year in the stream too, but we'll also force-render them so they never disappear.
-                      { text: 'NOW', y: topNowY + pillYOffset },
+                      { text: 'NOW', y: nowPillY },
                       { text: String(chartEndYear), y: bottomYearY + pillYOffset },
                       ...withCardSpan.flatMap((e) => {
                         const endLabel = isOngoingLabel(e.end)
@@ -743,10 +868,7 @@ export function ExperienceTimeline() {
                       const p = pill(text)
                       const x = trunkX
                       const half = p.height / 2
-                      const clampedY = Math.max(
-                        chartPaddingTop + half + 2,
-                        Math.min(chartHeight - chartPaddingBottom - half - 2, y),
-                      )
+                      const clampedY = Math.max(half + 2, Math.min(chartHeight - chartPaddingBottom - half - 2, y))
                       const rx = 10
                       const fill = 'rgba(11, 18, 32, 0.92)'
                       const stroke = 'rgba(226, 232, 240, 0.16)'
@@ -788,7 +910,7 @@ export function ExperienceTimeline() {
 
                     return (
                       <>
-                        {renderPill('NOW', topNowY + pillYOffset)}
+                        {renderPill('NOW', nowPillY)}
                         {out
                           .filter((p) => p.text !== 'NOW' && p.text !== String(chartEndYear))
                           .map((p) => renderPill(p.text, p.y))}
