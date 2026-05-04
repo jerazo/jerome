@@ -17,7 +17,7 @@ export function buttonClassName({
     'focus-visible:focus-ring disabled:pointer-events-none disabled:opacity-50',
     size === 'sm' && 'px-4 py-2 text-xs',
     variant === 'primary' &&
-      'border-gold-500/60 bg-gold-500 text-white shadow-gold-glow hover:bg-gold-400',
+      'border-gold-600/60 bg-gold-700 text-white shadow-gold-glow hover:bg-gold-600',
     variant === 'secondary' &&
       'border-white/15 bg-white/0 text-sand hover:border-white/25 hover:bg-white/5',
     variant === 'ghost' &&

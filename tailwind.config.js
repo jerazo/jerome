@@ -28,7 +28,7 @@ export default {
         },
       },
       boxShadow: {
-        'gold-glow': '0 0 0 1px rgba(139,92,246,0.35), 0 14px 50px rgba(139,92,246,0.22)',
+        'gold-glow': '0 0 0 1px rgba(109,40,217,0.35), 0 14px 50px rgba(109,40,217,0.22)',
         'soft': '0 18px 60px rgba(0,0,0,0.55)',
       },
       backgroundImage: {
