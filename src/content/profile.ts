@@ -9,7 +9,7 @@ export type ExperienceItem = {
 
 export const profile = {
   name: 'Jerome Lopez Erazo',
-  headline: 'Software Engineer • Tech Lead • Web Developer',
+  headline: 'Software Engineer • Tech Lead • AI Enthusiast',
   tagline:
     'I build high-impact web products, scalable platforms, and front-end systems—fast, reliable, and production-ready.',
   location: 'Quezon City, Philippines',
@@ -20,7 +20,7 @@ export const profile = {
   },
   stats: [
     { label: 'Years building web', value: '20+' },
-    { label: 'Largest team led', value: '40 engineers' },
+    { label: 'Largest team led', value: 'Large engineering orgs' },
     { label: 'Focus', value: 'SaaS • Platforms • DX' },
   ],
   summary: [
@@ -140,7 +140,7 @@ export const profile = {
       start: 'May 2007',
       end: 'Mar 2009',
       highlights: [
-        'Managed a 40-person web production and programming organization, balancing internal delivery and external client work.',
+        'Managed a large web production and programming organization, balancing internal delivery and external client work.',
         'Led multiple concurrent campaigns (e.g., USwebsitebuilders.com, Fruitengine.com, Ebusinessweb.net), ensuring quality and on-time delivery.',
         'Owned operational workflows: domain management, scorecards/reporting, cancellations, and documentation across sales and production.',
         'Improved throughput by introducing tooling and lightweight process discipline while remaining hands-on with production work when needed.',

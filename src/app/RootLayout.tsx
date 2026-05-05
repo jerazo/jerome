@@ -1,5 +1,5 @@
-import { Outlet } from 'react-router-dom'
-import { useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { Footer } from '../components/organisms/Footer'
 import { Header } from '../components/organisms/Header'
 import { ScrollToTop } from './ScrollToTop'
@@ -7,6 +7,19 @@ import { ScrollToTop } from './ScrollToTop'
 export default function RootLayout() {
   const location = useLocation()
   const isHome = location.pathname === '/'
+
+  useEffect(() => {
+    if (!location.hash) return
+    const id = decodeURIComponent(location.hash.slice(1))
+    if (!id) return
+
+    const el = document.getElementById(id)
+    if (!el) return
+
+    // Scroll to the section anchor. Home doesn't have a fixed header, so no offset is required.
+    const y = el.getBoundingClientRect().top + window.scrollY
+    window.scrollTo({ top: y, behavior: 'smooth' })
+  }, [location.hash, location.pathname])
 
   return (
     <div className="min-h-svh">

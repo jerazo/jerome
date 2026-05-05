@@ -5,7 +5,7 @@ import { NavDropdown } from '../molecules/NavDropdown'
 
 export function PrimaryNav({ onNavigate }: { onNavigate?: () => void }) {
   return (
-    <nav className="hidden items-center gap-1 lg:flex">
+    <nav className="hidden items-center justify-end gap-1 lg:flex">
       {primaryNav.map((item) => {
         if (item.type === 'dropdown') {
           return (
@@ -22,9 +22,10 @@ export function PrimaryNav({ onNavigate }: { onNavigate?: () => void }) {
           <NavLink
             key={item.to}
             to={item.to}
+            onClick={onNavigate}
             className={({ isActive }) =>
               cn(
-                'rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-sand/70 transition hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
+                'inline-flex items-center rounded-full px-2 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-sand/70 transition hover:bg-white/5 hover:text-sand focus-visible:focus-ring xl:px-3 xl:text-[11px] xl:tracking-[0.26em]',
                 isActive && 'bg-white/5 text-sand',
               )
             }
@@ -36,4 +37,3 @@ export function PrimaryNav({ onNavigate }: { onNavigate?: () => void }) {
     </nav>
   )
 }
-

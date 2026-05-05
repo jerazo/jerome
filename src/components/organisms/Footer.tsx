@@ -22,11 +22,11 @@ export function Footer() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3 sm:justify-end">
-          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/services">
+          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#services">
             Services
           </Link>
-          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/work">
-            Work
+          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#work">
+            Experience
           </Link>
           <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/about">
             About
@@ -50,4 +50,3 @@ export function Footer() {
     </footer>
   )
 }
-

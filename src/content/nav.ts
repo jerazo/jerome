@@ -5,36 +5,15 @@ export type NavItem =
 export const primaryNav: NavItem[] = [
   {
     type: 'dropdown',
-    label: 'Services',
+    label: 'Home',
     items: [
-      { label: 'Full‑stack Web Apps', to: '/services' },
-      { label: 'Front‑End Systems', to: '/services' },
-      { label: 'Architecture & Leadership', to: '/services' },
-      { label: 'Performance & Observability', to: '/services' },
+      { label: 'Featured', to: '/#featured' },
+      { label: 'Services', to: '/#services' },
+      { label: 'Experience', to: '/#work' },
+      { label: 'Recommendations', to: '/#recommendations' },
+      { label: 'Resume', to: '/#resume' },
     ],
   },
-  {
-    type: 'dropdown',
-    label: 'Topics',
-    items: [
-      { label: 'Architecture', to: '/work' },
-      { label: 'React + TypeScript', to: '/work' },
-      { label: 'CI/CD + Delivery', to: '/work' },
-      { label: 'Performance', to: '/work' },
-      { label: 'Design Systems', to: '/work' },
-      { label: 'Team Leadership', to: '/about' },
-    ],
-  },
-  { type: 'link', label: 'Work', to: '/work' },
-  {
-    type: 'dropdown',
-    label: 'About',
-    items: [
-      { label: 'About Jerome', to: '/about' },
-      { label: 'Speaking', to: '/about' },
-      { label: 'Contact', to: '/contact' },
-    ],
-  },
-  { type: 'link', label: 'Newsletter', to: '/contact' },
+  { type: 'link', label: 'About', to: '/about' },
+  { type: 'link', label: 'Contact', to: '/contact' },
 ] as const
-

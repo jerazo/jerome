@@ -14,6 +14,17 @@ export const linkedInRecommendationsUrl =
 
 export const recommendations: Recommendation[] = [
   {
+    id: 'darius-lopez-2026-05-04',
+    author: 'Darius Lopez',
+    authorLinkedInUrl: 'https://www.linkedin.com/in/darius-lopez-44a58b248/',
+    authorImageSrc: '/recommendations/darius-lopez.jpeg',
+    authorTitle: 'Speaker / Training Manager / Head of Treasury / Head of Human Resources',
+    relationship: 'Worked with Jerome on the same team',
+    date: 'May 4, 2026',
+    quote:
+      "One of the best I have worked with, haven't seen one who can top his skills as of present date. His work is not confined in a box, he goes out of the box to improve process that is needed by clients. If you get to work with or under him, you are very lucky because you will learn a lot.",
+  },
+  {
     id: 'karen-bernadette-leonor-brizo-2025-11-23',
     author: 'Karen Bernadette Leonor-Brizo',
     authorLinkedInUrl: 'https://www.linkedin.com/in/karenleonor009',
@@ -72,4 +83,3 @@ export const recommendations: Recommendation[] = [
       'I have worked with Jerome for nearly a decade on many projects and in multiple companies, and he is the number-one go-to person for any software project that falls within his expertise. Jerome is also a pleasure to work with and a completely upstanding person. Jerome comes with my highest recommendation.',
   },
 ]
-

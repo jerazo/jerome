@@ -2,14 +2,18 @@ import { Menu, X } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Container } from '../atoms/Container'
+import { LogoMark } from '../atoms/LogoMark'
 import { cn } from '../../lib/cn'
 import { useUiStore } from '../../store/uiStore'
 import { PrimaryNav } from './PrimaryNav'
 
 const mobileNav = [
   { to: '/', label: 'Home' },
-  { to: '/services', label: 'Services' },
-  { to: '/work', label: 'Work' },
+  { to: '/#featured', label: 'Featured' },
+  { to: '/#services', label: 'Services' },
+  { to: '/#work', label: 'Experience' },
+  { to: '/#recommendations', label: 'Recommendations' },
+  { to: '/#resume', label: 'Resume' },
   { to: '/about', label: 'About' },
   { to: '/contact', label: 'Contact' },
 ] as const
@@ -28,11 +32,7 @@ export function Header() {
             className="group inline-flex items-center gap-3 focus-visible:focus-ring"
           >
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-gold-500 text-white shadow-soft">
-              <span className="flex gap-1">
-                <span className="h-4 w-1 -skew-x-12 bg-white/90" />
-                <span className="h-4 w-1 -skew-x-12 bg-white/90" />
-                <span className="h-4 w-1 -skew-x-12 bg-white/90" />
-              </span>
+              <LogoMark />
             </span>
             <div className="leading-tight">
               <p className="text-sm font-semibold tracking-tight text-sand">Jerome Erazo</p>

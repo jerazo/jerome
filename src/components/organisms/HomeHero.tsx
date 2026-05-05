@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Menu, X } from 'lucide-react'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Gutter } from '../atoms/Gutter'
+import { LogoMark } from '../atoms/LogoMark'
 import { cn } from '../../lib/cn'
 import { heroSlides } from '../../content/homeSections'
 import { profile } from '../../content/profile'
@@ -206,11 +207,7 @@ export function HomeHero() {
           <Gutter className="flex h-16 items-center justify-between gap-4 sm:h-20">
             <div className="flex items-center gap-3">
               <div className="grid h-9 w-9 place-items-center rounded-xl bg-gold-500 text-white">
-                <div className="flex gap-1">
-                  <span className="h-4 w-1 -skew-x-12 bg-white/90" />
-                  <span className="h-4 w-1 -skew-x-12 bg-white/90" />
-                  <span className="h-4 w-1 -skew-x-12 bg-white/90" />
-                </div>
+                <LogoMark />
               </div>
               <div className="leading-tight">
                 <p className="text-sm font-semibold tracking-tight text-sand">Jerome Erazo</p>
@@ -239,17 +236,38 @@ export function HomeHero() {
                   <div className="grid gap-2 text-sm font-semibold text-sand/80">
                     <a
                       className="rounded-2xl px-4 py-3 hover:bg-white/5"
-                      href="#services"
+                      href="/#featured"
+                      onClick={() => setMobileNavOpen(false)}
+                    >
+                      Featured
+                    </a>
+                    <a
+                      className="rounded-2xl px-4 py-3 hover:bg-white/5"
+                      href="/#services"
                       onClick={() => setMobileNavOpen(false)}
                     >
                       Services
                     </a>
                     <a
                       className="rounded-2xl px-4 py-3 hover:bg-white/5"
-                      href="#work"
+                      href="/#work"
                       onClick={() => setMobileNavOpen(false)}
                     >
-                      Work
+                      Experience
+                    </a>
+                    <a
+                      className="rounded-2xl px-4 py-3 hover:bg-white/5"
+                      href="/#recommendations"
+                      onClick={() => setMobileNavOpen(false)}
+                    >
+                      Recommendations
+                    </a>
+                    <a
+                      className="rounded-2xl px-4 py-3 hover:bg-white/5"
+                      href="/#resume"
+                      onClick={() => setMobileNavOpen(false)}
+                    >
+                      Resume
                     </a>
                     <ButtonLink
                       to="/about"

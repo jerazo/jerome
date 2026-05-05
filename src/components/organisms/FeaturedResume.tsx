@@ -5,7 +5,10 @@ import { SectionHeading } from '../molecules/SectionHeading'
 
 export function FeaturedResume() {
   return (
-    <section className="section-surface section-bg-resume py-28 sm:py-29">
+    <section
+      id="resume"
+      className="section-surface section-bg-resume section-stitch-balanced section-stitch-safe-bottom py-56 sm:py-72"
+    >
       <Gutter>
         <div className="mx-auto w-full max-w-screen-lg">
           <SectionHeading
@@ -14,7 +17,7 @@ export function FeaturedResume() {
             description="A PDF download with the full timeline, skills, and highlights."
           />
 
-          <div className="mt-8 flex flex-col items-start justify-between gap-6 border-t border-sand/10 pt-8 sm:flex-row sm:items-center">
+          <div className="mt-8 flex flex-col items-start justify-between gap-6 border-t border-sand/10 pt-8 sm:flex-row sm:items-center sm:pb-10">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/55">
                 PDF resume

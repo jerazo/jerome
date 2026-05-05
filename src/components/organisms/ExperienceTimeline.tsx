@@ -627,8 +627,8 @@ export function ExperienceTimeline() {
         <div className="mx-auto w-full max-w-screen-lg">
           <SectionHeading
             eyebrow="Experience"
-            title="Leadership + hands-on delivery"
-            description="I’ve led teams, owned architecture, and shipped production systems across multiple organizations."
+            title="Tech leadership + hands-on delivery"
+            description="I’ve led teams as a Tech Lead, set engineering standards, and shipped production systems across multiple organizations. I’m equally comfortable in senior IC roles when the scope calls for deep execution."
           />
 
           <div className="mt-10">

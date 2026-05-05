@@ -45,6 +45,7 @@ export const techStack: SkillCategory[] = [
     items: [
       { name: 'MySQL', experience: '17 yrs' },
       { name: 'PostgreSQL', experience: '10+ yrs' },
+      { name: 'Supabase', experience: '2+ yrs' },
       { name: 'MongoDB', experience: '9+ yrs' },
       { name: 'MS SQL', experience: '5+ yrs' },
     ],

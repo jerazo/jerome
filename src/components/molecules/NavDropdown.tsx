@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { cn } from '../../lib/cn'
 
 export function NavDropdown({
@@ -13,14 +14,24 @@ export function NavDropdown({
   onNavigate?: () => void
 }) {
   const detailsRef = useRef<HTMLDetailsElement | null>(null)
+  const location = useLocation()
+  const activeHash = location.hash
+  const isHome = location.pathname === '/'
+  const isActive =
+    isHome &&
+    items.some((it) => {
+      const hash = it.to.startsWith('/#') ? it.to.slice(1) : ''
+      return hash && hash === activeHash
+    })
 
   return (
     <details ref={detailsRef} className="group relative">
       <summary
         className={cn(
-          'list-none rounded-full px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-sand/70 transition',
+          'list-none rounded-full px-2 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-sand/70 transition xl:px-3 xl:text-[11px] xl:tracking-[0.26em]',
           'hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
           'cursor-pointer select-none',
+          isActive && 'bg-white/5 text-sand',
         )}
       >
         <span className="inline-flex items-center gap-1">

@@ -77,6 +77,11 @@
     padding-bottom: calc(var(--section-slant));
   }
 
+  /* Extra breathing room at the bottom so the next section's overlap doesn't cramp content. */
+  .section-surface.section-stitch-safe-bottom {
+    padding-bottom: calc(var(--section-slant) * 2);
+  }
+
   .section-surface::before {
     content: '';
     position: absolute;
