@@ -14,8 +14,8 @@ const mobileNav = [
   { to: '/#work', label: 'Experience' },
   { to: '/#recommendations', label: 'Recommendations' },
   { to: '/#resume', label: 'Resume' },
-  { to: '/about', label: 'About' },
-  { to: '/contact', label: 'Contact' },
+  { to: '/#about', label: 'About' },
+  { to: '/#contact', label: 'Contact' },
 ] as const
 
 export function Header() {
@@ -44,7 +44,7 @@ export function Header() {
 
           <div className="hidden items-center gap-3 lg:flex">
             <PrimaryNav onNavigate={() => setMobileNavOpen(false)} />
-            <ButtonLink to="/contact" size="sm" className="ml-1">
+            <ButtonLink to="/#contact" size="sm" className="ml-1">
               Book a Call
             </ButtonLink>
           </div>
@@ -84,7 +84,7 @@ export function Header() {
                 </NavLink>
               ))}
               <ButtonLink
-                to="/contact"
+                to="/#contact"
                 className="w-full justify-center"
                 onClick={() => setMobileNavOpen(false)}
               >

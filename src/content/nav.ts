@@ -11,9 +11,11 @@ export const primaryNav: NavItem[] = [
       { label: 'Services', to: '/#services' },
       { label: 'Experience', to: '/#work' },
       { label: 'Recommendations', to: '/#recommendations' },
+      { label: 'About', to: '/#about' },
       { label: 'Resume', to: '/#resume' },
+      { label: 'Contact', to: '/#contact' },
     ],
   },
-  { type: 'link', label: 'About', to: '/about' },
-  { type: 'link', label: 'Contact', to: '/contact' },
+  { type: 'link', label: 'About', to: '/#about' },
+  { type: 'link', label: 'Contact', to: '/#contact' },
 ] as const

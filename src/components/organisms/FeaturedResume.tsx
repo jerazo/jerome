@@ -23,7 +23,7 @@ export function FeaturedResume() {
                 PDF resume
               </p>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sand/70 sm:text-base">
-                Prefer a quick download? Grab the CV as a PDF—no embedded preview.
+                Prefer a quick download? Grab the CV as a PDF, with no embedded preview.
               </p>
             </div>
 

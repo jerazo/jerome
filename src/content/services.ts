@@ -41,7 +41,7 @@ export const services: Service[] = [
   {
     title: 'Performance & Observability',
     description:
-      'Make systems measurable, stable, and fast—so teams ship confidently and users feel the difference.',
+      'Make systems measurable, stable, and fast, so teams ship confidently and users feel the difference.',
     bullets: [
       'Tracing, metrics, and logging strategy',
       'Error monitoring and alerting',

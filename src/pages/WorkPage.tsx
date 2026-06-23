@@ -3,8 +3,8 @@ import { ContactCta } from '../components/organisms/ContactCta'
 import { ExperienceTimeline } from '../components/organisms/ExperienceTimeline'
 import { Container } from '../components/atoms/Container'
 import { SectionHeading } from '../components/molecules/SectionHeading'
-import { Tag } from '../components/atoms/Tag'
-import { profile } from '../content/profile'
+import { SkillTag } from '../components/molecules/SkillTag'
+import { getAboutSectionSkills, getSkillHighlightTier } from '../content/techStack'
 
 export function WorkPage() {
   useEffect(() => {
@@ -21,9 +21,16 @@ export function WorkPage() {
             description="Highlights from roles spanning full-stack delivery, UI engineering, and technical leadership."
           />
           <div className="mt-8 flex flex-wrap gap-2">
-            {profile.skills.slice(0, 10).map((s) => (
-              <Tag key={s}>{s}</Tag>
-            ))}
+            {getAboutSectionSkills()
+              .slice(0, 10)
+              .map((skill) => (
+                <SkillTag
+                  key={skill.name}
+                  name={skill.name}
+                  experience={skill.experience}
+                  tier={getSkillHighlightTier(skill)}
+                />
+              ))}
           </div>
         </Container>
       </section>

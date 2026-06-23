@@ -1,12 +1,10 @@
 import { Gutter } from '../atoms/Gutter'
 import { SectionHeading } from '../molecules/SectionHeading'
-import { techStack } from '../../content/techStack'
-
-function isDefined<T>(v: T | undefined | null): v is T {
-  return v != null
-}
+import { getTechStackCategoriesInDisplayOrder } from '../../content/techStack'
 
 export function FeaturedOffer() {
+  const arsenalCategories = getTechStackCategoriesInDisplayOrder()
+
   return (
     <section id="featured" className="section-surface section-bg-featured section-slant-rev section-stitch-top py-16 sm:py-20">
       <Gutter>
@@ -19,7 +17,6 @@ export function FeaturedOffer() {
               />
 
           <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:items-start">
-            {/* Arsenal (left) */}
             <div className="lg:col-span-8">
               <div className="border-t border-sand/10 pt-6">
                 <div className="flex items-end justify-between gap-4">
@@ -37,40 +34,13 @@ export function FeaturedOffer() {
                 </div>
 
                 <div className="mt-5 columns-1 sm:columns-2 sm:[column-gap:2.5rem]">
-                  {[
-                    'Cloud + DevOps',
-                    'Front end',
-                    'Delivery',
-                    'Platforms',
-                    'Languages',
-                    'AI tooling',
-                    'Back end',
-                    'Data',
-                  ]
-                    .map((label) => techStack.find((c) => c.label === label))
-                    .filter(isDefined)
-                    .map((cat) => (
+                  {arsenalCategories.map((cat) => (
                       <div key={cat.label} className="mb-6 break-inside-avoid">
                         <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/45">
                           {cat.label}
                         </p>
                         <ul className="mt-2 space-y-1.5 text-sm">
-                          {cat.items
-                            .slice(
-                              0,
-                              cat.label === 'AI tooling'
-                                ? 6
-                                : cat.label === 'Cloud + DevOps'
-                                  ? 6
-                                  : cat.label === 'Front end'
-                                    ? 6
-                                    : cat.label === 'Platforms'
-                                      ? 6
-                                      : cat.label === 'Delivery'
-                                        ? 14
-                                        : 4,
-                            )
-                            .map((s) => (
+                          {cat.items.map((s) => (
                               <li
                                 key={s.name}
                                 className="group flex items-baseline gap-3 text-sand/80"
@@ -94,7 +64,6 @@ export function FeaturedOffer() {
               </div>
             </div>
 
-            {/* What you get (right) */}
             <div className="lg:col-span-4 lg:pl-8">
               <div className="border-t border-sand/10 pt-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/55">

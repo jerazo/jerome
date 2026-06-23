@@ -19,7 +19,7 @@ function clampTwoLinesStyle() {
 export function ServicesGrid({
   eyebrow = 'Services',
   title = 'What I can build for you',
-  description = 'Modern web delivery with strong engineering discipline—designed for speed, reliability, and maintainability.',
+  description = 'Modern web delivery with strong engineering discipline, designed for speed, reliability, and maintainability.',
 }: {
   eyebrow?: string
   title?: string
@@ -118,7 +118,7 @@ export function ServicesGrid({
 
                 <div className="relative mt-auto border-t border-sand/10 pt-6">
                   <div className="flex flex-col gap-3 sm:flex-row">
-                    <ButtonLink to="/contact" className="w-full justify-center sm:w-auto">
+                    <ButtonLink to="/#contact" className="w-full justify-center sm:w-auto">
                       Start a project <ArrowRight size={16} />
                     </ButtonLink>
                     <ButtonLink

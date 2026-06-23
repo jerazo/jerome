@@ -682,7 +682,7 @@ export function ExperienceTimeline() {
 
                         <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-sand/70">
                           <span className="font-medium text-sand/75">
-                            {e.start} — {e.end}
+                            {e.start} to {e.end}
                           </span>
                           {e.location ? <span className="text-sand/45">{e.location}</span> : null}
                         </div>
@@ -1022,7 +1022,7 @@ export function ExperienceTimeline() {
 
                         <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-sand/70">
                           <span className="font-medium text-sand/75">
-                            {e.start} — {e.end}
+                            {e.start} to {e.end}
                           </span>
                           {e.location ? <span className="text-sand/45">{e.location}</span> : null}
                         </div>
@@ -1086,7 +1086,7 @@ export function ExperienceTimeline() {
 
                         <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-sand/70">
                           <span className="font-medium text-sand/75">
-                            {e.start} — {e.end}
+                            {e.start} to {e.end}
                           </span>
                           {e.location ? <span className="text-sand/45">{e.location}</span> : null}
                         </div>

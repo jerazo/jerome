@@ -28,7 +28,7 @@ export function Footer() {
           <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#work">
             Experience
           </Link>
-          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/about">
+          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#about">
             About
           </Link>
           <a

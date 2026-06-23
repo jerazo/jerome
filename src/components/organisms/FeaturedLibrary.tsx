@@ -13,7 +13,7 @@ export function FeaturedLibrary() {
             <SectionHeading
               eyebrow="Library"
               title="Search the entire capability set."
-              description="Find the strength you need—architecture, performance, delivery discipline, or a full build."
+              description="Find the strength you need: architecture, performance, delivery discipline, or a full build."
             />
           </div>
           <div className="lg:col-span-7">

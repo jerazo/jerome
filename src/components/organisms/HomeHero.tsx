@@ -270,7 +270,7 @@ export function HomeHero() {
                       Resume
                     </a>
                     <ButtonLink
-                      to="/about"
+                      to="/#about"
                       variant="secondary"
                       className="w-full justify-center"
                       onClick={() => setMobileNavOpen(false)}
@@ -278,7 +278,7 @@ export function HomeHero() {
                       About
                     </ButtonLink>
                     <ButtonLink
-                      to="/contact"
+                      to="/#contact"
                       className="w-full justify-center"
                       onClick={() => setMobileNavOpen(false)}
                     >

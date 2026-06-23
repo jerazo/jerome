@@ -11,7 +11,7 @@ export const profile = {
   name: 'Jerome Lopez Erazo',
   headline: 'Software Engineer • Tech Lead • AI Enthusiast',
   tagline:
-    'I build high-impact web products, scalable platforms, and front-end systems—fast, reliable, and production-ready.',
+    'I build high-impact web products, scalable platforms, and front-end systems: fast, reliable, and production-ready.',
   location: 'Quezon City, Philippines',
   email: 'monx.erazo@me.com',
   phone: '+63 917 621 7351',
@@ -27,23 +27,16 @@ export const profile = {
     'Seasoned full-stack engineer and technical leader with 20+ years of experience delivering and scaling web platforms.',
     'Experienced across frontend, backend, and cloud infrastructure with strong CI/CD and observability practices.',
     'Comfortable as a player-coach: setting standards, mentoring engineers, and aligning delivery with business goals.',
+    'I have built and led across fintech, esports, education, B2B, B2C, the wedding industry, SaaS, health & wellness, and analytics. These are domains where the stakes, users, and constraints could not be more different. In fintech, that has meant trust, compliance, and reliability under pressure. In esports, real-time performance and fan engagement at scale. In education, platforms that have to work for institutions and learners alike. B2B and B2C taught me when to optimize for depth versus speed-to-delight. Weddings reminded me that emotion and logistics have to coexist in the product. SaaS sharpened my instincts for retention, multi-tenancy, and shipping in cadence. Health & wellness raised the bar on accessibility, privacy, and outcomes. Analytics turned ambiguity into dashboards and decisions teams actually use.',
+    'That cross-industry range is not a résumé garnish. It is how I ramp fast, borrow proven patterns without forcing them, and bring a point of view that holds up from architecture review to launch day.',
   ],
   servicesPositioning: [
     'Full‑stack product development (React + Node) with maintainable architecture.',
     'Front-end systems: design systems, performance, accessibility, and developer experience.',
     'Technical leadership: planning, estimation, reviews, mentorship, and delivery discipline.',
-  ],
-  skills: [
-    'React',
-    'TypeScript',
-    'Node.js',
-    'API design',
-    'Distributed systems',
-    'System architecture',
-    'CI/CD',
-    'Observability',
-    'MongoDB',
-    'PostgreSQL',
+    'I measure. I do not guess. Instrumentation, benchmarks, and feedback loops come before opinions on everything I ship.',
+    'Keen on aesthetics for UI/UX, with data-driven decisions behind them so the experience works best for real users. I set the UI/UX strategy on the work I lead.',
+    'I am not always serious. I play as hard as I work hard. I enjoy conversations with my elders and learn just as much from subordinates and colleagues.',
   ],
   experience: [
     {

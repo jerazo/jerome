@@ -11,7 +11,7 @@ export const heroSlides: HeroSlide[] = [
   {
     quote:
       'Seasoned full‑stack engineer with 20+ years of experience designing, building, and leading high‑impact web platforms.',
-    source: 'CV — Professional Summary',
+    source: 'CV: Professional Summary',
     titleLines: [
       { text: 'SOFTWARE' },
       { text: 'ENGINEER', accent: false },
@@ -22,12 +22,12 @@ export const heroSlides: HeroSlide[] = [
     description:
       'From architecture to implementation, I help teams ship production-ready web products with speed, reliability, and maintainability.',
     ctaLabel: 'Start your project',
-    ctaTo: '/contact',
+    ctaTo: '/#contact',
   },
   {
     quote:
       'A player‑coach who can drive technical execution without compromising architectural integrity.',
-    source: 'Cover Letter — Principal Engineer / Tech Lead',
+    source: 'Cover Letter: Principal Engineer / Tech Lead',
     titleLines: [
       { text: 'BUILD' },
       { text: 'SYSTEMS', accent: true },
@@ -43,7 +43,7 @@ export const heroSlides: HeroSlide[] = [
   {
     quote:
       'Transformed production efficiency from one webpage per developer per week to one per day.',
-    source: 'Cover Letter — OneGlobal highlight',
+    source: 'Cover Letter: OneGlobal highlight',
     titleLines: [
       { text: 'DELIVER' },
       { text: 'FASTER', accent: true, italic: true },
@@ -52,14 +52,14 @@ export const heroSlides: HeroSlide[] = [
       { text: 'AND QUALITY', accent: true },
     ],
     description:
-      'Performance, observability, CI/CD, and review discipline—so teams can move quickly without breaking trust.',
+      'Performance, observability, CI/CD, and review discipline, so teams can move quickly without breaking trust.',
     ctaLabel: 'Explore services',
     ctaTo: '/services',
   },
   {
     quote:
       'Reduced key‑person dependencies and improved code quality through structured reviews and architectural alignment.',
-    source: 'Cover Letter — Leadership approach',
+    source: 'Cover Letter: Leadership approach',
     titleLines: [
       { text: 'RAISE' },
       { text: 'QUALITY', accent: true },
@@ -68,13 +68,13 @@ export const heroSlides: HeroSlide[] = [
       { text: 'DELIVERY', accent: true, italic: true },
     ],
     description:
-      'Standards, automation, and mentorship that help teams ship sustainably—without “hero coding”.',
+      'Standards, automation, and mentorship that help teams ship sustainably, without “hero coding”.',
     ctaLabel: 'Work together',
-    ctaTo: '/contact',
+    ctaTo: '/#contact',
   },
   {
     quote: 'Builder of both systems and teams.',
-    source: 'Cover Letter — What sets me apart',
+    source: 'Cover Letter: What sets me apart',
     titleLines: [
       { text: 'BUILDER' },
       { text: 'OF', accent: false },
@@ -83,9 +83,9 @@ export const heroSlides: HeroSlide[] = [
       { text: 'TEAMS', accent: true, italic: true },
     ],
     description:
-      'I help build technical foundations from the ground up—architecture, culture, and execution.',
+      'I help build technical foundations from the ground up: architecture, culture, and execution.',
     ctaLabel: 'See leadership',
-    ctaTo: '/about',
+    ctaTo: '/#about',
   },
 ]
 
@@ -109,7 +109,7 @@ export const featuredItems: FeaturedItem[] = [
   {
     title: 'Technical leadership & mentorship',
     subtitle: 'Planning, estimation, code review standards, hiring support.',
-    to: '/about',
+    to: '/#about',
   },
   {
     title: 'Observability & performance',

@@ -1,4 +1,4 @@
-# Jerome Erazo — Personal Website
+# Jerome Erazo: Personal Website
 
 Professional portfolio/service site built with:
 

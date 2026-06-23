@@ -10,7 +10,7 @@ export function TopItems() {
         <SectionHeading
           eyebrow="Top Items"
           title="Featured services"
-          description="A structure inspired by melrobbins.com—adapted to sell web development and technical leadership."
+          description="A structure inspired by melrobbins.com, adapted to sell web development and technical leadership."
         />
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {featuredItems.map((item) => (

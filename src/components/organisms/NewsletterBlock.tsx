@@ -21,7 +21,7 @@ export function NewsletterBlock() {
           <SectionHeading
             eyebrow="Newsletter"
             title="One practical email per week."
-            description="Short, direct, and useful—engineering patterns, delivery discipline, and product-quality thinking."
+            description="Short, direct, and useful: engineering patterns, delivery discipline, and product-quality thinking."
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
             <label className="grid gap-2">
