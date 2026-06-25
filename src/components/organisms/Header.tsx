@@ -1,24 +1,12 @@
 import { Menu, X } from 'lucide-react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Container } from '../atoms/Container'
 import { LogoMark } from '../atoms/LogoMark'
-import { cn } from '../../lib/cn'
 import { profile } from '../../content/profile'
 import { useUiStore } from '../../store/uiStore'
+import { MobileNavPanel } from './MobileNavPanel'
 import { PrimaryNav } from './PrimaryNav'
-
-const mobileNav = [
-  { to: '/', label: 'Home' },
-  { to: '/#featured', label: 'Featured' },
-  { to: '/#services', label: 'Services' },
-  { to: '/#about', label: 'About' },
-  { to: '/#portfolio', label: 'Portfolio' },
-  { to: '/#work', label: 'Experience' },
-  { to: '/#resume', label: 'Resume' },
-  { to: '/#recommendations', label: 'Recommendations' },
-  { to: '/#contact', label: 'Contact' },
-] as const
 
 export function Header() {
   const mobileNavOpen = useUiStore((s) => s.mobileNavOpen)
@@ -68,31 +56,8 @@ export function Header() {
             className="fixed inset-0 z-40 bg-black/60"
             onClick={() => setMobileNavOpen(false)}
           />
-          <div className="fixed inset-x-4 top-20 z-50 rounded-3xl border border-sand/10 bg-ink2/95 p-4 shadow-soft backdrop-blur">
-            <div className="grid gap-2">
-              {mobileNav.map((n) => (
-                <NavLink
-                  key={n.to}
-                  to={n.to}
-                  onClick={() => setMobileNavOpen(false)}
-                  className={({ isActive }) =>
-                    cn(
-                      'rounded-2xl px-4 py-3 text-sm font-semibold text-sand/80 hover:bg-white/5 focus-visible:focus-ring',
-                      isActive && 'bg-white/5 text-sand',
-                    )
-                  }
-                >
-                  {n.label}
-                </NavLink>
-              ))}
-              <ButtonLink
-                to="/#contact"
-                className="w-full justify-center"
-                onClick={() => setMobileNavOpen(false)}
-              >
-                Let’s build something
-              </ButtonLink>
-            </div>
+          <div className="fixed inset-x-4 top-20 z-50 md:inset-x-auto md:right-4 md:left-auto md:w-[min(100%,20rem)]">
+            <MobileNavPanel onNavigate={() => setMobileNavOpen(false)} />
           </div>
         </div>
       ) : null}

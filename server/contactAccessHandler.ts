@@ -8,6 +8,10 @@ import {
 import { buildClickUpCustomFields } from './clickupFieldMap.ts'
 import { clickUpErrorStatus, formatClickUpError } from './clickupErrors.ts'
 import {
+  buildContactAccessNotificationEmail,
+  buildOtpVerificationEmail,
+} from './emailTemplates.ts'
+import {
   contactAccessOtpTtlMinutes,
   createVerificationToken,
   generateOtpCode,
@@ -43,12 +47,14 @@ async function sendSesEmail(
   {
     to,
     subject,
-    body,
+    text,
+    html,
     replyTo,
   }: {
     to: string
     subject: string
-    body: string
+    text: string
+    html: string
     replyTo?: string
   },
 ) {
@@ -63,8 +69,11 @@ async function sendSesEmail(
       Source: sesFromEmail,
       Destination: { ToAddresses: [to] },
       Message: {
-        Subject: { Data: subject },
-        Body: { Text: { Data: body } },
+        Subject: { Data: subject, Charset: 'UTF-8' },
+        Body: {
+          Text: { Data: text, Charset: 'UTF-8' },
+          Html: { Data: html, Charset: 'UTF-8' },
+        },
       },
       ReplyToAddresses: replyTo ? [replyTo] : undefined,
     }),
@@ -77,18 +86,16 @@ async function sendOtpEmail(
   data: { email: string; company: string; otp: string },
   config: ContactAccessHandlerConfig,
 ) {
-  const body = [
-    `Your verification code is ${data.otp}.`,
-    '',
-    `It expires in ${contactAccessOtpTtlMinutes} minutes.`,
-    '',
-    'If you did not request Jerome’s contact details, you can ignore this email.',
-  ].join('\n')
+  const template = buildOtpVerificationEmail({
+    otp: data.otp,
+    ttlMinutes: contactAccessOtpTtlMinutes,
+  })
 
   return sendSesEmail(config, {
     to: data.email,
-    subject: 'Your verification code',
-    body,
+    subject: template.subject,
+    text: template.text,
+    html: template.html,
   })
 }
 
@@ -101,10 +108,17 @@ async function sendOwnerNotification(
     return false
   }
 
+  const template = buildContactAccessNotificationEmail({
+    email: data.email,
+    company: data.company,
+    viewedAt: new Date().toISOString(),
+  })
+
   return sendSesEmail(config, {
     to: notifyEmail,
-    subject: `Contact details viewed (${data.company})`,
-    body: buildNotificationBody(data),
+    subject: template.subject,
+    text: template.text,
+    html: template.html,
     replyTo: data.email,
   })
 }

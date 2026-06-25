@@ -118,6 +118,74 @@ export const featuredItems: FeaturedItem[] = [
   },
 ]
 
+export type FeaturedOfferPillar = {
+  title: string
+  description: string
+}
+
+export const featuredOffer = {
+  eyebrow: 'Featured',
+  title: 'Principal Engineer / Tech Lead (player‑coach)',
+  intro:
+    '20+ years building and scaling web platforms—with hands-on engineering, system design, and team leadership in one role.',
+  lead:
+    'I still open PRs, write runbooks, and sit in architecture review—shipping myself while raising the bar on CI/CD, reliability, and observability. I partner with product and design so speed does not cost maintainability.',
+  pillars: [
+    {
+      title: 'Ship in production',
+      description:
+        'React, Node, and cloud delivery from spike through the first week in production.',
+    },
+    {
+      title: 'Architecture that lasts',
+      description:
+        'Clear boundaries, sensible data models, and patterns teams can extend on their own.',
+    },
+    {
+      title: 'Standards that stick',
+      description:
+        'Reviews, estimation, and paved-road tooling that make quality the default.',
+    },
+    {
+      title: 'Lead without bottlenecks',
+      description:
+        'Mentorship and shared direction that grow ownership across the team.',
+    },
+    {
+      title: 'Measured delivery',
+      description:
+        'Instrumentation and feedback loops before opinions.',
+    },
+    {
+      title: 'AI in practice',
+      description:
+        'LLM features and automation that ship secure, testable, and measurable.',
+    },
+  ] satisfies FeaturedOfferPillar[],
+  closing:
+    'Standing up a new platform or unblocking a team that has outgrown its first architecture—I bring senior judgment, execution speed, and leadership that compounds.',
+}
+
+export const heroBannerMessages = [
+  'Ship faster. Scale smarter. Leave the tech debt behind.',
+  'Do not guess, measure it!',
+  'Build systems your team can still change six months from now.',
+  'Player-coach engineering: I ship the PR and raise the bar.',
+  'Velocity without sacrificing maintainability—or the next hire.',
+  'Strong foundations: architecture, culture, and delivery under pressure.',
+  'From spike to production—with observability baked in.',
+  'Pragmatic architecture. Measured delivery. Real outcomes.',
+  'Code that ships. Standards that stick. Teams that compound.',
+  'Turn ambitious goals into platforms teams can extend.',
+  'CI/CD people trust. Incidents people understand.',
+  'Less hero engineering. More shared ownership.',
+] as const
+
+export function pickHeroBannerMessage() {
+  const index = Math.floor(Math.random() * heroBannerMessages.length)
+  return heroBannerMessages[index]!
+}
+
 export const capabilityTopics = [
   'Architecture',
   'React',

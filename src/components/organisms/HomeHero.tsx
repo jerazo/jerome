@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { ArrowRight, Menu, X } from 'lucide-react'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Gutter } from '../atoms/Gutter'
 import { LogoMark } from '../atoms/LogoMark'
 import { HeroCarouselControls } from '../molecules/HeroCarouselControls'
 import { HeroSlideCopy } from '../molecules/HeroSlideCopy'
-import { heroSlides } from '../../content/homeSections'
+import { heroSlides, pickHeroBannerMessage } from '../../content/homeSections'
 import { profile } from '../../content/profile'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { useUiStore } from '../../store/uiStore'
+import { MobileNavPanel } from './MobileNavPanel'
 import { PrimaryNav } from './PrimaryNav'
 
 const SLIDE_INTERVAL_MS = 7000
@@ -24,6 +24,7 @@ export function HomeHero() {
   const heroParallaxRef = useRef<HTMLDivElement | null>(null)
   const [desktopObjectX, setDesktopObjectX] = useState('54%')
   const [paused, setPaused] = useState(false)
+  const [bannerMessage] = useState(pickHeroBannerMessage)
 
   const slide = useMemo(() => heroSlides[heroIndex % heroSlides.length], [heroIndex])
 
@@ -190,7 +191,7 @@ export function HomeHero() {
         <div className="h-12 bg-gold-500">
           <div className="flex h-full items-center justify-center px-4">
             <p className="text-center text-[11px] font-semibold uppercase tracking-[0.28em] text-white/90 sm:tracking-[0.34em]">
-              Ship faster. Scale smarter. Leave the tech debt behind.
+              {bannerMessage}
             </p>
           </div>
         </div>
@@ -222,38 +223,8 @@ export function HomeHero() {
 
           {mobileNavOpen ? (
             <div className="lg:hidden">
-              <Gutter className="pb-4 pt-4">
-                <div className="rounded-3xl border border-sand/10 bg-ink2/70 p-4 shadow-soft">
-                  <div className="grid gap-2 text-sm font-semibold text-sand/80">
-                    <Link className="rounded-2xl px-4 py-3 hover:bg-white/5" to="/#featured" onClick={() => setMobileNavOpen(false)}>
-                      Featured
-                    </Link>
-                    <Link className="rounded-2xl px-4 py-3 hover:bg-white/5" to="/#services" onClick={() => setMobileNavOpen(false)}>
-                      Services
-                    </Link>
-                    <Link className="rounded-2xl px-4 py-3 hover:bg-white/5" to="/#about" onClick={() => setMobileNavOpen(false)}>
-                      About
-                    </Link>
-                    <Link className="rounded-2xl px-4 py-3 hover:bg-white/5" to="/#portfolio" onClick={() => setMobileNavOpen(false)}>
-                      Portfolio
-                    </Link>
-                    <Link className="rounded-2xl px-4 py-3 hover:bg-white/5" to="/#work" onClick={() => setMobileNavOpen(false)}>
-                      Experience
-                    </Link>
-                    <Link className="rounded-2xl px-4 py-3 hover:bg-white/5" to="/#resume" onClick={() => setMobileNavOpen(false)}>
-                      Resume
-                    </Link>
-                    <Link className="rounded-2xl px-4 py-3 hover:bg-white/5" to="/#recommendations" onClick={() => setMobileNavOpen(false)}>
-                      Recommendations
-                    </Link>
-                    <ButtonLink to="/#about" variant="secondary" className="w-full justify-center" onClick={() => setMobileNavOpen(false)}>
-                      About
-                    </ButtonLink>
-                    <ButtonLink to="/#contact" className="w-full justify-center" onClick={() => setMobileNavOpen(false)}>
-                      Contact
-                    </ButtonLink>
-                  </div>
-                </div>
+              <Gutter className="pb-4 pt-2">
+                <MobileNavPanel onNavigate={() => setMobileNavOpen(false)} />
               </Gutter>
             </div>
           ) : null}

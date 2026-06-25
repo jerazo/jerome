@@ -129,6 +129,8 @@ export class JeromeStack extends cdk.Stack {
       ],
     })
 
+    contactHandler.addEnvironment('SITE_URL', `https://${distribution.distributionDomainName}`)
+
     new cdk.CfnOutput(this, 'SiteBucketName', {
       value: siteBucket.bucketName,
       description: 'S3 bucket for the static site build',

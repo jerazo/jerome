@@ -1,8 +1,8 @@
 import { ChevronDown } from 'lucide-react'
-import { useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { cn } from '../../lib/cn'
+import { NavHashLink } from '../atoms/NavHashLink'
 
 export function NavDropdown({
   label,
@@ -19,18 +19,42 @@ export function NavDropdown({
   const isHome = location.pathname === '/'
   const isActive =
     isHome &&
-    items.some((it) => {
-      const hash = it.to.startsWith('/#') ? it.to.slice(1) : ''
-      return hash && hash === activeHash
+    items.some((item) => {
+      const hash = item.to.startsWith('/#') ? item.to.slice(1) : ''
+      return hash.length > 0 && hash === activeHash
     })
+
+  useEffect(() => {
+    const node = detailsRef.current
+    if (!node) return
+
+    const close = () => node.removeAttribute('open')
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!node.open) return
+      const target = event.target
+      if (target instanceof Node && !node.contains(target)) close()
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') close()
+    }
+
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [])
 
   return (
     <details ref={detailsRef} className="group relative">
       <summary
         className={cn(
-          'list-none rounded-full px-2 py-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-sand/70 transition xl:px-3 xl:text-[11px] xl:tracking-[0.26em]',
+          'list-none rounded-full px-2.5 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-sand/70 transition xl:px-3 xl:tracking-[0.24em]',
           'hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
-          'cursor-pointer select-none',
+          'cursor-pointer select-none [&::-webkit-details-marker]:hidden',
           isActive && 'bg-white/5 text-sand',
         )}
       >
@@ -42,19 +66,24 @@ export function NavDropdown({
           />
         </span>
       </summary>
-      <div className="absolute right-0 top-[calc(100%+10px)] z-50 w-[280px] rounded-3xl border border-sand/10 bg-ink2/95 p-2 shadow-soft backdrop-blur">
-        {items.map((it) => (
-          <Link
-            key={it.label}
-            to={it.to}
+      <div className="absolute left-1/2 top-[calc(100%+8px)] z-50 w-48 -translate-x-1/2 rounded-2xl border border-sand/10 bg-ink2/95 p-1.5 shadow-soft backdrop-blur">
+        {items.map((item) => (
+          <NavHashLink
+            key={item.to}
+            to={item.to}
             onClick={() => {
               detailsRef.current?.removeAttribute('open')
               onNavigate?.()
             }}
-            className="block rounded-2xl px-4 py-3 text-sm font-semibold text-sand/80 hover:bg-white/5 hover:text-sand focus-visible:focus-ring"
+            className={(active) =>
+              cn(
+                'block rounded-xl px-3 py-2 text-sm font-medium text-sand/75 transition hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
+                active && 'bg-white/5 text-sand',
+              )
+            }
           >
-            {it.label}
-          </Link>
+            {item.label}
+          </NavHashLink>
         ))}
       </div>
     </details>
