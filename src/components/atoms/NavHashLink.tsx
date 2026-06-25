@@ -2,12 +2,6 @@ import type { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { cn } from '../../lib/cn'
 
-export function useNavHashActive(to: string) {
-  const location = useLocation()
-  const hash = to.startsWith('/#') ? to.slice(1) : ''
-  return location.pathname === '/' && hash.length > 0 && location.hash === hash
-}
-
 export function NavHashLink({
   to,
   className,
@@ -21,7 +15,9 @@ export function NavHashLink({
   children: ReactNode
   onClick?: () => void
 }) {
-  const isActive = useNavHashActive(to)
+  const location = useLocation()
+  const hash = to.startsWith('/#') ? to.slice(1) : ''
+  const isActive = location.pathname === '/' && hash.length > 0 && location.hash === hash
   const resolvedClassName =
     typeof className === 'function' ? className(isActive) : cn(className, isActive && activeClassName)
 
