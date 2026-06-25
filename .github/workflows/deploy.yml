@@ -155,6 +155,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Verify deploy permissions
+        working-directory: infrastructure
         env:
           AWS_AUTH_METHOD: ${{ vars.AWS_AUTH_METHOD || 'oidc' }}
         run: bash scripts/verify-deploy-permissions.sh
