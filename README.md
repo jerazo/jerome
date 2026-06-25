@@ -162,6 +162,7 @@ The deploy IAM principal still needs permission to create **S3**, **IAM roles**,
 | `SITE_BUCKET_NAME` | Optional override if CloudFormation lookup is unavailable |
 | `CLOUDFRONT_DISTRIBUTION_ID` | Optional override for site deploy |
 | `SITE_URL` | Optional public site URL for deploy logs |
+| `VITE_MIXPANEL_TOKEN` | Mixpanel project token for client analytics (omit to disable) |
 
 **OIDC setup**
 

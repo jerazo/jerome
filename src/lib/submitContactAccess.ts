@@ -1,3 +1,5 @@
+import { trackEvent } from './analytics'
+
 export type ContactAccessRequestPayload = {
   company: string
   email: string
@@ -49,14 +51,17 @@ export async function requestContactAccessOtp(
   const result = await postContactAccess('/request', values)
 
   if (!result.ok) {
+    trackEvent('Contact Access OTP Failed', { step: 'request' })
     return result
   }
 
   const verificationToken = result.body.verificationToken
   if (typeof verificationToken !== 'string' || !verificationToken) {
+    trackEvent('Contact Access OTP Failed', { step: 'request', reason: 'missing_token' })
     return { ok: false, error: 'Verification could not be started. Please try again.' }
   }
 
+  trackEvent('Contact Access OTP Requested')
   return { ok: true, verificationToken }
 }
 
@@ -64,5 +69,12 @@ export async function verifyContactAccessOtp(
   values: ContactAccessVerifyPayload,
 ): Promise<ContactAccessVerifyResult> {
   const result = await postContactAccess('/verify', values)
-  return result.ok ? { ok: true } : result
+
+  if (result.ok) {
+    trackEvent('Contact Access Verified')
+    return { ok: true }
+  }
+
+  trackEvent('Contact Access OTP Failed', { step: 'verify' })
+  return result
 }

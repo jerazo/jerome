@@ -1,4 +1,5 @@
 import type { ContactAccessField } from '../../lib/contactAccessSchema'
+import { trackEvent } from '../../lib/analytics'
 import { maskEmail, maskLocation, maskPhone } from '../../lib/maskContact'
 import { profile } from '../../content/profile'
 import { useUiStore } from '../../store/uiStore'
@@ -56,7 +57,10 @@ export function MaskedContactValue({
     <button
       type="button"
       className={`${className} underline decoration-dotted underline-offset-4`}
-      onClick={() => setContactAccessModalOpen(true)}
+      onClick={() => {
+        trackEvent('Contact Access Modal Opened', { field })
+        setContactAccessModalOpen(true)
+      }}
     >
       {masked}
     </button>

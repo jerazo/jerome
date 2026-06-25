@@ -254,6 +254,8 @@ jobs:
           name: cdk-outputs
 
       - name: Build site
+        env:
+          VITE_MIXPANEL_TOKEN: ${{ vars.VITE_MIXPANEL_TOKEN }}
         run: npm run build
 
       - name: Show build version

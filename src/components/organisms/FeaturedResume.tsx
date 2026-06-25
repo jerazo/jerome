@@ -1,4 +1,5 @@
 import { Download } from 'lucide-react'
+import { trackEvent } from '../../lib/analytics'
 import { ButtonAnchor } from '../atoms/ButtonAnchor'
 import { Gutter } from '../atoms/Gutter'
 import { SectionHeading } from '../molecules/SectionHeading'
@@ -31,6 +32,7 @@ export function FeaturedResume() {
               href="/jerome-erazo-cv.pdf"
               download="Jerome-Lopez-Erazo-CV.pdf"
               className="rounded-2xl border-gold-400/70 bg-gradient-to-b from-gold-400 to-gold-600 px-7 py-4 text-[12px] uppercase tracking-[0.28em] text-white shadow-gold-glow hover:from-gold-300 hover:to-gold-500"
+              onClick={() => trackEvent('Resume Downloaded')}
             >
               Download CV <Download size={16} />
             </ButtonAnchor>

@@ -1,5 +1,7 @@
 import type { ContactFormValues } from '../content/contactForm'
 
+import { trackEvent } from './analytics'
+
 export type ContactSubmitPayload = Pick<
   ContactFormValues,
   'name' | 'email' | 'phone' | 'phoneCountry' | 'websiteUrl' | 'company' | 'message' | 'honeypot'
@@ -22,11 +24,14 @@ export async function submitContactForm(values: ContactSubmitPayload): Promise<C
     const payload = (await response.json().catch(() => null)) as { error?: string } | null
 
     if (!response.ok) {
+      trackEvent('Contact Form Failed', { status: response.status })
       return { ok: false, error: payload?.error ?? 'Unable to send your message right now.' }
     }
 
+    trackEvent('Contact Form Submitted')
     return { ok: true }
   } catch {
+    trackEvent('Contact Form Failed', { reason: 'network' })
     return { ok: false, error: 'Unable to reach the contact service. Try email instead.' }
   }
 }
