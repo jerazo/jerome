@@ -5,6 +5,7 @@ import { ExperienceTimeline } from '../components/organisms/ExperienceTimeline'
 import { FeaturedOffer } from '../components/organisms/FeaturedOffer'
 import { FeaturedResume } from '../components/organisms/FeaturedResume'
 import { HomeHero } from '../components/organisms/HomeHero'
+import { PortfolioSection } from '../components/organisms/PortfolioSection'
 import { RecommendationsSection } from '../components/organisms/RecommendationsSection'
 import { ServicesGrid } from '../components/organisms/ServicesGrid'
 
@@ -18,10 +19,11 @@ export function HomePage() {
       <HomeHero />
       <FeaturedOffer />
       <ServicesGrid />
-      <ExperienceTimeline />
-      <RecommendationsSection />
       <AboutTeaser />
+      <PortfolioSection />
+      <ExperienceTimeline />
       <FeaturedResume />
+      <RecommendationsSection />
       <ContactCta />
     </>
   )

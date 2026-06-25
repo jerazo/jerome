@@ -11,10 +11,11 @@ const mobileNav = [
   { to: '/', label: 'Home' },
   { to: '/#featured', label: 'Featured' },
   { to: '/#services', label: 'Services' },
-  { to: '/#work', label: 'Experience' },
-  { to: '/#recommendations', label: 'Recommendations' },
-  { to: '/#resume', label: 'Resume' },
   { to: '/#about', label: 'About' },
+  { to: '/#portfolio', label: 'Portfolio' },
+  { to: '/#work', label: 'Experience' },
+  { to: '/#resume', label: 'Resume' },
+  { to: '/#recommendations', label: 'Recommendations' },
   { to: '/#contact', label: 'Contact' },
 ] as const
 

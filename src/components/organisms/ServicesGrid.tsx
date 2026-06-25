@@ -117,18 +117,9 @@ export function ServicesGrid({
                 </div>
 
                 <div className="relative mt-auto border-t border-sand/10 pt-6">
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <ButtonLink to="/#contact" className="w-full justify-center sm:w-auto">
-                      Start a project <ArrowRight size={16} />
-                    </ButtonLink>
-                    <ButtonLink
-                      to="/services"
-                      variant="secondary"
-                      className="w-full justify-center sm:w-auto"
-                    >
-                      View services page
-                    </ButtonLink>
-                  </div>
+                  <ButtonLink to="/#contact" className="w-full justify-center sm:w-auto">
+                    Start a project <ArrowRight size={16} />
+                  </ButtonLink>
                 </div>
               </article>
             </div>

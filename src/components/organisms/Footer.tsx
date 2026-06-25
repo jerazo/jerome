@@ -25,11 +25,14 @@ export function Footer() {
           <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#services">
             Services
           </Link>
-          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#work">
-            Experience
-          </Link>
           <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#about">
             About
+          </Link>
+          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#portfolio">
+            Portfolio
+          </Link>
+          <Link className="text-sm font-semibold text-sand/70 hover:text-sand" to="/#work">
+            Experience
           </Link>
           <a
             className="text-sm font-semibold text-sand/70 hover:text-sand"

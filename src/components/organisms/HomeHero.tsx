@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Menu, X } from 'lucide-react'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Gutter } from '../atoms/Gutter'
@@ -234,41 +235,55 @@ export function HomeHero() {
               <Gutter className="pb-4 pt-4">
                 <div className="rounded-3xl border border-sand/10 bg-ink2/70 p-4 shadow-soft">
                   <div className="grid gap-2 text-sm font-semibold text-sand/80">
-                    <a
+                    <Link
                       className="rounded-2xl px-4 py-3 hover:bg-white/5"
-                      href="/#featured"
+                      to="/#featured"
                       onClick={() => setMobileNavOpen(false)}
                     >
                       Featured
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="rounded-2xl px-4 py-3 hover:bg-white/5"
-                      href="/#services"
+                      to="/#services"
                       onClick={() => setMobileNavOpen(false)}
                     >
                       Services
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="rounded-2xl px-4 py-3 hover:bg-white/5"
-                      href="/#work"
+                      to="/#about"
+                      onClick={() => setMobileNavOpen(false)}
+                    >
+                      About
+                    </Link>
+                    <Link
+                      className="rounded-2xl px-4 py-3 hover:bg-white/5"
+                      to="/#portfolio"
+                      onClick={() => setMobileNavOpen(false)}
+                    >
+                      Portfolio
+                    </Link>
+                    <Link
+                      className="rounded-2xl px-4 py-3 hover:bg-white/5"
+                      to="/#work"
                       onClick={() => setMobileNavOpen(false)}
                     >
                       Experience
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="rounded-2xl px-4 py-3 hover:bg-white/5"
-                      href="/#recommendations"
-                      onClick={() => setMobileNavOpen(false)}
-                    >
-                      Recommendations
-                    </a>
-                    <a
-                      className="rounded-2xl px-4 py-3 hover:bg-white/5"
-                      href="/#resume"
+                      to="/#resume"
                       onClick={() => setMobileNavOpen(false)}
                     >
                       Resume
-                    </a>
+                    </Link>
+                    <Link
+                      className="rounded-2xl px-4 py-3 hover:bg-white/5"
+                      to="/#recommendations"
+                      onClick={() => setMobileNavOpen(false)}
+                    >
+                      Recommendations
+                    </Link>
                     <ButtonLink
                       to="/#about"
                       variant="secondary"
@@ -323,10 +338,7 @@ export function HomeHero() {
                 <div className="flex items-start gap-3">
                   <span className="mt-1 text-3xl text-gold-300">“</span>
                   <div className="min-w-0">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/55">
-                      {slide.source}
-                    </p>
-                    <p className="mt-2 text-sm leading-relaxed text-sand/70">{slide.quote}</p>
+                    <p className="text-sm leading-relaxed text-sand/70">{slide.quote}</p>
                   </div>
                 </div>
 
@@ -392,10 +404,7 @@ export function HomeHero() {
             <div className="flex items-start gap-4">
               <span className="mt-3 text-4xl text-gold-300">“</span>
               <div ref={desktopCopyRef} className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-sand/55">
-                  {slide.source}
-                </p>
-                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sand/70 sm:text-base">
+                <p className="max-w-2xl text-sm leading-relaxed text-sand/70 sm:text-base">
                   {slide.quote}
                 </p>
 

@@ -9,10 +9,11 @@ export const primaryNav: NavItem[] = [
     items: [
       { label: 'Featured', to: '/#featured' },
       { label: 'Services', to: '/#services' },
-      { label: 'Experience', to: '/#work' },
-      { label: 'Recommendations', to: '/#recommendations' },
       { label: 'About', to: '/#about' },
+      { label: 'Portfolio', to: '/#portfolio' },
+      { label: 'Experience', to: '/#work' },
       { label: 'Resume', to: '/#resume' },
+      { label: 'Recommendations', to: '/#recommendations' },
       { label: 'Contact', to: '/#contact' },
     ],
   },

@@ -1,0 +1,125 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_infra:
+        description: Deploy CDK infrastructure
+        type: boolean
+        default: false
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+  NODE_VERSION: '20'
+  AWS_STACK_NAME: JeromeStack
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      infra: ${{ steps.changes.outputs.infra }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect infrastructure changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            infra:
+              - 'infrastructure/**'
+              - 'lambda/**'
+              - 'server/**'
+              - 'package.json'
+              - 'package-lock.json'
+
+  deploy-infra:
+    name: Deploy infrastructure
+    needs: changes
+    if: |
+      needs.changes.outputs.infra == 'true' ||
+      (github.event_name == 'workflow_dispatch' && inputs.deploy_infra)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm ci --prefix infrastructure
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy CDK stack
+        working-directory: infrastructure
+        env:
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+          CLICKUP_LIST_ID: ${{ secrets.CLICKUP_LIST_ID }}
+        run: npx cdk deploy --require-approval never --outputs-file ../cdk-outputs.json
+
+      - name: Upload CDK outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: cdk-outputs
+          path: cdk-outputs.json
+          retention-days: 7
+
+  deploy-site:
+    name: Deploy site
+    needs: [changes, deploy-infra]
+    if: |
+      always() &&
+      (needs.deploy-infra.result == 'success' || needs.deploy-infra.result == 'skipped')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Download CDK outputs
+        if: needs.deploy-infra.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: cdk-outputs
+
+      - name: Build site
+        run: npm run build
+
+      - name: Sync to S3 and invalidate CloudFront
+        run: node scripts/deploy-site.mjs --skip-build

@@ -1,0 +1,26 @@
+{
+  "name": "jerome-infrastructure",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "cdk": "cdk",
+    "deploy": "cdk deploy --outputs-file ../cdk-outputs.json",
+    "deploy:oidc": "cdk deploy JeromeGithubOidcStack --app 'npx tsx bin/github-oidc.ts'",
+    "diff": "cdk diff",
+    "synth": "cdk synth"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.230.0",
+    "constructs": "^10.4.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.159",
+    "@types/node": "^24.12.2",
+    "aws-cdk": "^2.1033.0",
+    "esbuild": "^0.27.3",
+    "tsx": "^4.21.0",
+    "typescript": "~6.0.2"
+  }
+}
