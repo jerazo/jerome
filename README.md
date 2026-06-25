@@ -117,12 +117,18 @@ npm run deploy:oidc --prefix infrastructure
 
 Copy the `GitHubActionsRoleArn` output.
 
-3. Deploy the site stack once locally (or trigger the workflow with **Deploy CDK infrastructure**):
+3. Deploy the site stack once locally (or re-run the Deploy workflow — it auto-deploys infra when `JeromeStack` is missing):
 
 ```bash
 export CLICKUP_API_TOKEN=pk_...
 export CLICKUP_LIST_ID=...
 npm run deploy:infra
+```
+
+If CDK has never been bootstrapped in the account/region:
+
+```bash
+cd infrastructure && npx cdk bootstrap
 ```
 
 ### GitHub environment configuration
@@ -148,6 +154,9 @@ Do **not** configure both OIDC and access keys at once. The workflow uses one me
 | `NODE_VERSION` | e.g. `24` |
 | `CLICKUP_API_TOKEN` | ClickUp personal API token (prefer moving to secrets) |
 | `CLICKUP_LIST_ID` | ClickUp list ID for contact form tasks |
+| `SITE_BUCKET_NAME` | Optional override if CloudFormation lookup is unavailable |
+| `CLOUDFRONT_DISTRIBUTION_ID` | Optional override for site deploy |
+| `SITE_URL` | Optional public site URL for deploy logs |
 
 **OIDC setup**
 

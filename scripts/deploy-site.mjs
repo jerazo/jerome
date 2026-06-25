@@ -9,8 +9,15 @@ const skipBuild = process.argv.includes('--skip-build')
 const outputs = resolveStackOutputs()
 
 if (!outputs) {
+  const stackName = process.env.AWS_STACK_NAME ?? 'JeromeStack'
+  const region = process.env.AWS_REGION ?? process.env.AWS_DEFAULT_REGION ?? 'us-east-1'
   console.error(
-    'Could not resolve deployment targets. Provide cdk-outputs.json, SITE_BUCKET_NAME + CLOUDFRONT_DISTRIBUTION_ID, or a deployed JeromeStack in CloudFormation.',
+    [
+      'Could not resolve deployment targets.',
+      `CloudFormation stack "${stackName}" was not found in ${region}.`,
+      'Run the Deploy workflow with "Deploy CDK infrastructure" checked, or push infrastructure changes,',
+      'or set SITE_BUCKET_NAME and CLOUDFRONT_DISTRIBUTION_ID in the jerome environment.',
+    ].join('\n'),
   )
   process.exit(1)
 }

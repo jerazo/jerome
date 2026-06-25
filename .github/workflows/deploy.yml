@@ -42,12 +42,66 @@ jobs:
               - 'package.json'
               - 'package-lock.json'
 
+  check-infra:
+    name: Check infrastructure
+    needs: changes
+    runs-on: ubuntu-latest
+    environment: jerome
+    outputs:
+      stack_exists: ${{ steps.check.outputs.stack_exists }}
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+    steps:
+      - name: Verify AWS credentials
+        run: |
+          AUTH_METHOD="${{ vars.AWS_AUTH_METHOD || 'oidc' }}"
+          if [ "$AUTH_METHOD" = "access-keys" ]; then
+            if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ] || [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then
+              echo "::error::AWS_AUTH_METHOD=access-keys requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in the jerome environment."
+              exit 1
+            fi
+          else
+            if [ -z "${{ secrets.AWS_ROLE_ARN }}" ]; then
+              echo "::error::OIDC auth requires AWS_ROLE_ARN in the jerome environment. Set AWS_AUTH_METHOD=access-keys to use IAM access keys instead."
+              exit 1
+            fi
+          fi
+
+      - name: Configure AWS credentials (OIDC)
+        if: ${{ vars.AWS_AUTH_METHOD != 'access-keys' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure AWS credentials (access keys)
+        if: ${{ vars.AWS_AUTH_METHOD == 'access-keys' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Check CloudFormation stack
+        id: check
+        run: |
+          if aws cloudformation describe-stacks \
+            --stack-name "${{ env.AWS_STACK_NAME }}" \
+            --region "${{ env.AWS_REGION }}" >/dev/null 2>&1; then
+            echo "stack_exists=true" >> "$GITHUB_OUTPUT"
+            echo "JeromeStack already exists in ${{ env.AWS_REGION }}."
+          else
+            echo "stack_exists=false" >> "$GITHUB_OUTPUT"
+            echo "JeromeStack not found in ${{ env.AWS_REGION }} — infrastructure deploy will run."
+          fi
+
   deploy-infra:
     name: Deploy infrastructure
-    needs: changes
+    needs: [changes, check-infra]
     if: |
       needs.changes.outputs.infra == 'true' ||
-      (github.event_name == 'workflow_dispatch' && inputs.deploy_infra)
+      (github.event_name == 'workflow_dispatch' && inputs.deploy_infra) ||
+      needs.check-infra.outputs.stack_exists == 'false'
     runs-on: ubuntu-latest
     environment: jerome
     env:
@@ -114,15 +168,19 @@ jobs:
 
   deploy-site:
     name: Deploy site
-    needs: [changes, deploy-infra]
+    needs: [changes, check-infra, deploy-infra]
     if: |
       always() &&
+      needs.check-infra.result == 'success' &&
       (needs.deploy-infra.result == 'success' || needs.deploy-infra.result == 'skipped')
     runs-on: ubuntu-latest
     environment: jerome
     env:
       AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
       NODE_VERSION: ${{ vars.NODE_VERSION || '24' }}
+      SITE_BUCKET_NAME: ${{ vars.SITE_BUCKET_NAME }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+      SITE_URL: ${{ vars.SITE_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5

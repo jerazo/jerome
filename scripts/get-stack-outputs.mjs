@@ -5,6 +5,26 @@ import { fileURLToPath } from 'node:url'
 
 const rootDir = path.join(fileURLToPath(import.meta.url), '..')
 
+function awsCommandArgs(stackName, outputKey) {
+  const args = [
+    'cloudformation',
+    'describe-stacks',
+    '--stack-name',
+    stackName,
+    '--query',
+    `Stacks[0].Outputs[?OutputKey=='${outputKey}'].OutputValue | [0]`,
+    '--output',
+    'text',
+  ]
+
+  const region = process.env.AWS_REGION?.trim() || process.env.AWS_DEFAULT_REGION?.trim()
+  if (region) {
+    args.push('--region', region)
+  }
+
+  return args
+}
+
 export function readCdkOutputs(outputsPath = path.join(rootDir, 'cdk-outputs.json')) {
   if (!existsSync(outputsPath)) {
     return null
@@ -40,20 +60,7 @@ export function readEnvOutputs() {
 }
 
 function readCloudFormationOutput(stackName, outputKey) {
-  return execFileSync(
-    'aws',
-    [
-      'cloudformation',
-      'describe-stacks',
-      '--stack-name',
-      stackName,
-      '--query',
-      `Stacks[0].Outputs[?OutputKey=='${outputKey}'].OutputValue | [0]`,
-      '--output',
-      'text',
-    ],
-    { encoding: 'utf8' },
-  ).trim()
+  return execFileSync('aws', awsCommandArgs(stackName, outputKey), { encoding: 'utf8' }).trim()
 }
 
 export function readCloudFormationOutputs(stackName = process.env.AWS_STACK_NAME ?? 'JeromeStack') {
@@ -73,6 +80,20 @@ export function readCloudFormationOutputs(stackName = process.env.AWS_STACK_NAME
     }
   } catch {
     return null
+  }
+}
+
+export function stackExists(stackName = process.env.AWS_STACK_NAME ?? 'JeromeStack') {
+  try {
+    const args = ['cloudformation', 'describe-stacks', '--stack-name', stackName, '--output', 'text']
+    const region = process.env.AWS_REGION?.trim() || process.env.AWS_DEFAULT_REGION?.trim()
+    if (region) {
+      args.push('--region', region)
+    }
+    execFileSync('aws', args, { stdio: 'ignore' })
+    return true
+  } catch {
+    return false
   }
 }
 
