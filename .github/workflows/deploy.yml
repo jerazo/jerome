@@ -11,8 +11,6 @@ on:
         default: false
 
 env:
-  AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
-  NODE_VERSION: '24'
   AWS_STACK_NAME: JeromeStack
 
 permissions:
@@ -51,6 +49,10 @@ jobs:
       needs.changes.outputs.infra == 'true' ||
       (github.event_name == 'workflow_dispatch' && inputs.deploy_infra)
     runs-on: ubuntu-latest
+    environment: jerome
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+      NODE_VERSION: ${{ vars.NODE_VERSION || '24' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -66,10 +68,10 @@ jobs:
           npm ci
           npm ci --prefix infrastructure
 
-      - name: Verify AWS secrets
+      - name: Verify AWS credentials
         run: |
           if [ -z "${{ secrets.AWS_ROLE_ARN }}" ] && [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
-            echo "::error::Missing AWS credentials. Add repository secret AWS_ROLE_ARN (recommended after running npm run deploy:oidc) or AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY."
+            echo "::error::Missing AWS credentials in the jerome environment. Add AWS_ROLE_ARN or AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY."
             exit 1
           fi
 
@@ -84,8 +86,8 @@ jobs:
       - name: Deploy CDK stack
         working-directory: infrastructure
         env:
-          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
-          CLICKUP_LIST_ID: ${{ secrets.CLICKUP_LIST_ID }}
+          CLICKUP_API_TOKEN: ${{ vars.CLICKUP_API_TOKEN }}
+          CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
         run: npx cdk deploy --require-approval never --outputs-file ../cdk-outputs.json
 
       - name: Upload CDK outputs
@@ -102,6 +104,10 @@ jobs:
       always() &&
       (needs.deploy-infra.result == 'success' || needs.deploy-infra.result == 'skipped')
     runs-on: ubuntu-latest
+    environment: jerome
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+      NODE_VERSION: ${{ vars.NODE_VERSION || '24' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -115,10 +121,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify AWS secrets
+      - name: Verify AWS credentials
         run: |
           if [ -z "${{ secrets.AWS_ROLE_ARN }}" ] && [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
-            echo "::error::Missing AWS credentials. Add repository secret AWS_ROLE_ARN (recommended after running npm run deploy:oidc) or AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY."
+            echo "::error::Missing AWS credentials in the jerome environment. Add AWS_ROLE_ARN or AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY."
             exit 1
           fi
 

@@ -6,6 +6,7 @@ export type GithubOidcStackProps = cdk.StackProps & {
   githubOrg: string
   githubRepo: string
   githubBranch?: string
+  githubEnvironment?: string
 }
 
 export class GithubOidcStack extends cdk.Stack {
@@ -13,7 +14,11 @@ export class GithubOidcStack extends cdk.Stack {
     super(scope, id, props)
 
     const branch = props.githubBranch ?? 'main'
-    const repositorySubject = `repo:${props.githubOrg}/${props.githubRepo}:ref:refs/heads/${branch}`
+    const environment = props.githubEnvironment ?? 'jerome'
+    const repositorySubjects = [
+      `repo:${props.githubOrg}/${props.githubRepo}:ref:refs/heads/${branch}`,
+      `repo:${props.githubOrg}/${props.githubRepo}:environment:${environment}`,
+    ]
 
     const provider = new iam.OpenIdConnectProvider(this, 'GitHubOidcProvider', {
       url: 'https://token.actions.githubusercontent.com',
@@ -29,7 +34,7 @@ export class GithubOidcStack extends cdk.Stack {
           'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com',
         },
         StringLike: {
-          'token.actions.githubusercontent.com:sub': repositorySubject,
+          'token.actions.githubusercontent.com:sub': repositorySubjects,
         },
       }),
     })

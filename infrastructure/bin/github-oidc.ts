@@ -12,4 +12,5 @@ new GithubOidcStack(app, 'JeromeGithubOidcStack', {
   githubOrg: 'jerazo',
   githubRepo: 'jerome',
   githubBranch: 'main',
+  githubEnvironment: 'jerome',
 })

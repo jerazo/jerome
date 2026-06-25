@@ -125,28 +125,30 @@ export CLICKUP_LIST_ID=...
 npm run deploy:infra
 ```
 
-### GitHub repository configuration
+### GitHub environment configuration
 
-Add these **repository secrets**:
+Deploy jobs use the **`jerome`** GitHub Environment. Configure it under **Settings → Environments → jerome**.
+
+**Environment secrets**
 
 | Secret | Value |
 |---|---|
 | `AWS_ROLE_ARN` | `GitHubActionsRoleArn` from the OIDC stack (recommended) |
-| `CLICKUP_API_TOKEN` | ClickUp personal API token |
-| `CLICKUP_LIST_ID` | ClickUp list ID for contact form tasks |
+| `AWS_ACCESS_KEY_ID` | Optional IAM access key fallback |
+| `AWS_SECRET_ACCESS_KEY` | Optional IAM secret key fallback |
 
-Alternatively, instead of `AWS_ROLE_ARN`, you can use long-lived keys:
+Use either `AWS_ROLE_ARN` (OIDC) or the access key pair, not both.
 
-| Secret | Value |
-|---|---|
-| `AWS_ACCESS_KEY_ID` | IAM user access key with deploy permissions |
-| `AWS_SECRET_ACCESS_KEY` | Matching secret key |
-
-Optional **repository variable**:
+**Environment variables**
 
 | Variable | Value |
 |---|---|
-| `AWS_REGION` | AWS region (defaults to `us-east-1`) |
+| `AWS_REGION` | e.g. `us-east-1` |
+| `NODE_VERSION` | e.g. `24` |
+| `CLICKUP_API_TOKEN` | ClickUp personal API token |
+| `CLICKUP_LIST_ID` | ClickUp list ID for contact form tasks |
+
+If you use OIDC with the `jerome` environment, redeploy the OIDC stack after pulling the latest changes so the IAM role trusts `repo:jerazo/jerome:environment:jerome`.
 
 After the first successful deploy, every push to `main` updates the live site automatically.
 
