@@ -101,12 +101,18 @@ Pull requests and pushes also run `.github/workflows/ci.yml` (lint, build, CDK s
 
 ### One-time AWS setup
 
-1. Bootstrap CDK in your account/region:
+1. Bootstrap CDK in your account/region (once per account/region; the Deploy workflow runs this automatically):
 
 ```bash
 cd infrastructure
 npm install
-npx cdk bootstrap
+npx cdk bootstrap aws://YOUR_ACCOUNT_ID/us-east-1
+```
+
+Or from the repo root after AWS CLI credentials are configured:
+
+```bash
+npm run bootstrap:infra
 ```
 
 2. Create the GitHub OIDC deploy role (once per account):
@@ -125,11 +131,7 @@ export CLICKUP_LIST_ID=...
 npm run deploy:infra
 ```
 
-If CDK has never been bootstrapped in the account/region:
-
-```bash
-cd infrastructure && npx cdk bootstrap
-```
+The Deploy workflow also bootstraps CDK automatically before the first `JeromeStack` deploy.
 
 ### GitHub environment configuration
 

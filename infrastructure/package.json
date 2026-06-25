@@ -7,6 +7,7 @@
     "build": "tsc --noEmit",
     "cdk": "cdk",
     "deploy": "cdk deploy --outputs-file ../cdk-outputs.json",
+    "bootstrap": "cdk bootstrap",
     "deploy:oidc": "cdk deploy JeromeGithubOidcStack --app 'npx tsx bin/github-oidc.ts'",
     "diff": "cdk diff",
     "synth": "cdk synth"

@@ -152,6 +152,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Bootstrap CDK
+        working-directory: infrastructure
+        run: |
+          ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+          npx cdk bootstrap "aws://${ACCOUNT_ID}/${{ env.AWS_REGION }}"
+
       - name: Deploy CDK stack
         working-directory: infrastructure
         env:
