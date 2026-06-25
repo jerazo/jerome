@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { ExperienceRoleCard } from '../molecules/ExperienceRoleCard'
 import { Gutter } from '../atoms/Gutter'
 import { SectionHeading } from '../molecules/SectionHeading'
 import { profile } from '../../content/profile'
@@ -23,21 +24,6 @@ function monthStartMsFromKey(key: string) {
   const month = Number(m)
   // Use UTC to ensure consistent month boundaries regardless of locale.
   return Date.UTC(year, month, 1)
-}
-
-function splitRole(role: string) {
-  const trimmed = role.trim()
-  const paren = /^(.*)\(([^)]+)\)\s*$/.exec(trimmed)
-  if (paren) {
-    const title = paren[1]?.trim().replace(/\s+$/, '')
-    const subtitle = paren[2]?.trim()
-    if (title && subtitle) return { title, subtitle }
-  }
-
-  const dash = trimmed.split(' - ')
-  if (dash.length === 2 && dash[0] && dash[1]) return { title: dash[0].trim(), subtitle: dash[1].trim() }
-
-  return { title: trimmed, subtitle: null as string | null }
 }
 
 function monthIndexFromLabel(label: string) {
@@ -87,25 +73,6 @@ function parseExperienceDate(value: string, kind: 'start' | 'end') {
   return Number.isNaN(parsed) ? NaN : parsed
 }
 
-function formatDuration(startMs: number, endMs: number) {
-  if (!Number.isFinite(startMs)) return null
-  if (!Number.isFinite(endMs)) return null
-  const start = new Date(startMs)
-  const end = new Date(endMs)
-  if (end < start) return null
-
-  let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth())
-  if (months < 0) months = 0
-  const years = Math.floor(months / 12)
-  const remMonths = months % 12
-
-  const parts: string[] = []
-  if (years) parts.push(`${years}y`)
-  if (remMonths) parts.push(`${remMonths}m`)
-  if (!parts.length) parts.push('0m')
-  return parts.join(' ')
-}
-
 function yearLabelForExperience(start: string, startMs: number) {
   const explicitYear = /(\d{4})/.exec(start)
   if (explicitYear) return explicitYear[1]
@@ -118,7 +85,9 @@ function isOngoingLabel(value: string) {
 }
 
 function useIsLargeLayout() {
-  const [isLarge, setIsLarge] = useState(false)
+  const [isLarge, setIsLarge] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(min-width: 1024px)').matches : false,
+  )
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)') // Tailwind `lg`
@@ -311,7 +280,6 @@ export function ExperienceTimeline() {
 
   const leftPrelim = prelim.filter((e) => e.side === 'left')
   const rightPrelim = prelim.filter((e) => e.side === 'right')
-  const mobilePrelim = prelim.map((e) => ({ ...e, side: 'right' as const }))
 
   function requiredHeightForEntries(entries: typeof prelim) {
     if (!entries.length) return 0
@@ -336,7 +304,6 @@ export function ExperienceTimeline() {
   const contentHeight = Math.max(
     requiredHeightForEntries(leftPrelim),
     requiredHeightForEntries(rightPrelim),
-    requiredHeightForEntries(mobilePrelim),
   )
   const initialChartHeight = Math.max(baseChartHeight, contentHeight)
   const [measuredHeight, setMeasuredHeight] = useState(0)
@@ -349,10 +316,8 @@ export function ExperienceTimeline() {
   }
 
   const [desktopSizes, setDesktopSizes] = useState<SizeMap>({})
-  const [mobileSizes, setMobileSizes] = useState<SizeMap>({})
 
   const desktopRefs = useRef<Record<string, HTMLElement | null>>({})
-  const mobileRefs = useRef<Record<string, HTMLElement | null>>({})
   const chartRef = useRef<HTMLDivElement | null>(null)
 
   const [chartScrollY, setChartScrollY] = useState(0)
@@ -388,7 +353,7 @@ export function ExperienceTimeline() {
     }
   }, [chartHeight])
 
-  const activeSizes = isLargeLayout ? desktopSizes : mobileSizes
+  const activeSizes = desktopSizes
   const fallbackCardHeight = 280
 
   const yByMonthKey = (() => {
@@ -478,7 +443,6 @@ export function ExperienceTimeline() {
 
   const leftEntries = withCardSpan.filter((e) => e.side === 'left')
   const rightEntries = withCardSpan.filter((e) => e.side === 'right')
-  const mobileEntries = withCardSpan.map((e) => ({ ...e, side: 'right' as const }))
 
   const layoutKey = `${isLargeLayout ? 'lg' : 'sm'}:${items
     .map((e) => `${e.company}::${e.role}`)
@@ -486,68 +450,39 @@ export function ExperienceTimeline() {
     .join('|')}`
 
   useLayoutEffect(() => {
+    if (!isLargeLayout) return
+
     const ro = new ResizeObserver(() => {
-      if (isLargeLayout) {
-        const next: SizeMap = {}
-        for (const [id, el] of Object.entries(desktopRefs.current)) {
-          if (!el) continue
-          const h = el.getBoundingClientRect().height
-          if (h > 0) next[id] = h
-        }
-        const leftIds = leftEntries.map((e) => `${e.company}::${e.role}`)
-        const rightIds = rightEntries.map((e) => `${e.company}::${e.role}`)
-        const sumHeights = (ids: string[]) =>
-          ids.reduce((sum, id) => sum + (next[id] ?? desktopSizes[id] ?? 280), 0)
-        const laneMinBottom = (entries: Array<{ pastY: number }>) =>
-          entries.reduce((max, e) => Math.max(max, e.pastY + chartPaddingBottom + 6), 0)
-        const required = Math.max(
-          chartPaddingTop + chartPaddingBottom + sumHeights(leftIds) + Math.max(0, leftIds.length - 1) * minCardPadding,
-          chartPaddingTop + chartPaddingBottom + sumHeights(rightIds) + Math.max(0, rightIds.length - 1) * minCardPadding,
-          laneMinBottom(leftEntries),
-          laneMinBottom(rightEntries),
-          initialChartHeight,
-        )
-        if (required > measuredHeight + 1) setMeasuredHeight(required)
-
-        setDesktopSizes((prev) => {
-          // avoid re-render loops if nothing changed materially
-          const keys = Object.keys(next)
-          if (keys.length !== Object.keys(prev).length) return next
-          for (const k of keys) if (Math.abs((prev[k] ?? 0) - next[k]) > 0.5) return next
-          return prev
-        })
-      } else {
-        const next: SizeMap = {}
-        for (const [id, el] of Object.entries(mobileRefs.current)) {
-          if (!el) continue
-          const h = el.getBoundingClientRect().height
-          if (h > 0) next[id] = h
-        }
-        const mobileIds = mobileEntries.map((e) => `${e.company}::${e.role}`)
-        const laneMinBottom = mobileEntries.reduce(
-          (max, e) => Math.max(max, e.pastY + chartPaddingBottom + 6),
-          0,
-        )
-        const required = Math.max(
-          chartPaddingTop +
-            chartPaddingBottom +
-            mobileIds.reduce((sum, id) => sum + (next[id] ?? mobileSizes[id] ?? 280), 0) +
-            Math.max(0, mobileIds.length - 1) * minCardPadding,
-          laneMinBottom,
-        )
-        if (required > measuredHeight + 1) setMeasuredHeight(required)
-
-        setMobileSizes((prev) => {
-          const keys = Object.keys(next)
-          if (keys.length !== Object.keys(prev).length) return next
-          for (const k of keys) if (Math.abs((prev[k] ?? 0) - next[k]) > 0.5) return next
-          return prev
-        })
+      const next: SizeMap = {}
+      for (const [id, el] of Object.entries(desktopRefs.current)) {
+        if (!el) continue
+        const h = el.getBoundingClientRect().height
+        if (h > 0) next[id] = h
       }
+      const leftIds = leftEntries.map((e) => `${e.company}::${e.role}`)
+      const rightIds = rightEntries.map((e) => `${e.company}::${e.role}`)
+      const sumHeights = (ids: string[]) =>
+        ids.reduce((sum, id) => sum + (next[id] ?? desktopSizes[id] ?? 280), 0)
+      const laneMinBottom = (entries: Array<{ pastY: number }>) =>
+        entries.reduce((max, e) => Math.max(max, e.pastY + chartPaddingBottom + 6), 0)
+      const required = Math.max(
+        chartPaddingTop + chartPaddingBottom + sumHeights(leftIds) + Math.max(0, leftIds.length - 1) * minCardPadding,
+        chartPaddingTop + chartPaddingBottom + sumHeights(rightIds) + Math.max(0, rightIds.length - 1) * minCardPadding,
+        laneMinBottom(leftEntries),
+        laneMinBottom(rightEntries),
+        initialChartHeight,
+      )
+      if (required > measuredHeight + 1) setMeasuredHeight(required)
+
+      setDesktopSizes((prev) => {
+        const keys = Object.keys(next)
+        if (keys.length !== Object.keys(prev).length) return next
+        for (const k of keys) if (Math.abs((prev[k] ?? 0) - next[k]) > 0.5) return next
+        return prev
+      })
     })
 
-    const activeRefs = isLargeLayout ? desktopRefs.current : mobileRefs.current
-    for (const el of Object.values(activeRefs)) if (el) ro.observe(el)
+    for (const el of Object.values(desktopRefs.current)) if (el) ro.observe(el)
 
     return () => ro.disconnect()
   }, [
@@ -559,8 +494,6 @@ export function ExperienceTimeline() {
     layoutKey,
     leftEntries,
     minCardPadding,
-    mobileEntries,
-    mobileSizes,
     measuredHeight,
     rightEntries,
   ])
@@ -568,58 +501,40 @@ export function ExperienceTimeline() {
   const top = chartPaddingTop
   const bottom = chartHeight - chartPaddingBottom
   const stickyPreferredTop = chartScrollY
-  const followPositions = (() => {
-    const fallbackHeight = 280
-    if (isLargeLayout) {
-      return {
-        left: computeFollowPositions({
-          entries: leftEntries.map((e) => ({
-            id: `${e.company}::${e.role}`,
-            minTop: e.recentY + CARD_LINE_PAD_PX,
-            maxTop: e.pastY - CARD_LINE_PAD_PX,
-            preferredTop: stickyPreferredTop,
-          })),
-          heights: desktopSizes,
-          minPadding: minCardPadding,
-          top,
-          bottom,
-          fallbackHeight,
-        }),
-        right: computeFollowPositions({
-          entries: rightEntries.map((e) => ({
-            id: `${e.company}::${e.role}`,
-            minTop: e.recentY + CARD_LINE_PAD_PX,
-            maxTop: e.pastY - CARD_LINE_PAD_PX,
-            preferredTop: stickyPreferredTop,
-          })),
-          heights: desktopSizes,
-          minPadding: minCardPadding,
-          top,
-          bottom,
-          fallbackHeight,
-        }),
-        mobile: {} as Record<string, number>,
-      }
-    }
+  const followPositions = {
+    left: computeFollowPositions({
+      entries: leftEntries.map((e) => ({
+        id: `${e.company}::${e.role}`,
+        minTop: e.recentY + CARD_LINE_PAD_PX,
+        maxTop: e.pastY - CARD_LINE_PAD_PX,
+        preferredTop: stickyPreferredTop,
+      })),
+      heights: desktopSizes,
+      minPadding: minCardPadding,
+      top,
+      bottom,
+      fallbackHeight: 280,
+    }),
+    right: computeFollowPositions({
+      entries: rightEntries.map((e) => ({
+        id: `${e.company}::${e.role}`,
+        minTop: e.recentY + CARD_LINE_PAD_PX,
+        maxTop: e.pastY - CARD_LINE_PAD_PX,
+        preferredTop: stickyPreferredTop,
+      })),
+      heights: desktopSizes,
+      minPadding: minCardPadding,
+      top,
+      bottom,
+      fallbackHeight: 280,
+    }),
+  }
 
-    return {
-      left: {} as Record<string, number>,
-      right: {} as Record<string, number>,
-      mobile: computeFollowPositions({
-        entries: mobileEntries.map((e) => ({
-          id: `${e.company}::${e.role}`,
-          minTop: e.recentY + CARD_LINE_PAD_PX,
-          maxTop: e.pastY - CARD_LINE_PAD_PX,
-          preferredTop: stickyPreferredTop,
-        })),
-        heights: mobileSizes,
-        minPadding: minCardPadding,
-        top,
-        bottom,
-        fallbackHeight,
-      }),
-    }
-  })()
+  const mobileListItems = items.map((e, index) => ({
+    ...e,
+    finiteEndMs: Number.isFinite(e.endMs) && !Number.isNaN(e.endMs) ? e.endMs : NOW_MS,
+    color: LANE_COLORS[index % LANE_COLORS.length]!,
+  }))
 
   return (
     <section id="work" className="section-surface section-bg-experience section-slant-rev py-16 sm:py-20">
@@ -631,75 +546,40 @@ export function ExperienceTimeline() {
             description="I’ve led teams as a Tech Lead, set engineering standards, and shipped production systems across multiple organizations. I’m equally comfortable in senior IC roles when the scope calls for deep execution."
           />
 
+          <div className="mt-10 flex flex-col gap-4 lg:hidden">
+            {mobileListItems.map((e) => (
+              <ExperienceRoleCard
+                key={`${e.company}-${e.role}-mobile-list`}
+                entry={e}
+                compact
+                className="relative overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-5 shadow-soft"
+              />
+            ))}
+          </div>
+
+          {isLargeLayout ? (
           <div className="mt-10">
             <div
               className="mx-auto grid w-full max-w-screen-lg gap-x-8"
               style={{ height: chartHeight }}
               ref={chartRef}
             >
-              <div className="grid h-full grid-cols-[280px_1fr] gap-x-6 lg:grid-cols-[1fr_280px_1fr] lg:gap-x-10">
+              <div className="grid h-full grid-cols-[1fr_280px_1fr] gap-x-10">
               {/* Left cards */}
-              <div className="relative hidden lg:block">
+              <div className="relative">
                 {leftEntries.map((e) => {
                   const id = `${e.company}::${e.role}`
                   const cardY = followPositions.left[id] ?? e.recentY
-                  const duration = formatDuration(e.startMs, e.finiteEndMs)
-                  const { title: roleTitle, subtitle: roleSubtitle } = splitRole(e.role)
                   return (
-                    <article
+                    <ExperienceRoleCard
                       key={`${e.company}-${e.role}`}
+                      entry={e}
                       className="group absolute right-0 w-full max-w-[22rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft"
                       style={{ top: cardY }}
-                      ref={(el) => {
+                      cardRef={(el) => {
                         desktopRefs.current[id] = el
                       }}
-                    >
-                      <div
-                        aria-hidden
-                        className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full blur-3xl"
-                        style={{ backgroundColor: `${e.color}22` }}
-                      />
-                      <header>
-                        <div className="flex items-start justify-between gap-4">
-                          <p className="pt-1 text-[12px] font-semibold uppercase tracking-[0.22em] text-sand/60">
-                            {e.company}
-                          </p>
-                          {duration ? (
-                            <span className="inline-flex flex-none items-center rounded-full border border-sand/10 bg-white/5 px-3 py-1 text-[11px] font-semibold tracking-wide text-sand/70">
-                              {duration}
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <h3 className="mt-3 text-balance font-display text-xl font-semibold tracking-tight text-sand sm:text-2xl">
-                          {roleTitle}
-                        </h3>
-                        {roleSubtitle ? (
-                          <p className="mt-1 text-sm leading-relaxed text-sand/60">
-                            {roleSubtitle}
-                          </p>
-                        ) : null}
-
-                        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-sand/70">
-                          <span className="font-medium text-sand/75">
-                            {e.start} to {e.end}
-                          </span>
-                          {e.location ? <span className="text-sand/45">{e.location}</span> : null}
-                        </div>
-                      </header>
-
-                      <ul className="mt-6 space-y-3 text-sm leading-relaxed text-sand/75">
-                        {e.highlights.map((h) => (
-                          <li key={h} className="flex gap-3">
-                            <span
-                              className="mt-2.5 h-1.5 w-1.5 flex-none rounded-full"
-                              style={{ backgroundColor: e.color }}
-                            />
-                            <span>{h}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
+                    />
                   )
                 })}
               </div>
@@ -979,137 +859,26 @@ export function ExperienceTimeline() {
 
               {/* Right cards */}
               <div className="relative">
-                {/* Mobile/tablet: render all cards on one side */}
-                {mobileEntries.map((e) => {
-                  const id = `${e.company}::${e.role}`
-                  const cardY = followPositions.mobile[id] ?? e.recentY
-                  const duration = formatDuration(e.startMs, e.finiteEndMs)
-                  const { title: roleTitle, subtitle: roleSubtitle } = splitRole(e.role)
-                  return (
-                    <article
-                      key={`${e.company}-${e.role}-mobile`}
-                      className="group absolute left-0 w-full overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft lg:hidden"
-                      style={{ top: cardY }}
-                      ref={(el) => {
-                        mobileRefs.current[id] = el
-                      }}
-                    >
-                      <div
-                        aria-hidden
-                        className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full blur-3xl"
-                        style={{ backgroundColor: `${e.color}22` }}
-                      />
-                      <header>
-                        <div className="flex items-start justify-between gap-4">
-                          <p className="pt-1 text-[12px] font-semibold uppercase tracking-[0.22em] text-sand/60">
-                            {e.company}
-                          </p>
-                          {duration ? (
-                            <span className="inline-flex flex-none items-center rounded-full border border-sand/10 bg-white/5 px-3 py-1 text-[11px] font-semibold tracking-wide text-sand/70">
-                              {duration}
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <h3 className="mt-3 text-balance font-display text-xl font-semibold tracking-tight text-sand sm:text-2xl">
-                          {roleTitle}
-                        </h3>
-                        {roleSubtitle ? (
-                          <p className="mt-1 text-sm leading-relaxed text-sand/60">
-                            {roleSubtitle}
-                          </p>
-                        ) : null}
-
-                        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-sand/70">
-                          <span className="font-medium text-sand/75">
-                            {e.start} to {e.end}
-                          </span>
-                          {e.location ? <span className="text-sand/45">{e.location}</span> : null}
-                        </div>
-                      </header>
-
-                      <ul className="mt-6 space-y-3 text-sm leading-relaxed text-sand/75">
-                        {e.highlights.map((h) => (
-                          <li key={h} className="flex gap-3">
-                            <span
-                              className="mt-2.5 h-1.5 w-1.5 flex-none rounded-full"
-                              style={{ backgroundColor: e.color }}
-                            />
-                            <span>{h}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
-                  )
-                })}
-
-                {/* Desktop: only the right-side cards (left side is rendered in the left column) */}
                 {rightEntries.map((e) => {
                   const id = `${e.company}::${e.role}`
                   const cardY = followPositions.right[id] ?? e.recentY
-                  const duration = formatDuration(e.startMs, e.finiteEndMs)
-                  const { title: roleTitle, subtitle: roleSubtitle } = splitRole(e.role)
                   return (
-                    <article
+                    <ExperienceRoleCard
                       key={`${e.company}-${e.role}-desktop`}
-                      className="group absolute left-0 hidden w-full max-w-[22rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft lg:block"
+                      entry={e}
+                      className="group absolute left-0 w-full max-w-[22rem] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/50 p-7 shadow-soft"
                       style={{ top: cardY }}
-                      ref={(el) => {
+                      cardRef={(el) => {
                         desktopRefs.current[id] = el
                       }}
-                    >
-                      <div
-                        aria-hidden
-                        className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full blur-3xl"
-                        style={{ backgroundColor: `${e.color}22` }}
-                      />
-                      <header>
-                        <div className="flex items-start justify-between gap-4">
-                          <p className="pt-1 text-[12px] font-semibold uppercase tracking-[0.22em] text-sand/60">
-                            {e.company}
-                          </p>
-                          {duration ? (
-                            <span className="inline-flex flex-none items-center rounded-full border border-sand/10 bg-white/5 px-3 py-1 text-[11px] font-semibold tracking-wide text-sand/70">
-                              {duration}
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <h3 className="mt-3 text-balance font-display text-xl font-semibold tracking-tight text-sand sm:text-2xl">
-                          {roleTitle}
-                        </h3>
-                        {roleSubtitle ? (
-                          <p className="mt-1 text-sm leading-relaxed text-sand/60">
-                            {roleSubtitle}
-                          </p>
-                        ) : null}
-
-                        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-sand/70">
-                          <span className="font-medium text-sand/75">
-                            {e.start} to {e.end}
-                          </span>
-                          {e.location ? <span className="text-sand/45">{e.location}</span> : null}
-                        </div>
-                      </header>
-
-                      <ul className="mt-6 space-y-3 text-sm leading-relaxed text-sand/75">
-                        {e.highlights.map((h) => (
-                          <li key={h} className="flex gap-3">
-                            <span
-                              className="mt-2.5 h-1.5 w-1.5 flex-none rounded-full"
-                              style={{ backgroundColor: e.color }}
-                            />
-                            <span>{h}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
+                    />
                   )
                 })}
               </div>
               </div>
             </div>
           </div>
+          ) : null}
         </div>
       </Gutter>
     </section>

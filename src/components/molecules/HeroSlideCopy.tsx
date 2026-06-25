@@ -9,6 +9,7 @@ type HeroSlideCopyProps = {
   className?: string
   titleClassName?: string
   showCta?: boolean
+  compact?: boolean
 }
 
 export function HeroSlideCopy({
@@ -17,6 +18,7 @@ export function HeroSlideCopy({
   className,
   titleClassName,
   showCta = true,
+  compact = false,
 }: HeroSlideCopyProps) {
   return (
     <div
@@ -25,23 +27,41 @@ export function HeroSlideCopy({
         animate && 'motion-safe:animate-[hero-slide-in_0.55s_ease-out] motion-reduce:animate-none',
       )}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-gold-200/80">
+      <p
+        className={cn(
+          'font-semibold uppercase text-gold-200/80',
+          compact
+            ? 'text-[10px] tracking-[0.22em]'
+            : 'text-[10px] tracking-[0.34em]',
+        )}
+      >
         {slide.eyebrow}
       </p>
 
-      <div className="mt-4 flex items-start gap-3 sm:mt-5 sm:gap-4">
+      <div className={cn('flex items-start gap-3', compact ? 'mt-3' : 'mt-4 sm:mt-5 sm:gap-4')}>
         <span
           aria-hidden
-          className="mt-0.5 font-display text-3xl leading-none text-gold-300/80 sm:mt-1 sm:text-4xl"
+          className={cn(
+            'font-display leading-none text-gold-300/80',
+            compact ? 'mt-0.5 text-2xl' : 'mt-0.5 text-3xl sm:mt-1 sm:text-4xl',
+          )}
         >
           “
         </span>
-        <p className="max-w-2xl text-sm leading-relaxed text-sand/75 sm:text-base">{slide.quote}</p>
+        <p
+          className={cn(
+            'max-w-2xl leading-relaxed text-sand/75',
+            compact ? 'line-clamp-3 text-sm' : 'text-sm sm:text-base',
+          )}
+        >
+          {slide.quote}
+        </p>
       </div>
 
       <h1
         className={cn(
-          'mt-5 font-display text-[40px] font-semibold leading-[0.9] tracking-tight text-sand sm:mt-6 sm:text-[58px] lg:text-[64px]',
+          'font-display font-semibold leading-[0.9] tracking-tight text-sand',
+          compact ? 'mt-4 text-[32px]' : 'mt-5 text-[40px] sm:mt-6 sm:text-[58px] lg:text-[64px]',
           titleClassName,
         )}
       >
@@ -62,7 +82,12 @@ export function HeroSlideCopy({
         ))}
       </h1>
 
-      <p className="mt-4 max-w-xl text-sm leading-relaxed text-sand/75 sm:mt-5 sm:text-base">
+      <p
+        className={cn(
+          'max-w-xl leading-relaxed text-sand/75',
+          compact ? 'mt-3 text-sm' : 'mt-4 text-sm sm:mt-5 sm:text-base',
+        )}
+      >
         {slide.description}
       </p>
 

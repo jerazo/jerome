@@ -142,11 +142,12 @@ export function HomeHero() {
   }, [reducedMotion])
 
   return (
-    <section className="relative h-svh overflow-hidden bg-black">
+    <section className="relative min-h-svh bg-black lg:h-svh lg:overflow-hidden">
       <div className="absolute inset-0 -z-10 vignette" />
 
       <div ref={heroParallaxRef} className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/25 to-black/80" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,55,0.08),transparent_55%)] lg:hidden" />
         <div
           className="pointer-events-none absolute inset-0 hidden lg:block"
           style={{ clipPath: 'polygon(0 0, 58% 0, 46% 100%, 0 100%)' }}
@@ -188,22 +189,22 @@ export function HomeHero() {
       </div>
 
       <div className="absolute inset-x-0 top-0 z-30">
-        <div className="h-12 bg-gold-500">
-          <div className="flex h-full items-center justify-center px-4">
-            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.28em] text-white/90 sm:tracking-[0.34em]">
+        <div className="h-11 bg-gold-500 sm:h-12">
+          <div className="flex h-full items-center justify-center px-3 sm:px-4">
+            <p className="line-clamp-2 text-center text-[10px] font-semibold uppercase leading-snug tracking-[0.16em] text-white/90 sm:line-clamp-none sm:text-[11px] sm:leading-normal sm:tracking-[0.34em]">
               {bannerMessage}
             </p>
           </div>
         </div>
         <div className="bg-black/25 backdrop-blur-sm">
-          <Gutter className="flex h-16 items-center justify-between gap-4 sm:h-20">
-            <div className="flex items-center gap-3">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-gold-500 text-white">
+          <Gutter className="flex h-14 items-center justify-between gap-3 sm:h-20 sm:gap-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="grid h-9 w-9 flex-none place-items-center rounded-xl bg-gold-500 text-white">
                 <LogoMark />
               </div>
-              <div className="leading-tight">
-                <p className="text-sm font-semibold tracking-tight text-sand">{profile.name}</p>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/55">
+              <div className="min-w-0 leading-tight">
+                <p className="truncate text-sm font-semibold tracking-tight text-sand">{profile.name}</p>
+                <p className="hidden text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/55 sm:block">
                   {profile.headline}
                 </p>
               </div>
@@ -232,58 +233,49 @@ export function HomeHero() {
       </div>
 
       <div
-        className="relative z-10 h-full pt-28 sm:pt-32"
+        className="relative z-10 pt-[6.5rem] sm:pt-28 lg:h-full lg:pt-32"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onFocusCapture={() => setPaused(true)}
         onBlurCapture={() => setPaused(false)}
       >
         <div className="lg:hidden">
-          <div className="flex h-full flex-col">
-            <div className="-mx-4 sm:-mx-6">
-              <div className="relative h-[46svh] min-h-[300px] w-full bg-black">
-                <img
-                  src="/jerome-portrait-square.jpg"
-                  alt={profile.name}
-                  className="h-full w-full object-cover"
-                  style={{ objectPosition: '55% 22%' }}
-                  loading="eager"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/95" />
-              </div>
+          <Gutter className="pb-8 pt-3">
+            <div className="relative aspect-[5/6] w-full max-h-[min(72vw,320px)] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/40 shadow-soft">
+              <img
+                src="/jerome-portrait-square.jpg"
+                alt={profile.name}
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: '55% 16%' }}
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
             </div>
 
-            <Gutter className="-mt-[8svh] flex min-h-0 flex-1 flex-col pb-0 pt-8">
-              <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[calc(100%+8svh)] bg-gradient-to-b from-black/0 via-black/75 to-black" />
+            <div className="mt-6">
+              <HeroSlideCopy
+                key={heroIndex}
+                slide={slide}
+                animate={!reducedMotion}
+                showCta={false}
+                compact
+              />
+            </div>
 
-              <div className="relative flex min-h-0 flex-1 flex-col pb-32">
-                <HeroSlideCopy
-                  key={heroIndex}
-                  slide={slide}
-                  animate={!reducedMotion}
-                  showCta={false}
-                  titleClassName="text-[38px]"
-                />
-
-                <div className="absolute inset-x-0 bottom-0">
-                  <div className="rounded-t-3xl border border-sand/10 bg-black/80 pb-[calc(20px+env(safe-area-inset-bottom))] pt-5 backdrop-blur-md">
-                    <div className="flex flex-col items-stretch gap-4">
-                      <ButtonLink to={slide.ctaTo} className="w-full justify-center">
-                        {slide.ctaLabel} <ArrowRight size={16} />
-                      </ButtonLink>
-                      <HeroCarouselControls
-                        slides={heroSlides}
-                        activeIndex={heroIndex}
-                        onPrev={goPrev}
-                        onNext={goNext}
-                        onSelect={setHeroIndex}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Gutter>
-          </div>
+            <div className="mt-6 flex flex-col gap-4 border-t border-sand/10 pt-6">
+              <ButtonLink to={slide.ctaTo} className="w-full justify-center">
+                {slide.ctaLabel} <ArrowRight size={16} />
+              </ButtonLink>
+              <HeroCarouselControls
+                slides={heroSlides}
+                activeIndex={heroIndex}
+                onPrev={goPrev}
+                onNext={goNext}
+                onSelect={setHeroIndex}
+                className="justify-between"
+              />
+            </div>
+          </Gutter>
         </div>
 
         <Gutter className="hidden h-full content-center gap-8 pb-10 lg:grid lg:grid-cols-12 lg:gap-10">
