@@ -70,15 +70,30 @@ jobs:
 
       - name: Verify AWS credentials
         run: |
-          if [ -z "${{ secrets.AWS_ROLE_ARN }}" ] && [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
-            echo "::error::Missing AWS credentials in the jerome environment. Add AWS_ROLE_ARN or AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY."
-            exit 1
+          AUTH_METHOD="${{ vars.AWS_AUTH_METHOD || 'oidc' }}"
+          if [ "$AUTH_METHOD" = "access-keys" ]; then
+            if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ] || [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then
+              echo "::error::AWS_AUTH_METHOD=access-keys requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in the jerome environment."
+              exit 1
+            fi
+          else
+            if [ -z "${{ secrets.AWS_ROLE_ARN }}" ]; then
+              echo "::error::OIDC auth requires AWS_ROLE_ARN in the jerome environment. Set AWS_AUTH_METHOD=access-keys to use IAM access keys instead."
+              exit 1
+            fi
           fi
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
+        if: ${{ vars.AWS_AUTH_METHOD != 'access-keys' }}
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure AWS credentials (access keys)
+        if: ${{ vars.AWS_AUTH_METHOD == 'access-keys' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
@@ -123,15 +138,30 @@ jobs:
 
       - name: Verify AWS credentials
         run: |
-          if [ -z "${{ secrets.AWS_ROLE_ARN }}" ] && [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ]; then
-            echo "::error::Missing AWS credentials in the jerome environment. Add AWS_ROLE_ARN or AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY."
-            exit 1
+          AUTH_METHOD="${{ vars.AWS_AUTH_METHOD || 'oidc' }}"
+          if [ "$AUTH_METHOD" = "access-keys" ]; then
+            if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ] || [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then
+              echo "::error::AWS_AUTH_METHOD=access-keys requires AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in the jerome environment."
+              exit 1
+            fi
+          else
+            if [ -z "${{ secrets.AWS_ROLE_ARN }}" ]; then
+              echo "::error::OIDC auth requires AWS_ROLE_ARN in the jerome environment. Set AWS_AUTH_METHOD=access-keys to use IAM access keys instead."
+              exit 1
+            fi
           fi
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
+        if: ${{ vars.AWS_AUTH_METHOD != 'access-keys' }}
         uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure AWS credentials (access keys)
+        if: ${{ vars.AWS_AUTH_METHOD == 'access-keys' }}
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}

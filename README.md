@@ -131,24 +131,32 @@ Deploy jobs use the **`jerome`** GitHub Environment. Configure it under **Settin
 
 **Environment secrets**
 
-| Secret | Value |
+| Secret | When needed |
 |---|---|
-| `AWS_ROLE_ARN` | `GitHubActionsRoleArn` from the OIDC stack (recommended) |
-| `AWS_ACCESS_KEY_ID` | Optional IAM access key fallback |
-| `AWS_SECRET_ACCESS_KEY` | Optional IAM secret key fallback |
+| `AWS_ROLE_ARN` | OIDC deploys (`AWS_AUTH_METHOD` unset or `oidc`) |
+| `AWS_ACCESS_KEY_ID` | Only when `AWS_AUTH_METHOD=access-keys` |
+| `AWS_SECRET_ACCESS_KEY` | Only when `AWS_AUTH_METHOD=access-keys` |
 
-Use either `AWS_ROLE_ARN` (OIDC) or the access key pair, not both.
+Do **not** configure both OIDC and access keys at once. The workflow uses one method only.
 
 **Environment variables**
 
 | Variable | Value |
 |---|---|
+| `AWS_AUTH_METHOD` | `oidc` (default) or `access-keys` |
 | `AWS_REGION` | e.g. `us-east-1` |
 | `NODE_VERSION` | e.g. `24` |
-| `CLICKUP_API_TOKEN` | ClickUp personal API token |
+| `CLICKUP_API_TOKEN` | ClickUp personal API token (prefer moving to secrets) |
 | `CLICKUP_LIST_ID` | ClickUp list ID for contact form tasks |
 
-If you use OIDC with the `jerome` environment, redeploy the OIDC stack after pulling the latest changes so the IAM role trusts `repo:jerazo/jerome:environment:jerome`.
+**OIDC setup**
+
+1. Run `npm run deploy:oidc --prefix infrastructure` locally
+2. Add the `GitHubActionsRoleArn` output as `AWS_ROLE_ARN` in the `jerome` environment
+3. Leave `AWS_AUTH_METHOD` unset (defaults to OIDC)
+4. Remove `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from the environment if present
+
+The IAM role must trust `repo:jerazo/jerome:environment:jerome` (included in the current OIDC stack).
 
 After the first successful deploy, every push to `main` updates the live site automatically.
 
