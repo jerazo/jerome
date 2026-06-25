@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { formatBuildLabel } from '../../lib/buildInfo'
 import { Container } from '../atoms/Container'
 import { profile } from '../../content/profile'
 
@@ -47,7 +48,9 @@ export function Footer() {
       <div className="border-t border-sand/10 py-5">
         <Container className="flex flex-wrap items-center justify-between gap-3 text-xs text-sand/55">
           <p>© {new Date().getFullYear()} {profile.name}. All rights reserved.</p>
-          <p>Built with React • TypeScript • Tailwind</p>
+          <p>
+            {formatBuildLabel()} · Built with React • TypeScript • Tailwind
+          </p>
         </Container>
       </div>
     </footer>

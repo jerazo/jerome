@@ -78,6 +78,14 @@ After `deploy:infra`, check `cdk-outputs.json` for:
 
 The frontend defaults to `POST /api/contact`, so no `VITE_CONTACT_API_URL` is needed when served from CloudFront.
 
+### Versioning
+
+- App version lives in `package.json` (`1.0.0` semver)
+- Each build injects git commit + timestamp into the bundle and writes `dist/version.json`
+- Footer shows `v{version} · {commit}` (e.g. `v1.0.0 · a1b2c3d`)
+- Check current build metadata locally: `npm run version:info`
+- Deployed builds expose `https://<your-domain>/version.json`
+
 ### Custom domain (optional)
 
 Add an ACM certificate in `us-east-1`, then extend `infrastructure/lib/jerome-stack.ts` with `domainNames` and `certificate` on the CloudFront distribution.

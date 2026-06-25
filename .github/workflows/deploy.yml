@@ -139,5 +139,8 @@ jobs:
       - name: Build site
         run: npm run build
 
+      - name: Show build version
+        run: cat dist/version.json
+
       - name: Sync to S3 and invalidate CloudFront
         run: node scripts/deploy-site.mjs --skip-build
