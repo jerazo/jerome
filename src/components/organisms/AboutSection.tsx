@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
+import { TruncatedText } from '../atoms/TruncatedText'
 import { SkillTag } from '../molecules/SkillTag'
+import { MaskedContactValue } from '../molecules/MaskedContactValue'
 import { SkillTierFilters, type SkillTierFilterValue } from '../molecules/SkillTierFilters'
 import { SectionHeading } from '../molecules/SectionHeading'
 import {
@@ -82,7 +84,7 @@ export function AboutSection() {
           <div className="overflow-hidden rounded-3xl border border-sand/10 bg-white/5 shadow-soft">
             <img
               src="/jerome-portrait-square.jpg"
-              alt="Jerome Erazo"
+              alt={profile.name}
               className="h-[320px] w-full object-cover"
               loading="lazy"
             />
@@ -90,7 +92,13 @@ export function AboutSection() {
               <p className="font-display text-xl font-semibold tracking-tight text-sand">
                 {profile.name}
               </p>
-              <p className="mt-1 text-sm text-sand/70">{profile.location}</p>
+              <p className="mt-1 text-sm text-sand/70">
+                <MaskedContactValue
+                  field="location"
+                  className="text-sand/70 hover:text-sand"
+                  revealedClassName="text-sand/70"
+                />
+              </p>
             </div>
           </div>
 
@@ -153,9 +161,10 @@ export function AboutSection() {
                   <ul className="mt-2 space-y-1.5 text-sm">
                     {cat.items.map((s) => (
                       <li key={s.name} className="group flex items-baseline gap-3 text-sand/80">
-                        <span className="min-w-0 truncate transition-colors group-hover:text-sand">
-                          {s.name}
-                        </span>
+                        <TruncatedText
+                          text={s.name}
+                          className="transition-colors group-hover:text-sand"
+                        />
                         <span
                           aria-hidden
                           className="hidden flex-1 translate-y-[-1px] border-b border-dotted border-sand/10 sm:block"

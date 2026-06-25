@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import { ButtonLink } from '../components/atoms/ButtonLink'
 import { Container } from '../components/atoms/Container'
+import { formatPageTitle } from '../content/profile'
 
 export function NotFoundPage() {
   useEffect(() => {
-    document.title = 'Not Found | Jerome Erazo'
+    document.title = formatPageTitle('Not Found')
   }, [])
 
   return (

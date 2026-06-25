@@ -29,7 +29,7 @@ export function FeaturedResume() {
 
             <ButtonAnchor
               href="/jerome-erazo-cv.pdf"
-              download="Jerome-Erazo-CV.pdf"
+              download="Jerome-Lopez-Erazo-CV.pdf"
               className="rounded-2xl border-gold-400/70 bg-gradient-to-b from-gold-400 to-gold-600 px-7 py-4 text-[12px] uppercase tracking-[0.28em] text-white shadow-gold-glow hover:from-gold-300 hover:to-gold-500"
             >
               Download CV <Download size={16} />

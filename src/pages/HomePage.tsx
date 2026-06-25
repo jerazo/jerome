@@ -8,10 +8,11 @@ import { HomeHero } from '../components/organisms/HomeHero'
 import { PortfolioSection } from '../components/organisms/PortfolioSection'
 import { RecommendationsSection } from '../components/organisms/RecommendationsSection'
 import { ServicesGrid } from '../components/organisms/ServicesGrid'
+import { formatPageTitle } from '../content/profile'
 
 export function HomePage() {
   useEffect(() => {
-    document.title = 'Jerome Erazo | Web Developer & Tech Lead'
+    document.title = formatPageTitle()
   }, [])
 
   return (

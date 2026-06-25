@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { formatBuildLabel } from '../../lib/buildInfo'
 import { Container } from '../atoms/Container'
+import { MaskedContactValue } from '../molecules/MaskedContactValue'
 import { profile } from '../../content/profile'
 
 export function Footer() {
@@ -13,13 +14,9 @@ export function Footer() {
           </p>
           <p className="mt-1 text-sm text-sand/70">{profile.headline}</p>
           <p className="mt-3 text-sm text-sand/70">
-            <a className="hover:text-sand" href={`mailto:${profile.email}`}>
-              {profile.email}
-            </a>
+            <MaskedContactValue field="email" className="hover:text-sand" revealedClassName="hover:text-sand" />
             <span className="mx-2 text-sand/30">•</span>
-            <a className="hover:text-sand" href={`tel:${profile.phone.replace(/\\s+/g, '')}`}>
-              {profile.phone}
-            </a>
+            <MaskedContactValue field="phone" className="hover:text-sand" revealedClassName="hover:text-sand" />
           </p>
         </div>
         <div className="flex flex-wrap gap-3 sm:justify-end">

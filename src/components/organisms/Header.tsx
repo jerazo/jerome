@@ -4,6 +4,7 @@ import { ButtonLink } from '../atoms/ButtonLink'
 import { Container } from '../atoms/Container'
 import { LogoMark } from '../atoms/LogoMark'
 import { cn } from '../../lib/cn'
+import { profile } from '../../content/profile'
 import { useUiStore } from '../../store/uiStore'
 import { PrimaryNav } from './PrimaryNav'
 
@@ -36,9 +37,9 @@ export function Header() {
               <LogoMark />
             </span>
             <div className="leading-tight">
-              <p className="text-sm font-semibold tracking-tight text-sand">Jerome Erazo</p>
+              <p className="text-sm font-semibold tracking-tight text-sand">{profile.name}</p>
               <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/55">
-                Software Engineer • Tech Lead • AI Enthusiast
+                {profile.headline}
               </p>
             </div>
           </Link>

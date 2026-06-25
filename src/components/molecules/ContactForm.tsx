@@ -16,7 +16,7 @@ import {
 } from '../../lib/contactSchema'
 import { detectUserCountryCode } from '../../lib/detectUserCountry'
 import { submitContactForm } from '../../lib/submitContactForm'
-import { profile } from '../../content/profile'
+import { MaskedContactValue } from './MaskedContactValue'
 import { PhoneField } from './PhoneField'
 
 const inputClassName =
@@ -322,10 +322,7 @@ export function ContactForm({ className }: { className?: string }) {
           {status === 'error' && errorMessage ? (
             <p className="text-sm text-red-200/90" role="alert">
               {errorMessage}{' '}
-              <a className="font-semibold text-sand underline-offset-2 hover:underline" href={`mailto:${profile.email}`}>
-                Email me directly
-              </a>
-              .
+              You can also request my email: <MaskedContactValue field="email" />.
             </p>
           ) : null}
 

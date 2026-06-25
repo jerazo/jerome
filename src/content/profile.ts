@@ -165,3 +165,9 @@ export const profile = {
     },
   ] satisfies ExperienceItem[],
 } as const
+
+export const defaultPageTitle = `${profile.name} | Web Developer & Tech Lead` as const
+
+export function formatPageTitle(pageName?: string) {
+  return pageName ? `${pageName} | ${profile.name}` : defaultPageTitle
+}

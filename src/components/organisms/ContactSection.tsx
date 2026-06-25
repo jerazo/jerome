@@ -1,4 +1,5 @@
 import { ContactForm } from '../molecules/ContactForm'
+import { MaskedContactValue } from '../molecules/MaskedContactValue'
 import { SectionHeading } from '../molecules/SectionHeading'
 import { profile } from '../../content/profile'
 
@@ -21,19 +22,10 @@ export function ContactSection() {
             Direct
           </p>
           <p className="mt-3 text-sm text-sand/75">
-            Email:{' '}
-            <a className="font-semibold text-sand hover:text-gold-200" href={`mailto:${profile.email}`}>
-              {profile.email}
-            </a>
+            Email: <MaskedContactValue field="email" />
           </p>
           <p className="mt-2 text-sm text-sand/75">
-            Phone:{' '}
-            <a
-              className="font-semibold text-sand hover:text-gold-200"
-              href={`tel:${profile.phone.replace(/\s+/g, '')}`}
-            >
-              {profile.phone}
-            </a>
+            Phone: <MaskedContactValue field="phone" />
           </p>
           <p className="mt-2 text-sm text-sand/75">
             LinkedIn:{' '}

@@ -164,11 +164,22 @@ jobs:
         working-directory: infrastructure
         run: bash scripts/bootstrap.sh
 
+      - name: Verify SES and contact access config
+        working-directory: infrastructure
+        env:
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || 'jerome.erazo@gmail.com' }}
+          SES_FROM_EMAIL: ${{ vars.SES_FROM_EMAIL || vars.NOTIFY_EMAIL || 'jerome.erazo@gmail.com' }}
+          CONTACT_ACCESS_OTP_SECRET: ${{ secrets.CONTACT_ACCESS_OTP_SECRET }}
+        run: bash scripts/verify-ses.sh
+
       - name: Deploy CDK stack
         working-directory: infrastructure
         env:
           CLICKUP_API_TOKEN: ${{ vars.CLICKUP_API_TOKEN }}
           CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
+          NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || 'jerome.erazo@gmail.com' }}
+          SES_FROM_EMAIL: ${{ vars.SES_FROM_EMAIL || vars.NOTIFY_EMAIL || 'jerome.erazo@gmail.com' }}
+          CONTACT_ACCESS_OTP_SECRET: ${{ secrets.CONTACT_ACCESS_OTP_SECRET }}
         run: npx cdk deploy --require-approval never --outputs-file ../cdk-outputs.json
 
       - name: Upload CDK outputs

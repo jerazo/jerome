@@ -14,6 +14,10 @@ export default defineConfig(({ mode }) => {
       contactApiPlugin({
         clickupApiToken: env.CLICKUP_API_TOKEN ?? '',
         clickupListId: env.CLICKUP_LIST_ID ?? '',
+        notifyEmail: env.NOTIFY_EMAIL ?? 'jerome.erazo@gmail.com',
+        sesFromEmail: env.SES_FROM_EMAIL ?? env.NOTIFY_EMAIL ?? 'jerome.erazo@gmail.com',
+        contactAccessOtpSecret:
+          env.CONTACT_ACCESS_OTP_SECRET ?? 'jerome-contact-access-dev-secret',
       }),
     ],
   }

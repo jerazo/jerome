@@ -1,6 +1,13 @@
+export type HeroTitlePart = {
+  text: string
+  accent?: boolean
+  italic?: boolean
+}
+
 export type HeroSlide = {
+  eyebrow: string
   quote: string
-  titleLines: Array<{ text: string; accent?: boolean; italic?: boolean }>
+  titleLines: HeroTitlePart[][]
   description: string
   ctaLabel: string
   ctaTo: string
@@ -8,77 +15,76 @@ export type HeroSlide = {
 
 export const heroSlides: HeroSlide[] = [
   {
+    eyebrow: '20+ years in production',
     quote:
-      'Seasoned full‑stack engineer with 20+ years of experience designing, building, and leading high‑impact web platforms.',
+      'Fintech, esports, SaaS, health, education—different domains, same bar: ship work that holds up after launch day.',
     titleLines: [
-      { text: 'SOFTWARE' },
-      { text: 'ENGINEER', accent: false },
-      { text: '| TECH LEAD' },
-      { text: 'AI', accent: false },
-      { text: 'ENTHUSIAST', accent: true, italic: true },
+      [{ text: 'ENGINEER' }],
+      [{ text: 'WHO', accent: true, italic: true }, { text: ' SHIPS' }],
+      [{ text: 'FOR REAL' }],
     ],
     description:
-      'From architecture to implementation, I help teams ship production-ready web products with speed, reliability, and maintainability.',
+      'Full-stack builder and tech lead. I turn ambitious product goals into systems teams can extend, not rewrite.',
     ctaLabel: 'Start your project',
     ctaTo: '/#contact',
   },
   {
+    eyebrow: 'Architecture that survives growth',
     quote:
-      'A player‑coach who can drive technical execution without compromising architectural integrity.',
+      'The best platform is the one your team can still change confidently six months from now.',
     titleLines: [
-      { text: 'BUILD' },
-      { text: 'SYSTEMS', accent: true },
-      { text: 'THAT SCALE' },
-      { text: 'AND STAY' },
-      { text: 'MAINTAINABLE', accent: true, italic: true },
+      [{ text: 'BUILD' }],
+      [{ text: 'SYSTEMS', accent: true, italic: true }],
+      [{ text: 'THAT SCALE' }],
+      [{ text: '& STAY MAINTAINABLE', accent: true }],
     ],
     description:
-      'I design scalable systems, set engineering standards, mentor teams, and deliver features that move the business forward.',
+      'Clear boundaries, pragmatic patterns, and standards that keep velocity high as the codebase and team grow.',
     ctaLabel: 'See experience',
     ctaTo: '/#work',
   },
   {
+    eyebrow: 'Measured delivery',
     quote:
-      'Transformed production efficiency from one webpage per developer per week to one per day.',
+      'Took a team from one webpage per developer per week to one per day—without trading away quality or review discipline.',
     titleLines: [
-      { text: 'DELIVER' },
-      { text: 'FASTER', accent: true, italic: true },
-      { text: 'WITH' },
-      { text: 'DISCIPLINE' },
-      { text: 'AND QUALITY', accent: true },
+      [{ text: 'MOVE' }],
+      [{ text: 'FAST', accent: true, italic: true }],
+      [{ text: 'WITHOUT' }],
+      [{ text: 'BREAKING TRUST', accent: true }],
     ],
     description:
-      'Performance, observability, CI/CD, and review discipline, so teams can move quickly without breaking trust.',
+      'CI/CD, observability, and tight feedback loops so speed shows up in production—not just in standup.',
     ctaLabel: 'Explore services',
     ctaTo: '/#services',
   },
   {
+    eyebrow: 'Player-coach leadership',
     quote:
-      'Reduced key‑person dependencies and improved code quality through structured reviews and architectural alignment.',
+      'Cut key-person risk and raised code quality through mentorship, reviews, and shared architectural direction.',
     titleLines: [
-      { text: 'RAISE' },
-      { text: 'QUALITY', accent: true },
-      { text: 'WITHOUT' },
-      { text: 'SLOWING' },
-      { text: 'DELIVERY', accent: true, italic: true },
+      [{ text: 'LEAD' }],
+      [{ text: 'TEAMS', accent: true, italic: true }],
+      [{ text: 'THAT' }],
+      [{ text: 'EXECUTE', accent: true }],
     ],
     description:
-      'Standards, automation, and mentorship that help teams ship sustainably, without “hero coding”.',
-    ctaLabel: 'Work together',
-    ctaTo: '/#contact',
+      'Planning, estimation, and coaching that lift the whole team—so delivery doesn’t depend on one hero engineer.',
+    ctaLabel: 'Read recommendations',
+    ctaTo: '/#recommendations',
   },
   {
-    quote: 'Builder of both systems and teams.',
+    eyebrow: 'Systems & culture',
+    quote:
+      'Strong foundations aren’t only services and schemas—they’re how a team makes tradeoffs under pressure.',
     titleLines: [
-      { text: 'BUILDER' },
-      { text: 'OF', accent: false },
-      { text: 'SYSTEMS' },
-      { text: 'AND' },
-      { text: 'TEAMS', accent: true, italic: true },
+      [{ text: 'BUILDER' }],
+      [{ text: 'OF SYSTEMS' }],
+      [{ text: '&', accent: true }, { text: ' TEAMS', accent: true, italic: true }],
     ],
     description:
-      'I help build technical foundations from the ground up: architecture, culture, and execution.',
-    ctaLabel: 'See leadership',
+      'I help organizations stand up architecture, engineering culture, and execution from the ground up.',
+    ctaLabel: 'See how I work',
     ctaTo: '/#about',
   },
 ]

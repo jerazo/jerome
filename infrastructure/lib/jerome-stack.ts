@@ -5,6 +5,7 @@ import * as apigatewayv2 from 'aws-cdk-lib/aws-apigatewayv2'
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
 import * as s3 from 'aws-cdk-lib/aws-s3'
@@ -15,6 +16,9 @@ const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../.
 export type JeromeStackProps = cdk.StackProps & {
   clickupApiToken: string
   clickupListId: string
+  notifyEmail?: string
+  sesFromEmail?: string
+  contactAccessOtpSecret?: string
 }
 
 export class JeromeStack extends cdk.Stack {
@@ -28,6 +32,11 @@ export class JeromeStack extends cdk.Stack {
       autoDeleteObjects: true,
     })
 
+    const notifyEmail = props.notifyEmail?.trim() || 'jerome.erazo@gmail.com'
+    const sesFromEmail = props.sesFromEmail?.trim() || notifyEmail
+    const contactAccessOtpSecret =
+      props.contactAccessOtpSecret?.trim() || 'jerome-contact-access-dev-secret'
+
     const contactHandler = new NodejsFunction(this, 'ContactHandler', {
       entry: path.join(rootDir, 'lambda/contact/handler.ts'),
       projectRoot: rootDir,
@@ -39,6 +48,9 @@ export class JeromeStack extends cdk.Stack {
       environment: {
         CLICKUP_API_TOKEN: props.clickupApiToken,
         CLICKUP_LIST_ID: props.clickupListId,
+        NOTIFY_EMAIL: notifyEmail,
+        SES_FROM_EMAIL: sesFromEmail,
+        CONTACT_ACCESS_OTP_SECRET: contactAccessOtpSecret,
       },
       bundling: {
         minify: true,
@@ -46,6 +58,13 @@ export class JeromeStack extends cdk.Stack {
         target: 'node20',
       },
     })
+
+    contactHandler.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['ses:SendEmail', 'ses:SendRawEmail'],
+        resources: ['*'],
+      }),
+    )
 
     const contactApi = new apigatewayv2.HttpApi(this, 'ContactApi', {
       apiName: 'jerome-contact',
@@ -60,6 +79,18 @@ export class JeromeStack extends cdk.Stack {
       path: '/api/contact',
       methods: [apigatewayv2.HttpMethod.POST, apigatewayv2.HttpMethod.OPTIONS],
       integration: new HttpLambdaIntegration('ContactIntegration', contactHandler),
+    })
+
+    contactApi.addRoutes({
+      path: '/api/contact-access/request',
+      methods: [apigatewayv2.HttpMethod.POST, apigatewayv2.HttpMethod.OPTIONS],
+      integration: new HttpLambdaIntegration('ContactAccessRequestIntegration', contactHandler),
+    })
+
+    contactApi.addRoutes({
+      path: '/api/contact-access/verify',
+      methods: [apigatewayv2.HttpMethod.POST, apigatewayv2.HttpMethod.OPTIONS],
+      integration: new HttpLambdaIntegration('ContactAccessVerifyIntegration', contactHandler),
     })
 
     const apiDomain = `${contactApi.apiId}.execute-api.${this.region}.${this.urlSuffix}`

@@ -1,13 +1,20 @@
 import type { IncomingMessage } from 'node:http'
 import type { Plugin, PreviewServer, ViteDevServer } from 'vite'
+import {
+  handleContactAccessOtpRequest,
+  handleContactAccessOtpVerify,
+} from './contactAccessHandler.ts'
 import { handleContactRequest, type ContactPayload } from './contactHandler.ts'
 
 type ContactApiEnv = {
   clickupApiToken: string
   clickupListId: string
+  notifyEmail: string
+  sesFromEmail: string
+  contactAccessOtpSecret: string
 }
 
-function readJsonBody(req: IncomingMessage): Promise<ContactPayload> {
+function readJsonBody(req: IncomingMessage): Promise<Record<string, unknown>> {
   return new Promise((resolve, reject) => {
     let data = ''
 
@@ -22,7 +29,7 @@ function readJsonBody(req: IncomingMessage): Promise<ContactPayload> {
       }
 
       try {
-        resolve(JSON.parse(data) as ContactPayload)
+        resolve(JSON.parse(data) as Record<string, unknown>)
       } catch {
         reject(new Error('Invalid JSON body'))
       }
@@ -43,13 +50,26 @@ function sendJson(
 }
 
 function createContactMiddleware(env: ContactApiEnv) {
+  const contactAccessConfig = {
+    clickupApiToken: env.clickupApiToken,
+    clickupListId: env.clickupListId,
+    notifyEmail: env.notifyEmail,
+    sesFromEmail: env.sesFromEmail,
+    otpSecret: env.contactAccessOtpSecret,
+  }
+
   return async (
     req: IncomingMessage,
     res: { statusCode: number; setHeader: (name: string, value: string) => void; end: (body?: string) => void },
     next: () => void,
   ) => {
     const pathname = req.url?.split('?')[0]
-    if (pathname !== '/api/contact') {
+
+    if (
+      pathname !== '/api/contact' &&
+      pathname !== '/api/contact-access/request' &&
+      pathname !== '/api/contact-access/verify'
+    ) {
       next()
       return
     }
@@ -68,7 +88,20 @@ function createContactMiddleware(env: ContactApiEnv) {
 
     try {
       const payload = await readJsonBody(req)
-      const result = await handleContactRequest(payload, env)
+
+      if (pathname === '/api/contact-access/request') {
+        const result = await handleContactAccessOtpRequest(payload, contactAccessConfig)
+        sendJson(res, result.status, result.body)
+        return
+      }
+
+      if (pathname === '/api/contact-access/verify') {
+        const result = await handleContactAccessOtpVerify(payload, contactAccessConfig)
+        sendJson(res, result.status, result.body)
+        return
+      }
+
+      const result = await handleContactRequest(payload as ContactPayload, env)
       sendJson(res, result.status, result.body)
     } catch {
       sendJson(res, 400, { error: 'Invalid request body.' })

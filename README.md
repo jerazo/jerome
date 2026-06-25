@@ -1,4 +1,4 @@
-# Jerome Erazo: Personal Website
+# Jerome Lopez Erazo: Personal Website
 
 Professional portfolio/service site built with:
 
@@ -140,6 +140,9 @@ Deploy jobs use the **`jerome`** GitHub Environment. Configure it under **Settin
 | `AWS_ROLE_ARN` | OIDC deploys (`AWS_AUTH_METHOD` unset or `oidc`) |
 | `AWS_ACCESS_KEY_ID` | Only when `AWS_AUTH_METHOD=access-keys` |
 | `AWS_SECRET_ACCESS_KEY` | Only when `AWS_AUTH_METHOD=access-keys` |
+| `CONTACT_ACCESS_OTP_SECRET` | Random secret for OTP signing (`openssl rand -hex 32`) |
+
+Do **not** use `change-me-in-production` in production.
 
 Do **not** configure both OIDC and access keys at once. The workflow uses one method only.
 
@@ -154,6 +157,8 @@ The deploy IAM principal still needs permission to create **S3**, **IAM roles**,
 | `NODE_VERSION` | e.g. `24` |
 | `CLICKUP_API_TOKEN` | ClickUp personal API token (prefer moving to secrets) |
 | `CLICKUP_LIST_ID` | ClickUp list ID for contact form tasks |
+| `NOTIFY_EMAIL` | Where contact-access alerts are sent (default `jerome.erazo@gmail.com`) |
+| `SES_FROM_EMAIL` | Verified SES sender (default matches `NOTIFY_EMAIL`) |
 | `SITE_BUCKET_NAME` | Optional override if CloudFormation lookup is unavailable |
 | `CLOUDFRONT_DISTRIBUTION_ID` | Optional override for site deploy |
 | `SITE_URL` | Optional public site URL for deploy logs |
@@ -166,6 +171,51 @@ The deploy IAM principal still needs permission to create **S3**, **IAM roles**,
 4. Remove `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from the environment if present
 
 The IAM role must trust `repo:jerazo/jerome:environment:jerome` (included in the current OIDC stack).
+
+### Contact access email (SES + OTP)
+
+The masked contact flow sends OTP codes to visitors and alerts you when someone verifies.
+
+**1. Verify SES in AWS (once per account/region)**
+
+1. Open [Amazon SES](https://console.aws.amazon.com/ses/) in `us-east-1` (same region as deploy).
+2. **Verified identities** → **Create identity** → **Email address**.
+3. Enter `jerome.erazo@gmail.com` and complete the verification link in your inbox.
+4. **Account dashboard** → **Request production access** so OTP emails can go to any visitor address (sandbox only allows verified recipients).
+
+**2. Generate an OTP secret**
+
+```bash
+openssl rand -hex 32
+```
+
+**3. GitHub environment `jerome`**
+
+| Type | Name | Value |
+|---|---|---|
+| Variable | `NOTIFY_EMAIL` | `jerome.erazo@gmail.com` |
+| Variable | `SES_FROM_EMAIL` | `jerome.erazo@gmail.com` |
+| Secret | `CONTACT_ACCESS_OTP_SECRET` | output from `openssl rand -hex 32` |
+
+**4. Deploy infrastructure**
+
+Re-run the **Deploy** workflow (or push infra changes). CDK injects these into the contact Lambda.
+
+**5. Local deploy (optional)**
+
+```bash
+cp .env.example .env.local
+# edit CLICKUP_* and CONTACT_ACCESS_OTP_SECRET
+
+export $(grep -v '^#' .env.local | xargs)
+npm run deploy:infra
+```
+
+Preflight check:
+
+```bash
+AWS_REGION=us-east-1 bash infrastructure/scripts/verify-ses.sh
+```
 
 ### Troubleshooting deploy IAM errors
 

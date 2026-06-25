@@ -6,6 +6,9 @@ const app = new cdk.App()
 
 const clickupApiToken = process.env.CLICKUP_API_TOKEN?.trim() ?? ''
 const clickupListId = process.env.CLICKUP_LIST_ID?.trim() ?? ''
+const notifyEmail = process.env.NOTIFY_EMAIL?.trim() ?? 'jerome.erazo@gmail.com'
+const sesFromEmail = process.env.SES_FROM_EMAIL?.trim() ?? notifyEmail
+const contactAccessOtpSecret = process.env.CONTACT_ACCESS_OTP_SECRET?.trim() ?? ''
 
 if (!clickupApiToken || !clickupListId) {
   console.warn(
@@ -20,4 +23,7 @@ new JeromeStack(app, 'JeromeStack', {
   },
   clickupApiToken,
   clickupListId,
+  notifyEmail,
+  sesFromEmail,
+  contactAccessOtpSecret: contactAccessOtpSecret || undefined,
 })

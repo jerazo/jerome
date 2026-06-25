@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
+import { ContactAccessModal } from '../components/molecules/ContactAccessModal'
 import { Footer } from '../components/organisms/Footer'
 import { Header } from '../components/organisms/Header'
 import { useSectionHashScroll } from '../hooks/useSectionHashScroll'
@@ -23,6 +24,7 @@ export default function RootLayout() {
       </main>
 
       <Footer />
+      <ContactAccessModal />
     </div>
   )
 }
