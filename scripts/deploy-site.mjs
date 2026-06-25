@@ -3,7 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { resolveStackOutputs } from './get-stack-outputs.mjs'
 
-const rootDir = path.join(fileURLToPath(import.meta.url), '..')
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const skipBuild = process.argv.includes('--skip-build')
 
 const outputs = resolveStackOutputs()

@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const rootDir = path.join(fileURLToPath(import.meta.url), '..')
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 function awsCommandArgs(stackName, outputKey) {
   const args = [
