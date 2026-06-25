@@ -1,0 +1,165 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Minimal CDK bootstrap for Jerome (S3 file assets only — no ECR)
+
+Parameters:
+  Qualifier:
+    Type: String
+    Default: hnb659fds
+    AllowedPattern: '[A-Za-z0-9_-]{1,10}'
+  BootstrapVariant:
+    Type: String
+    Default: jerome-minimal-v1
+
+Resources:
+  StagingBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub 'cdk-${Qualifier}-assets-${AWS::AccountId}-${AWS::Region}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+  StagingBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref StagingBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowSSLRequestsOnly
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !GetAtt StagingBucket.Arn
+              - !Sub '${StagingBucket.Arn}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: false
+
+  FilePublishingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'cdk-${Qualifier}-file-publishing-role-${AWS::AccountId}-${AWS::Region}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:root'
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+      Tags:
+        - Key: aws-cdk:bootstrap-role
+          Value: file-publishing
+
+  FilePublishingRoleDefaultPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      Roles:
+        - !Ref FilePublishingRole
+      PolicyName: !Sub 'cdk-${Qualifier}-file-publishing-role-default-policy-${AWS::AccountId}-${AWS::Region}'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+              - s3:PutObject*
+              - s3:Abort*
+            Resource:
+              - !GetAtt StagingBucket.Arn
+              - !Sub '${StagingBucket.Arn}/*'
+
+  DeploymentActionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'cdk-${Qualifier}-deploy-role-${AWS::AccountId}-${AWS::Region}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:root'
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AdministratorAccess'
+      Tags:
+        - Key: aws-cdk:bootstrap-role
+          Value: deploy
+
+  CloudFormationExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'cdk-${Qualifier}-cfn-exec-role-${AWS::AccountId}-${AWS::Region}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AdministratorAccess'
+      Tags:
+        - Key: aws-cdk:bootstrap-role
+          Value: cfn-exec
+
+  LookupRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'cdk-${Qualifier}-lookup-role-${AWS::AccountId}-${AWS::Region}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:root'
+            Action:
+              - sts:AssumeRole
+              - sts:TagSession
+      ManagedPolicyArns:
+        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/ReadOnlyAccess'
+      Tags:
+        - Key: aws-cdk:bootstrap-role
+          Value: lookup
+
+  CdkBootstrapVersion:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Name: !Sub '/cdk-bootstrap/${Qualifier}/version'
+      Value: '32'
+
+Outputs:
+  BucketName:
+    Description: The name of the S3 bucket owned by the CDK toolkit stack
+    Value: !Ref StagingBucket
+  BucketDomainName:
+    Description: The domain name of the S3 bucket owned by the CDK toolkit stack
+    Value: !GetAtt StagingBucket.RegionalDomainName
+  FileAssetKeyArn:
+    Description: KMS key for the asset bucket (unused in minimal bootstrap)
+    Value: AWS_MANAGED_KEY
+  ImageRepositoryName:
+    Description: Unused — no container assets in this project
+    Value: ''
+  BootstrapVersion:
+    Description: The version of the bootstrap resources in this stack
+    Value: '32'

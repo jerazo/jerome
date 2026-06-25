@@ -147,6 +147,8 @@ Deploy jobs use the **`jerome`** GitHub Environment. Configure it under **Settin
 
 Do **not** configure both OIDC and access keys at once. The workflow uses one method only.
 
+The deploy IAM principal still needs permission to create **S3**, **IAM roles**, and **SSM parameters** for the first bootstrap. This project uses a **minimal bootstrap template without ECR**, so `ecr:CreateRepository` is not required.
+
 **Environment variables**
 
 | Variable | Value |
