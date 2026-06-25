@@ -149,7 +149,7 @@ The deploy IAM principal still needs permission to create **S3**, **IAM roles**,
 
 | Variable | Value |
 |---|---|
-| `AWS_AUTH_METHOD` | `oidc` (default) or `access-keys` |
+| `AWS_AUTH_METHOD` | `oidc` (recommended) or `access-keys` |
 | `AWS_REGION` | e.g. `us-east-1` |
 | `NODE_VERSION` | e.g. `24` |
 | `CLICKUP_API_TOKEN` | ClickUp personal API token (prefer moving to secrets) |
@@ -166,6 +166,22 @@ The deploy IAM principal still needs permission to create **S3**, **IAM roles**,
 4. Remove `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from the environment if present
 
 The IAM role must trust `repo:jerazo/jerome:environment:jerome` (included in the current OIDC stack).
+
+### Troubleshooting deploy IAM errors
+
+If `cdk deploy` fails with `iam:PassRole` or `sts:AssumeRole` on `cdk-hnb659fds-*` roles, the deploy principal is too limited.
+
+**Recommended fix (OIDC):**
+
+1. Set `AWS_AUTH_METHOD` = `oidc` in the `jerome` environment
+2. Keep only `AWS_ROLE_ARN` (from `npm run deploy:oidc --prefix infrastructure`)
+3. Remove `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from the environment
+
+The OIDC deploy role uses `AdministratorAccess` and can pass CDK execution roles.
+
+**If you must use access keys:**
+
+Attach `infrastructure/policies/github-actions-deploy-policy.json` to the IAM user, or attach `AdministratorAccess`.
 
 After the first successful deploy, every push to `main` updates the live site automatically.
 

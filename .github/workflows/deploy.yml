@@ -123,6 +123,8 @@ jobs:
           npm ci --prefix infrastructure
 
       - name: Verify AWS credentials
+        env:
+          AWS_AUTH_METHOD: ${{ vars.AWS_AUTH_METHOD || 'oidc' }}
         run: |
           AUTH_METHOD="${{ vars.AWS_AUTH_METHOD || 'oidc' }}"
           if [ "$AUTH_METHOD" = "access-keys" ]; then
@@ -151,6 +153,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Verify deploy permissions
+        env:
+          AWS_AUTH_METHOD: ${{ vars.AWS_AUTH_METHOD || 'oidc' }}
+        run: bash scripts/verify-deploy-permissions.sh
 
       - name: Bootstrap CDK
         working-directory: infrastructure

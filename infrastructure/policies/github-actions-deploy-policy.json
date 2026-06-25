@@ -1,0 +1,60 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AssumeCdkBootstrapRoles",
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "arn:aws:iam::*:role/cdk-hnb659fds-*"
+    },
+    {
+      "Sid": "PassCdkCloudFormationExecutionRole",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "arn:aws:iam::*:role/cdk-hnb659fds-cfn-exec-role-*",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "cloudformation.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "PassJeromeStackServiceRoles",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "arn:aws:iam::*:role/JeromeStack-*",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": [
+            "lambda.amazonaws.com",
+            "apigateway.amazonaws.com"
+          ]
+        }
+      }
+    },
+    {
+      "Sid": "DeployJeromeSite",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:*",
+        "s3:*",
+        "lambda:*",
+        "apigateway:*",
+        "iam:CreateRole",
+        "iam:DeleteRole",
+        "iam:GetRole",
+        "iam:AttachRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:PutRolePolicy",
+        "iam:DeleteRolePolicy",
+        "iam:TagRole",
+        "iam:UntagRole",
+        "logs:*",
+        "ssm:GetParameter",
+        "ssm:PutParameter",
+        "cloudfront:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
