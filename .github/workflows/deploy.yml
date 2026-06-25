@@ -154,30 +154,7 @@ jobs:
 
       - name: Bootstrap CDK
         working-directory: infrastructure
-        env:
-          CLICKUP_API_TOKEN: ${{ vars.CLICKUP_API_TOKEN }}
-          CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
-        run: |
-          ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-          REGION="${{ env.AWS_REGION }}"
-
-          STATUS="$(aws cloudformation describe-stacks \
-            --stack-name CDKToolkit \
-            --region "$REGION" \
-            --query 'Stacks[0].StackStatus' \
-            --output text 2>/dev/null || echo NONE)"
-
-          if [ "$STATUS" = "ROLLBACK_COMPLETE" ] || [ "$STATUS" = "CREATE_FAILED" ]; then
-            echo "Removing failed CDKToolkit stack ($STATUS) before re-bootstrapping..."
-            aws cloudformation delete-stack --stack-name CDKToolkit --region "$REGION"
-            aws cloudformation wait stack-delete-complete --stack-name CDKToolkit --region "$REGION"
-          fi
-
-          npx cdk bootstrap "aws://${ACCOUNT_ID}/${REGION}" \
-            --app 'npx tsx bin/empty.ts' \
-            --template bootstrap-minimal.yaml \
-            --qualifier hnb659fds \
-            --cloudformation-execution-policies arn:aws:iam::aws:policy/AdministratorAccess
+        run: bash scripts/bootstrap.sh
 
       - name: Deploy CDK stack
         working-directory: infrastructure

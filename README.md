@@ -38,7 +38,7 @@ The site is a static Vite build on **S3 + CloudFront**. The contact form runs on
 ```bash
 cd infrastructure
 npm install
-npx cdk bootstrap
+AWS_REGION=us-east-1 npm run bootstrap
 ```
 
 - ClickUp credentials in your shell (or `.env.local` sourced before deploy)
@@ -106,14 +106,10 @@ Pull requests and pushes also run `.github/workflows/ci.yml` (lint, build, CDK s
 ```bash
 cd infrastructure
 npm install
-npx cdk bootstrap aws://YOUR_ACCOUNT_ID/us-east-1
+AWS_REGION=us-east-1 npm run bootstrap
 ```
 
-Or from the repo root after AWS CLI credentials are configured:
-
-```bash
-npm run bootstrap:infra
-```
+This deploys `bootstrap-minimal.yaml` with CloudFormation directly (no ECR, no `cdk bootstrap` app required).
 
 2. Create the GitHub OIDC deploy role (once per account):
 
