@@ -41,7 +41,12 @@ export type ContactFieldErrors = Partial<Record<ValidatedField, string>>
 const validatedFields: ValidatedField[] = ['name', 'email', 'phone', 'message']
 
 function stripControlChars(value: string) {
-  return value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+  return [...value]
+    .filter((char) => {
+      const code = char.charCodeAt(0)
+      return (code > 31 && code !== 127) || code === 9 || code === 10 || code === 13
+    })
+    .join('')
 }
 
 function collapseInlineWhitespace(value: string) {

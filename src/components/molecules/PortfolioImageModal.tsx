@@ -17,16 +17,27 @@ export function PortfolioImageModal({
   state: PortfolioImageModalState | null
   onClose: () => void
 }) {
-  const [index, setIndex] = useState(0)
+  if (!state) return null
+
+  return (
+    <PortfolioImageModalContent
+      key={`${state.projectTitle}:${state.index}:${state.images.map((image) => image.src).join('|')}`}
+      state={state}
+      onClose={onClose}
+    />
+  )
+}
+
+function PortfolioImageModalContent({
+  state,
+  onClose,
+}: {
+  state: PortfolioImageModalState
+  onClose: () => void
+}) {
+  const [index, setIndex] = useState(state.index)
 
   useEffect(() => {
-    if (!state) return
-    setIndex(state.index)
-  }, [state])
-
-  useEffect(() => {
-    if (!state) return
-
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
       if (state.images.length <= 1) return
@@ -46,9 +57,7 @@ export function PortfolioImageModal({
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [onClose, state])
-
-  if (!state) return null
+  }, [onClose, state.images.length])
 
   const total = state.images.length
   const current = state.images[index]

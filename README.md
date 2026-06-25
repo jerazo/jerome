@@ -123,9 +123,16 @@ Add these **repository secrets**:
 
 | Secret | Value |
 |---|---|
-| `AWS_ROLE_ARN` | `GitHubActionsRoleArn` from the OIDC stack |
+| `AWS_ROLE_ARN` | `GitHubActionsRoleArn` from the OIDC stack (recommended) |
 | `CLICKUP_API_TOKEN` | ClickUp personal API token |
 | `CLICKUP_LIST_ID` | ClickUp list ID for contact form tasks |
+
+Alternatively, instead of `AWS_ROLE_ARN`, you can use long-lived keys:
+
+| Secret | Value |
+|---|---|
+| `AWS_ACCESS_KEY_ID` | IAM user access key with deploy permissions |
+| `AWS_SECRET_ACCESS_KEY` | Matching secret key |
 
 Optional **repository variable**:
 

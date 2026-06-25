@@ -29,7 +29,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
     }
   }
 
-  let payload: ContactPayload = {}
+  let payload: ContactPayload
 
   try {
     payload = JSON.parse(event.body ?? '{}') as ContactPayload
