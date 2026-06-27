@@ -1,9 +1,10 @@
 import { ArrowUpRight } from 'lucide-react'
 import { useState } from 'react'
 import { portfolioProjects } from '../../content/portfolio'
-import type { PortfolioImage } from '../../content/portfolio'
+import type { PortfolioProject } from '../../content/portfolio'
 import { cn } from '../../lib/cn'
 import { Gutter } from '../atoms/Gutter'
+import { ImpactBadge } from '../molecules/ImpactBadge'
 import {
   PortfolioImageModal,
   type PortfolioImageModalState,
@@ -16,28 +17,23 @@ function PortfolioMedia({
   project,
   onOpenImage,
 }: {
-  project: (typeof portfolioProjects)[number]
-  onOpenImage: (images: PortfolioImage[], index: number, projectTitle: string) => void
+  project: PortfolioProject
+  onOpenImage: (project: PortfolioProject, index: number) => void
 }) {
   if (project.images && project.images.length > 0) {
     return (
       <PortfolioCarousel
         images={project.images}
-        onImageClick={(index) => onOpenImage(project.images!, index, project.title)}
+        onImageClick={(index) => onOpenImage(project, index)}
       />
     )
   }
 
   if (project.imageSrc) {
-    const image: PortfolioImage = {
-      src: project.imageSrc,
-      alt: project.imageAlt ?? project.title,
-    }
-
     return (
       <button
         type="button"
-        onClick={() => onOpenImage([image], 0, project.title)}
+        onClick={() => onOpenImage(project, 0)}
         className="relative block h-40 w-full cursor-zoom-in overflow-hidden border-b border-sand/10 bg-ink2/50 text-left focus-visible:focus-ring"
         aria-label={`View larger ${project.title} screenshot`}
       >
@@ -62,8 +58,19 @@ function PortfolioMedia({
 export function PortfolioSection() {
   const [modalState, setModalState] = useState<PortfolioImageModalState | null>(null)
 
-  const openImage = (images: PortfolioImage[], index: number, projectTitle: string) => {
-    setModalState({ images, index, projectTitle })
+  const openImage = (project: PortfolioProject, index: number) => {
+    const images =
+      project.images ??
+      (project.imageSrc
+        ? [{ src: project.imageSrc, alt: project.imageAlt ?? project.title }]
+        : [])
+
+    setModalState({
+      images,
+      index,
+      projectTitle: project.title,
+      impactMetrics: project.impactMetrics,
+    })
   }
 
   return (
@@ -117,6 +124,10 @@ export function PortfolioSection() {
                     <p className="mt-3 flex-1 text-sm leading-relaxed text-sand/70">
                       {project.summary}
                     </p>
+
+                    {project.impactMetrics?.length ? (
+                      <ImpactBadge metrics={project.impactMetrics} className="mt-4" />
+                    ) : null}
 
                     <PortfolioTechStack tags={project.tags} />
                   </div>

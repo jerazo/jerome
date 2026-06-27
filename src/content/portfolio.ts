@@ -4,6 +4,11 @@ export type PortfolioImage = {
   label?: string
 }
 
+export type PortfolioImpactMetric = {
+  label: string
+  value: string
+}
+
 export type PortfolioProject = {
   id: string
   title: string
@@ -12,6 +17,7 @@ export type PortfolioProject = {
   summary: string
   tags: string[]
   accent: string
+  impactMetrics?: PortfolioImpactMetric[]
   imageSrc?: string
   imageAlt?: string
   images?: PortfolioImage[]
@@ -41,6 +47,10 @@ export const portfolioProjects: PortfolioProject[] = [
       ...aiWorkflowTags,
     ],
     accent: 'from-fuchsia-500/35 via-violet-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Platform export', value: '6 channels' },
+      { label: 'AI pipeline', value: 'Script → export' },
+    ],
     images: [
       {
         src: '/portfolio/digital-creator/projects.png',
@@ -104,6 +114,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'Apple Music',
     ],
     accent: 'from-cyan-500/35 via-sky-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Live integrations', value: '12+ feeds' },
+      { label: 'Query layer', value: 'Natural language' },
+    ],
     images: [
       {
         src: '/portfolio/jarvis/dashboard.png',
@@ -140,6 +154,10 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     accent: 'from-red-500/35 via-orange-500/20 to-transparent',
     url: 'https://configurator-test.thermal.com/',
+    impactMetrics: [
+      { label: 'Hardware config', value: 'Web USB' },
+      { label: 'Phase 2 scale', value: 'Fleet mgmt' },
+    ],
     images: [
       {
         src: '/portfolio/seek-thermal/connect-device.png',
@@ -215,6 +233,10 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     accent: 'from-violet-500/35 via-fuchsia-500/20 to-transparent',
     url: 'https://www.unicity.com/',
+    impactMetrics: [
+      { label: 'Product streams', value: '3 platforms' },
+      { label: 'Leadership', value: 'Asia engineering' },
+    ],
     images: [
       {
         src: '/portfolio/unicity/unicity-com.png',
@@ -259,6 +281,10 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     accent: 'from-sky-500/35 via-cyan-500/20 to-transparent',
     url: 'https://www.tempest.house/',
+    impactMetrics: [
+      { label: 'Client products', value: '4+ shipped' },
+      { label: 'Engagement', value: '7+ years' },
+    ],
     imageSrc: '/portfolio/tempest-house.png',
     imageAlt: 'Tempest House agency website homepage',
   },
@@ -271,6 +297,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'Frontend work on ZippyCash, a Canadian fintech wallet covering transfers, transaction history, funding sources, and Interac e-Transfer flows with a polished consumer UI.',
     tags: ['React', 'TypeScript', 'Fintech', 'UI engineering', 'PostgreSQL'],
     accent: 'from-orange-500/35 via-pink-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Payments', value: 'Interac e-Transfer' },
+      { label: 'Domain', value: 'Consumer fintech' },
+    ],
     imageSrc: '/portfolio/zippycash.png',
     imageAlt: 'ZippyCash wallet transfer completed screen',
   },
@@ -284,6 +314,10 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['Angular', 'TypeScript', 'Material UI', 'Redux', 'GitHub Actions', 'UI engineering', 'Accessibility'],
     accent: 'from-fuchsia-500/35 via-cyan-500/20 to-transparent',
     url: 'https://doubleverify.com/',
+    impactMetrics: [
+      { label: 'Platform', value: 'Enterprise media' },
+      { label: 'Delivery focus', value: 'A11y + perf' },
+    ],
     imageSrc: '/portfolio/doubleverify.png',
     imageAlt: 'DoubleVerify media effectiveness platform homepage',
   },
@@ -309,6 +343,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'API design',
     ],
     accent: 'from-emerald-500/35 via-teal-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Esports data', value: 'Pro LoL stats' },
+      { label: 'Shipped feature', value: 'Draft simulator' },
+    ],
     images: [
       {
         src: '/portfolio/shadow-gg/draft-simulator.png',
@@ -342,6 +380,10 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['React', 'Node.js', 'MongoDB', 'Web development', 'Education'],
     accent: 'from-lime-500/35 via-emerald-500/20 to-transparent',
     url: 'https://www.exploreplanet3.com/',
+    impactMetrics: [
+      { label: 'Stack', value: 'Node + MongoDB' },
+      { label: 'Domain', value: 'Ed-tech portal' },
+    ],
     imageSrc: '/portfolio/planet3.png',
     imageAlt: 'Planet3 explore play learn website homepage',
   },
@@ -354,6 +396,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'Mobile gait analysis app and backend services for a movement-science product, with an Ionic/Cordova client, data workflows, and close collaboration with the domain team.',
     tags: ['Ionic', 'Cordova', 'Angular', 'Node.js', 'MongoDB', 'Data workflows', 'Backend'],
     accent: 'from-amber-500/35 via-orange-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Product', value: 'Gait analysis app' },
+      { label: 'Stack', value: 'Ionic + Node.js' },
+    ],
     imageSrc: '/portfolio/aki-movement.png',
     imageAlt: 'AKI Movement Laboratory walking gait analysis mobile app',
   },
@@ -366,6 +412,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'Automated League of Legends tournament flows with brackets, structures, and API-backed consumer web features.',
     tags: ['JavaScript', 'PHP', 'jQuery', 'Laravel', 'API', 'Gaming'],
     accent: 'from-rose-500/35 via-pink-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Automation', value: 'Tournament brackets' },
+      { label: 'Game focus', value: 'League of Legends' },
+    ],
     imageSrc: '/portfolio/xfire.png',
     imageAlt: 'Xfire Battlefield 3 tournament page',
   },
@@ -378,6 +428,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'UI skins and core site features for bitraider.com, a digital game distribution platform with streaming download tech, plus reporting concepts for very large datasets.',
     tags: ['PHP', 'WordPress', 'Web development', 'Gaming', 'Digital distribution'],
     accent: 'from-orange-500/35 via-indigo-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Distribution', value: 'Streaming downloads' },
+      { label: 'UI delivery', value: 'Multi-game skins' },
+    ],
     images: [
       {
         src: '/portfolio/bitraider.png',
@@ -405,6 +459,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'Built the marketing site for Forensworks, an IT forensics firm serving legal professionals, covering digital forensics, data recovery, usage tracking, timeline reconstruction, and expert analysis.',
     tags: ['PHP', 'WordPress', 'Web development', 'Digital forensics', 'Legal tech'],
     accent: 'from-blue-500/35 via-slate-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Domain', value: 'Legal forensics' },
+      { label: 'Delivery', value: 'Marketing site' },
+    ],
     imageSrc: '/portfolio/forensworks.png',
     imageAlt: 'Forensworks digital forensics website homepage',
   },
@@ -417,6 +475,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'Managed a large web production org and raised throughput from one page per developer per week to one per day.',
     tags: ['Leadership', 'Process', 'Delivery', 'PHP', 'jQuery', 'MySQL'],
     accent: 'from-indigo-500/35 via-purple-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'Dev throughput', value: '7× faster' },
+      { label: 'Team output', value: '1 page/dev/day' },
+    ],
     imageSrc: '/portfolio/oneglobal-uswebsitebuilder.png',
     imageAlt: 'USWebsitebuilder.com homepage built under One Global Contact Center',
   },
@@ -429,6 +491,10 @@ export const portfolioProjects: PortfolioProject[] = [
       'Built and maintained a high-volume catalog of gaming, e-commerce, education, and marketing sites under Island Logic’s QuickJump line, using PHP/JavaScript and ASP/IIS stacks across concurrent client launches.',
     tags: ['PHP', 'JavaScript', 'Lua', 'C++', 'MySQL', 'MSSQL', 'Gaming', 'E-commerce'],
     accent: 'from-teal-500/35 via-cyan-500/20 to-transparent',
+    impactMetrics: [
+      { label: 'SME Sites', value: '10× production' },
+      { label: 'Stacks', value: 'PHP + ASP/IIS' },
+    ],
     images: [
       {
         src: '/portfolio/island-logic/couponfinder.png',
