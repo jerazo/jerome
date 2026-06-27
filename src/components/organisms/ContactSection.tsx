@@ -1,23 +1,44 @@
-import { ContactForm } from '../molecules/ContactForm'
+import { lazy, Suspense } from 'react'
 import { MaskedContactValue } from '../molecules/MaskedContactValue'
 import { SectionHeading } from '../molecules/SectionHeading'
+import { contactSection } from '../../content/contact'
 import { profile } from '../../content/profile'
+
+const ContactForm = lazy(() =>
+  import('../molecules/ContactForm').then((module) => ({ default: module.ContactForm })),
+)
+
+function ContactFormFallback() {
+  return (
+    <div
+      className="contact-form-shell min-h-[28rem] animate-pulse"
+      aria-hidden="true"
+      role="presentation"
+    />
+  )
+}
 
 export function ContactSection() {
   return (
-    <>
+    <div
+      role="region"
+      aria-label="Contact form"
+      className="grid gap-8 sm:gap-10"
+    >
       <SectionHeading
-        eyebrow="Contact"
-        title="Tell me what you’re building"
-        description="Send a quick note and I’ll reply with questions, scope guidance, and the next steps."
+        eyebrow={contactSection.eyebrow}
+        title={contactSection.title}
+        description={contactSection.description}
       />
 
-      <div className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-start">
+      <div className="grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
         <div className="lg:col-span-7">
-          <ContactForm />
+          <Suspense fallback={<ContactFormFallback />}>
+            <ContactForm id="contact-form" />
+          </Suspense>
         </div>
 
-        <aside className="lg:col-span-5">
+        <aside className="lg:col-span-5" aria-label="Direct contact details">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/55">
             Direct
           </p>
@@ -30,7 +51,7 @@ export function ContactSection() {
           <p className="mt-2 text-sm text-sand/75">
             LinkedIn:{' '}
             <a
-              className="font-semibold text-sand hover:text-gold-200"
+              className="font-semibold text-sand hover:text-gold-200 focus-visible:focus-ring"
               href={profile.links.linkedin}
               target="_blank"
               rel="noreferrer"
@@ -60,6 +81,6 @@ export function ContactSection() {
           </div>
         </aside>
       </div>
-    </>
+    </div>
   )
 }

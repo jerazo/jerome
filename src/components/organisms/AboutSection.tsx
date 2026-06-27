@@ -83,8 +83,10 @@ export function AboutSection() {
         <aside className="lg:col-span-5">
           <div className="overflow-hidden rounded-3xl border border-sand/10 bg-white/5 shadow-soft">
             <img
-              src="/jerome-portrait-square.jpg"
+              src="/jerome-portrait-square.webp"
               alt={profile.name}
+              width={900}
+              height={900}
               className="h-[320px] w-full object-cover"
               loading="lazy"
             />

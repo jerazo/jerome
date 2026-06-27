@@ -1,12 +1,14 @@
-import { useState, type FormEvent } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
+import { Lock } from 'lucide-react'
 import { Button } from '../atoms/Button'
-import { cn } from '../../lib/cn'
+import { contactPrivacy, contactSuccess } from '../../content/contact'
 import {
   contactFormFields,
   emptyContactFormValues,
   type ContactFormField,
   type ContactFormValues,
 } from '../../content/contactForm'
+import { cn } from '../../lib/cn'
 import {
   isFieldLevelError,
   sanitizeContactDraft,
@@ -79,17 +81,12 @@ function renderField(
   const fieldError = isValidatedField(field.id) ? options.fieldErrors[field.id] : undefined
   const errorId = fieldError ? `contact-${field.id}-error` : undefined
 
-  const label = (
-    <span className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/95">
-      {field.label}
-      {field.required ? <span className="text-gold-200/90"> *</span> : null}
-    </span>
-  )
-
   if (field.id === 'phone') {
     return (
-      <div key={field.id} className="min-w-0 grid gap-2">
-        {label}
+      <fieldset key={field.id} className="min-w-0 grid gap-2 border-0 p-0">
+        <legend className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/95">
+          {field.label}
+        </legend>
         <PhoneField
           countryCode={values.phoneCountry}
           nationalNumber={values.phone}
@@ -99,15 +96,21 @@ function renderField(
           placeholder={field.placeholder}
           error={fieldError}
         />
-      </div>
+      </fieldset>
     )
   }
 
+  const fieldId = `contact-${field.id}`
+
   if (field.type === 'textarea') {
     return (
-      <label key={field.id} className="min-w-0 grid gap-2">
-        {label}
+      <div key={field.id} className="min-w-0 grid gap-2">
+        <label htmlFor={fieldId} className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/95">
+          {field.label}
+          {field.required ? <span className="text-gold-200/90"> *</span> : null}
+        </label>
         <textarea
+          id={fieldId}
           name={field.id}
           value={values[field.id]}
           onChange={(event) => {
@@ -129,16 +132,20 @@ function renderField(
             {fieldError}
           </span>
         ) : null}
-      </label>
+      </div>
     )
   }
 
   const validatedId = isValidatedField(field.id) ? field.id : null
 
   return (
-    <label key={field.id} className="min-w-0 grid gap-2">
-      {label}
+    <div key={field.id} className="min-w-0 grid gap-2">
+      <label htmlFor={fieldId} className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/95">
+        {field.label}
+        {field.required ? <span className="text-gold-200/90"> *</span> : null}
+      </label>
       <input
+        id={fieldId}
         type={field.type}
         name={field.id}
         value={values[field.id]}
@@ -169,17 +176,28 @@ function renderField(
           {fieldError}
         </span>
       ) : null}
-    </label>
+    </div>
   )
 }
 
-export function ContactForm({ className }: { className?: string }) {
+export function ContactForm({
+  className,
+  id,
+}: {
+  className?: string
+  id?: string
+}) {
   const [values, setValues] = useState<ContactFormValues>(createInitialValues)
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<ValidatedField, string>>>({})
   const [touchedFields, setTouchedFields] = useState<Partial<Record<ValidatedField, boolean>>>({})
   const fieldGroups = buildFieldGroups(contactFormFields)
+
+  const isFormValid = useMemo(() => {
+    const validation = validateContactForm(values)
+    return validation.success && !validation.honeypot && validation.data !== null
+  }, [values])
 
   const updateField = (field: keyof ContactFormValues, value: string) => {
     setValues((current) => {
@@ -221,7 +239,7 @@ export function ContactForm({ className }: { className?: string }) {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (status === 'submitting') return
+    if (status === 'submitting' || !isFormValid) return
 
     const validation = validateContactForm(values)
     setFieldErrors(validation.fieldErrors)
@@ -277,13 +295,23 @@ export function ContactForm({ className }: { className?: string }) {
   }
 
   return (
-    <div className={cn('contact-form-shell', className)}>
+    <div
+      id={id}
+      className={cn('contact-form-shell scroll-mt-28', className)}
+      aria-labelledby={id ? `${id}-title` : undefined}
+    >
+      <h3 id={id ? `${id}-title` : undefined} className="sr-only">
+        Project inquiry form
+      </h3>
+
       {status === 'success' ? (
-        <div className="grid gap-3 py-4">
-          <p className="text-lg font-semibold text-sand">Message sent.</p>
-          <p className="text-sm text-sand/75">
-            Thanks for reaching out. I&apos;ll reply with questions, scope guidance, and next steps.
-          </p>
+        <div
+          className="contact-success-toast grid gap-3 py-4"
+          role="status"
+          aria-live="polite"
+        >
+          <p className="text-lg font-semibold text-sand">{contactSuccess.title}</p>
+          <p className="text-sm text-sand/75">{contactSuccess.description}</p>
           <Button
             type="button"
             variant="secondary"
@@ -291,18 +319,26 @@ export function ContactForm({ className }: { className?: string }) {
             className="mt-2 w-fit"
             onClick={() => setStatus('idle')}
           >
-            Send another message
+            {contactSuccess.action}
           </Button>
         </div>
       ) : (
-        <form className="grid gap-5" onSubmit={handleSubmit} noValidate>
+        <form
+          className="grid gap-6"
+          onSubmit={handleSubmit}
+          noValidate
+          aria-describedby="contact-privacy-note"
+        >
           {fieldGroups.map((group) => {
             if (group.type === 'full') {
               return renderField(group.field, values, updateField, fieldOptions)
             }
 
             return (
-              <div key={group.fields.map((field) => field.id).join('-')} className="grid min-w-0 gap-5 sm:grid-cols-2">
+              <div
+                key={group.fields.map((field) => field.id).join('-')}
+                className="grid min-w-0 gap-6 sm:grid-cols-2"
+              >
                 {group.fields.map((field) => renderField(field, values, updateField, fieldOptions))}
               </div>
             )
@@ -326,9 +362,22 @@ export function ContactForm({ className }: { className?: string }) {
             </p>
           ) : null}
 
+          <p
+            id="contact-privacy-note"
+            className="flex items-start gap-2 text-xs leading-relaxed text-sand/55"
+          >
+            <Lock size={14} className="mt-0.5 flex-none text-gold-300/80" aria-hidden />
+            <span>{contactPrivacy.text}</span>
+          </p>
+
           <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
             <p className="text-xs text-sand/50">Submissions go straight to my ClickUp inbox.</p>
-            <Button type="submit" disabled={status === 'submitting'} className="min-w-[9rem]">
+            <Button
+              type="submit"
+              disabled={status === 'submitting' || !isFormValid}
+              className="min-w-[9rem]"
+              aria-disabled={status === 'submitting' || !isFormValid}
+            >
               {status === 'submitting' ? 'Sending…' : 'Send message'}
             </Button>
           </div>

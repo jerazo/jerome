@@ -5,11 +5,14 @@ import { Footer } from '../components/organisms/Footer'
 import { Header } from '../components/organisms/Header'
 import { useAnalyticsPageView } from '../hooks/useAnalyticsPageView'
 import { useSectionHashScroll } from '../hooks/useSectionHashScroll'
+import { useUiStore } from '../store/uiStore'
 import { ScrollToTop } from './ScrollToTop'
 
 export default function RootLayout() {
   const location = useLocation()
   const isHome = location.pathname === '/'
+  const mobileNavOpen = useUiStore((state) => state.mobileNavOpen)
+  const lockBackgroundFocus = !isHome && mobileNavOpen
 
   useSectionHashScroll()
   useAnalyticsPageView()
@@ -23,11 +26,16 @@ export default function RootLayout() {
       {isHome ? null : <Header />}
       <ScrollToTop />
 
-      <main id="main-content" tabIndex={-1} className={isHome ? undefined : 'pt-16 sm:pt-20'}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        inert={lockBackgroundFocus ? true : undefined}
+        className={isHome ? undefined : 'pt-16 sm:pt-20'}
+      >
         <Outlet />
       </main>
 
-      <Footer />
+      <Footer inert={lockBackgroundFocus ? true : undefined} />
       <ContactAccessModal />
     </div>
   )

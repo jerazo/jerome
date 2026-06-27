@@ -20,24 +20,25 @@ export function useFocusTrap(containerRef: RefObject<HTMLElement | null>, active
       if (event.key !== 'Tab') return
 
       const focusable = getFocusableElements(container)
-      if (focusable.length === 0) {
-        event.preventDefault()
+      if (focusable.length === 0) return
+
+      const activeElement = document.activeElement
+      if (!(activeElement instanceof HTMLElement) || !container.contains(activeElement)) {
         return
       }
 
       const first = focusable[0]
       const last = focusable[focusable.length - 1]
-      const activeElement = document.activeElement
 
       if (event.shiftKey) {
-        if (activeElement === first || !container.contains(activeElement)) {
+        if (activeElement === first) {
           event.preventDefault()
           last.focus()
         }
         return
       }
 
-      if (activeElement === last || !container.contains(activeElement)) {
+      if (activeElement === last) {
         event.preventDefault()
         first.focus()
       }

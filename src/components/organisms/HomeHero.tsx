@@ -160,8 +160,10 @@ export function HomeHero() {
 
         <div className="absolute inset-0 hidden w-full lg:block">
           <img
-            src="/jerome-portrait-hero-background.png"
+            src="/jerome-portrait-hero-background.webp"
             alt=""
+            width={2409}
+            height={900}
             className="h-full w-full object-cover opacity-95"
             style={{
               objectPosition: `${desktopObjectX} 26%`,
@@ -174,8 +176,10 @@ export function HomeHero() {
             aria-hidden
           />
           <img
-            src="/jerome-portrait-hero-subject.png"
+            src="/jerome-portrait-hero-subject.webp"
             alt={`Portrait of ${profile.name}, ${profile.headline}`}
+            width={2409}
+            height={900}
             className="absolute inset-0 h-full w-full object-cover"
             style={{
               objectPosition: `${desktopObjectX} 26%`,
@@ -245,8 +249,10 @@ export function HomeHero() {
           <Gutter className="pb-8 pt-3">
             <div className="relative aspect-[5/6] w-full max-h-[min(72vw,320px)] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/40 shadow-soft">
               <img
-                src="/jerome-portrait-square.jpg"
+                src="/jerome-portrait-square.webp"
                 alt={`Portrait of ${profile.name}, ${profile.headline}`}
+                width={900}
+                height={900}
                 className="absolute inset-0 h-full w-full object-cover"
                 style={{ objectPosition: '55% 16%' }}
                 loading="eager"

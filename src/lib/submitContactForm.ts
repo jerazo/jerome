@@ -11,8 +11,10 @@ export type ContactSubmitResult =
   | { ok: true }
   | { ok: false; error: string }
 
+const CONTACT_API_ENDPOINT = import.meta.env.VITE_CONTACT_API_URL ?? '/api/contact'
+
 export async function submitContactForm(values: ContactSubmitPayload): Promise<ContactSubmitResult> {
-  const endpoint = import.meta.env.VITE_CONTACT_API_URL ?? '/api/contact'
+  const endpoint = CONTACT_API_ENDPOINT
 
   try {
     const response = await fetch(endpoint, {

@@ -8,9 +8,9 @@ import { profile } from '../../content/profile'
 const footerLinkClass =
   'text-sm font-medium text-sand/70 transition hover:text-sand focus-visible:focus-ring'
 
-export function Footer() {
+export function Footer({ inert }: { inert?: boolean }) {
   return (
-    <footer className="border-t border-sand/10 bg-ink/60">
+    <footer inert={inert ? true : undefined} className="border-t border-sand/10 bg-ink/60">
       <Container className="flex flex-col gap-10 pb-10 pt-[1in] lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
           <p className="font-display text-xl font-semibold tracking-tight text-sand">

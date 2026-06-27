@@ -16,6 +16,8 @@ type PhoneFieldProps = {
   placeholder?: string
   error?: string
   className?: string
+  countrySelectId?: string
+  phoneInputId?: string
 }
 
 export function PhoneField({
@@ -27,12 +29,18 @@ export function PhoneField({
   placeholder = '400 000 000',
   error,
   className,
+  countrySelectId = 'contact-phone-country',
+  phoneInputId = 'contact-phone',
 }: PhoneFieldProps) {
   return (
     <div className={cn('grid gap-2', className)}>
       <div className="flex min-w-0 gap-2">
         <div className="relative shrink-0">
+          <label htmlFor={countrySelectId} className="sr-only">
+            Country code
+          </label>
           <select
+            id={countrySelectId}
             name="phoneCountry"
             value={countryCode}
             onChange={(event) => onCountryChange(event.target.value)}
@@ -42,7 +50,6 @@ export function PhoneField({
               'cursor-pointer',
               error && 'border-red-400/50',
             )}
-            aria-label="Country code"
           >
             {countryDialCodes.map((country) => (
               <option key={country.code} value={country.code} title={country.name}>
@@ -59,6 +66,7 @@ export function PhoneField({
         </div>
 
         <input
+          id={phoneInputId}
           type="tel"
           name="phone"
           value={nationalNumber}
