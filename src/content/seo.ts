@@ -14,7 +14,7 @@ export const siteSeo = {
   ogImageAlt: `${profile.name}, ${profile.headline}`,
 } as const
 
-export function resolveSiteUrl(env: Record<string, string | undefined> = import.meta.env): string {
+export function resolveSiteUrl(env: Record<string, string | undefined>): string {
   const fromEnv = env.VITE_SITE_URL?.trim() || env.SITE_URL?.trim()
   if (fromEnv) return fromEnv.replace(/\/$/, '')
   return ''

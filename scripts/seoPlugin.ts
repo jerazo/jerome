@@ -1,5 +1,6 @@
 import { writeFileSync } from 'node:fs'
 import path from 'node:path'
+import { loadEnv } from 'vite'
 import type { Plugin } from 'vite'
 import { resolveSiteUrl } from '../src/content/seo.ts'
 import { buildRobotsTxt, buildSeoHeadTags, buildSitemapXml } from './lib/seoArtifacts.ts'
@@ -10,8 +11,8 @@ export function seoPlugin(): Plugin {
   return {
     name: 'jerome-seo',
     config(_, { mode }) {
-      const env = { ...process.env, MODE: mode }
-      siteUrl = resolveSiteUrl(env)
+      const env = loadEnv(mode, process.cwd(), '')
+      siteUrl = resolveSiteUrl({ ...process.env, ...env })
     },
     transformIndexHtml(html) {
       const seoTags = buildSeoHeadTags(siteUrl)

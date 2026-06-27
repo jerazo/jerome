@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import { ButtonLink } from '../atoms/ButtonLink'
+import { Tag } from '../atoms/Tag'
 import { TruncatedText } from '../atoms/TruncatedText'
 import { SkillTag } from '../molecules/SkillTag'
 import { MaskedContactValue } from '../molecules/MaskedContactValue'
@@ -47,64 +49,85 @@ export function AboutSection() {
 
   return (
     <>
-      <SectionHeading
-        eyebrow="About"
-        title="Builder of systems and teams"
-        description="Hands-on engineering, architecture, and delivery leadership, without sacrificing quality."
-      />
-
-      <div className="mt-10 grid gap-8 lg:grid-cols-12">
+      <div className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-start">
         <div className="lg:col-span-7">
-          <div>
-            <h3 className="font-display text-2xl font-semibold tracking-tight text-sand">
-              Professional summary
-            </h3>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-sand/75 sm:text-base">
-              {profile.summary.map((p) => (
-                <p key={p}>{p}</p>
-              ))}
+          <SectionHeading
+            eyebrow="About"
+            title="Builder of systems and teams"
+            description="Hands-on engineering, architecture, and delivery leadership, without sacrificing quality."
+          />
+          <p className="mt-6 font-display text-lg leading-relaxed text-sand sm:text-xl">
+            {profile.aboutBriefSummary}
+          </p>
+          <ul className="mt-6 flex flex-wrap gap-2" role="list" aria-label="Quick facts">
+            {profile.aboutQuickFacts.map((fact) => (
+              <li key={fact} role="listitem">
+                <Tag className="border-sand/20 bg-black/20 font-normal text-sand/70">
+                  {fact}
+                </Tag>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <aside className="flex self-start justify-center lg:col-span-5">
+          <div className="flex w-52 flex-col items-stretch gap-5 sm:w-56">
+            <div className="rounded-full border-2 border-gold-500/40 bg-ink2/40 p-1 shadow-soft">
+              <img
+                src="/jerome-portrait-square.webp"
+                alt={`Portrait of ${profile.name}`}
+                width={900}
+                height={900}
+                className="aspect-square w-full rounded-full object-cover"
+                style={{ objectPosition: '55% 16%' }}
+                loading="lazy"
+              />
+            </div>
+
+            <div className="flex flex-col items-stretch">
+              <ButtonLink
+                to={profile.aboutCta.to}
+                variant="secondary"
+                className="w-full justify-center border-gold-500/50 hover:border-gold-400/70 hover:bg-gold-500/10"
+                aria-label={profile.aboutCta.ariaLabel}
+              >
+                {profile.aboutCta.label}
+              </ButtonLink>
+            </div>
+
+            <div className="flex flex-col items-center gap-1.5 text-center text-sm text-sand/70">
+              <MaskedContactValue
+                field="location"
+                className="text-sand/70 hover:text-sand"
+                revealedClassName="text-sand/70"
+              />
+              <MaskedContactValue
+                field="email"
+                className="text-sand/70 hover:text-sand"
+                revealedClassName="text-sand/70"
+              />
             </div>
           </div>
-          <div className="mt-8">
-            <h3 className="font-display text-2xl font-semibold tracking-tight text-sand">
-              How I work
-            </h3>
-            <ul className="mt-4 space-y-2 text-sm text-sand/75">
-              {profile.servicesPositioning.map((p) => (
-                <li key={p} className="flex gap-2">
-                  <span className="mt-[9px] h-1 w-1 flex-none rounded-full bg-gold-400/80" />
-                  <span>{p}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+        </aside>
+      </div>
+
+      <div className="mt-10 grid gap-6 lg:grid-cols-12 lg:items-start">
+        <div className="lg:col-span-7">
+          <h3 className="font-display text-2xl font-semibold tracking-tight text-sand">
+            How I work
+          </h3>
+          <ul className="mt-4 space-y-2 text-sm text-sand/75">
+            {profile.servicesPositioning.map((p) => (
+              <li key={p} className="flex gap-2">
+                <span className="mt-[9px] h-1 w-1 flex-none rounded-full bg-gold-400/80" />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <aside className="lg:col-span-5">
-          <div className="overflow-hidden rounded-3xl border border-sand/10 bg-white/5 shadow-soft">
-            <img
-              src="/jerome-portrait-square.webp"
-              alt={profile.name}
-              width={900}
-              height={900}
-              className="h-[320px] w-full object-cover"
-              loading="lazy"
-            />
-            <div className="p-6">
-              <p className="font-display text-xl font-semibold tracking-tight text-sand">
-                {profile.name}
-              </p>
-              <p className="mt-1 text-sm text-sand/70">
-                <MaskedContactValue
-                  field="location"
-                  className="text-sand/70 hover:text-sand"
-                  revealedClassName="text-sand/70"
-                />
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-5 rounded-3xl border border-sand/10 bg-ink2/70 px-5 pb-5 pt-5 shadow-soft">
+          <div className="rounded-3xl border border-sand/10 bg-ink2/70 px-5 pb-5 pt-5 shadow-soft">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sand/55">Skills</p>
             <SkillTierFilters value={tierFilter} onChange={setTierFilter} counts={tierCounts} />
 

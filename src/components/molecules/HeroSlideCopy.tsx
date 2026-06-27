@@ -60,7 +60,8 @@ export function HeroSlideCopy({
 
       <h1
         className={cn(
-          'font-display font-semibold leading-[0.9] tracking-tight text-sand',
+          'flex flex-col font-display font-semibold leading-none tracking-tight text-sand',
+          compact ? '-space-y-1' : '-space-y-3 sm:-space-y-5 lg:-space-y-6',
           compact ? 'mt-4 text-[32px]' : 'mt-5 text-[40px] sm:mt-6 sm:text-[58px] lg:text-[64px]',
           titleClassName,
         )}

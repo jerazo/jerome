@@ -1,14 +1,37 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { AboutTeaser } from '../components/organisms/AboutTeaser'
-import { ContactCta } from '../components/organisms/ContactCta'
-import { ExperienceTimeline } from '../components/organisms/ExperienceTimeline'
 import { FeaturedOffer } from '../components/organisms/FeaturedOffer'
-import { FeaturedResume } from '../components/organisms/FeaturedResume'
 import { HomeHero } from '../components/organisms/HomeHero'
-import { PortfolioSection } from '../components/organisms/PortfolioSection'
-import { RecommendationsSection } from '../components/organisms/RecommendationsSection'
 import { ServicesGrid } from '../components/organisms/ServicesGrid'
 import { formatPageTitle } from '../content/profile'
+
+const PortfolioSection = lazy(() =>
+  import('../components/organisms/PortfolioSection').then((module) => ({
+    default: module.PortfolioSection,
+  })),
+)
+const ExperienceTimeline = lazy(() =>
+  import('../components/organisms/ExperienceTimeline').then((module) => ({
+    default: module.ExperienceTimeline,
+  })),
+)
+const FeaturedResume = lazy(() =>
+  import('../components/organisms/FeaturedResume').then((module) => ({
+    default: module.FeaturedResume,
+  })),
+)
+const RecommendationsSection = lazy(() =>
+  import('../components/organisms/RecommendationsSection').then((module) => ({
+    default: module.RecommendationsSection,
+  })),
+)
+const ContactCta = lazy(() =>
+  import('../components/organisms/ContactCta').then((module) => ({ default: module.ContactCta })),
+)
+
+function SectionFallback() {
+  return <div className="min-h-[12rem] animate-pulse" aria-hidden="true" role="presentation" />
+}
 
 export function HomePage() {
   useEffect(() => {
@@ -21,11 +44,21 @@ export function HomePage() {
       <FeaturedOffer />
       <ServicesGrid />
       <AboutTeaser />
-      <PortfolioSection />
-      <ExperienceTimeline />
-      <FeaturedResume />
-      <RecommendationsSection />
-      <ContactCta />
+      <Suspense fallback={<SectionFallback />}>
+        <PortfolioSection />
+      </Suspense>
+      <Suspense fallback={<SectionFallback />}>
+        <ExperienceTimeline />
+      </Suspense>
+      <Suspense fallback={<SectionFallback />}>
+        <FeaturedResume />
+      </Suspense>
+      <Suspense fallback={<SectionFallback />}>
+        <RecommendationsSection />
+      </Suspense>
+      <Suspense fallback={<SectionFallback />}>
+        <ContactCta />
+      </Suspense>
     </>
   )
 }

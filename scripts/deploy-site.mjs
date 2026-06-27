@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { resolveStackOutputs } from './get-stack-outputs.mjs'
@@ -25,16 +26,45 @@ if (!outputs) {
 const { bucket, distributionId, siteUrl } = outputs
 const distDir = path.join(rootDir, 'dist')
 
-function run(command, args) {
+const shortCacheFiles = ['index.html', 'sitemap.xml', 'robots.txt', 'version.json']
+
+function run(command, args, env = process.env) {
   console.log(`> ${command} ${args.join(' ')}`)
-  execFileSync(command, args, { cwd: rootDir, stdio: 'inherit' })
+  execFileSync(command, args, { cwd: rootDir, stdio: 'inherit', env })
 }
 
 if (!skipBuild) {
-  run('npm', ['run', 'build'])
+  run('npm', ['run', 'build'], {
+    ...process.env,
+    VITE_SITE_URL: process.env.VITE_SITE_URL ?? siteUrl ?? process.env.SITE_URL ?? '',
+  })
 }
 
-run('aws', ['s3', 'sync', distDir, `s3://${bucket}`, '--delete'])
+run('aws', [
+  's3',
+  'sync',
+  distDir,
+  `s3://${bucket}`,
+  '--delete',
+  '--cache-control',
+  'public,max-age=31536000,immutable',
+  ...shortCacheFiles.flatMap((file) => ['--exclude', file]),
+])
+
+for (const file of shortCacheFiles) {
+  const filePath = path.join(distDir, file)
+  if (!existsSync(filePath)) continue
+
+  run('aws', [
+    's3',
+    'cp',
+    filePath,
+    `s3://${bucket}/${file}`,
+    '--cache-control',
+    'public,max-age=0,must-revalidate',
+  ])
+}
+
 run('aws', [
   'cloudfront',
   'create-invalidation',

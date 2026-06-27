@@ -492,7 +492,7 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['PHP', 'JavaScript', 'Lua', 'C++', 'MySQL', 'MSSQL', 'Gaming', 'E-commerce'],
     accent: 'from-teal-500/35 via-cyan-500/20 to-transparent',
     impactMetrics: [
-      { label: 'SME Sites', value: '10× production' },
+      { label: 'Product sites', value: '10+ launches' },
       { label: 'Stacks', value: 'PHP + ASP/IIS' },
     ],
     images: [

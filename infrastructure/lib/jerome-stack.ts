@@ -95,14 +95,47 @@ export class JeromeStack extends cdk.Stack {
 
     const apiDomain = `${contactApi.apiId}.execute-api.${this.region}.${this.urlSuffix}`
 
+    const siteOrigin = origins.S3BucketOrigin.withOriginAccessControl(siteBucket)
+
+    const staticAssetCachePolicy = new cloudfront.CachePolicy(this, 'StaticAssetCachePolicy', {
+      cachePolicyName: `${cdk.Stack.of(this).stackName}-StaticAssets`,
+      comment: 'Long-lived cache for fingerprinted build assets',
+      defaultTtl: cdk.Duration.days(365),
+      maxTtl: cdk.Duration.days(365),
+      minTtl: cdk.Duration.days(1),
+      cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+      headerBehavior: cloudfront.CacheHeaderBehavior.none(),
+      queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
+      enableAcceptEncodingBrotli: true,
+      enableAcceptEncodingGzip: true,
+    })
+
+    const htmlCachePolicy = new cloudfront.CachePolicy(this, 'HtmlCachePolicy', {
+      cachePolicyName: `${cdk.Stack.of(this).stackName}-Html`,
+      comment: 'Revalidate HTML and crawl metadata on each request',
+      defaultTtl: cdk.Duration.seconds(0),
+      maxTtl: cdk.Duration.days(1),
+      minTtl: cdk.Duration.seconds(0),
+      cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+      headerBehavior: cloudfront.CacheHeaderBehavior.none(),
+      queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
+      enableAcceptEncodingBrotli: true,
+      enableAcceptEncodingGzip: true,
+    })
+
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultRootObject: 'index.html',
       defaultBehavior: {
-        origin: origins.S3BucketOrigin.withOriginAccessControl(siteBucket),
+        origin: siteOrigin,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+        cachePolicy: htmlCachePolicy,
       },
       additionalBehaviors: {
+        '/assets/*': {
+          origin: siteOrigin,
+          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          cachePolicy: staticAssetCachePolicy,
+        },
         '/api/*': {
           origin: new origins.HttpOrigin(apiDomain, {
             protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,

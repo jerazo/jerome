@@ -23,6 +23,18 @@ export const profile = {
     { label: 'Largest team led', value: 'Large engineering orgs' },
     { label: 'Focus', value: 'SaaS • Platforms • DX' },
   ],
+  aboutBriefSummary:
+    'Tech lead and full-stack engineer with 20+ years shipping web platforms across fintech, SaaS, esports, and B2B. I focus on scalable front-end systems, delivery discipline, and player-coach leadership that turns ambitious roadmaps into production-ready products.',
+  aboutQuickFacts: [
+    'Based in the Philippines',
+    'Available for full-time',
+    'Open to contract',
+  ],
+  aboutCta: {
+    label: "Let's Talk",
+    to: '/#contact',
+    ariaLabel: "Let's talk — go to the contact form",
+  },
   summary: [
     'Seasoned full-stack engineer and technical leader with 20+ years of experience delivering and scaling web platforms.',
     'Experienced across frontend, backend, and cloud infrastructure with strong CI/CD and observability practices.',

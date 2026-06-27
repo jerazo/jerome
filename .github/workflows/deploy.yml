@@ -256,6 +256,7 @@ jobs:
       - name: Build site
         env:
           VITE_MIXPANEL_TOKEN: ${{ vars.VITE_MIXPANEL_TOKEN }}
+          VITE_SITE_URL: ${{ vars.SITE_URL }}
         run: npm run build
 
       - name: Show build version
