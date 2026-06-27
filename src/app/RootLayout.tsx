@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
+import { SkipToContent } from '../components/atoms/SkipToContent'
 import { ContactAccessModal } from '../components/molecules/ContactAccessModal'
 import { Footer } from '../components/organisms/Footer'
 import { Header } from '../components/organisms/Header'
@@ -15,13 +16,14 @@ export default function RootLayout() {
 
   return (
     <div className="min-h-svh">
+      <SkipToContent />
       <div className="fixed inset-0 -z-20 bg-black" />
       <div className="fixed inset-0 -z-10 gridlines opacity-50" />
 
       {isHome ? null : <Header />}
       <ScrollToTop />
 
-      <main className={isHome ? undefined : 'pt-16 sm:pt-20'}>
+      <main id="main-content" tabIndex={-1} className={isHome ? undefined : 'pt-16 sm:pt-20'}>
         <Outlet />
       </main>
 

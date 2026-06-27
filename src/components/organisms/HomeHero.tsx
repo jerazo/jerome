@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowRight, Menu, X } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Gutter } from '../atoms/Gutter'
 import { LogoMark } from '../atoms/LogoMark'
 import { HeroCarouselControls } from '../molecules/HeroCarouselControls'
 import { HeroSlideCopy } from '../molecules/HeroSlideCopy'
+import { MobileNavToggle } from '../molecules/MobileNavToggle'
 import { heroSlides, pickHeroBannerMessage } from '../../content/homeSections'
 import { profile } from '../../content/profile'
+import { useMobileNav } from '../../hooks/useMobileNav'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { useUiStore } from '../../store/uiStore'
 import { MobileNavPanel } from './MobileNavPanel'
@@ -18,6 +20,7 @@ export function HomeHero() {
   const reducedMotion = useReducedMotion()
   const mobileNavOpen = useUiStore((s) => s.mobileNavOpen)
   const setMobileNavOpen = useUiStore((s) => s.setMobileNavOpen)
+  const { menuId, triggerRef, panelRef, toggle, close } = useMobileNav(mobileNavOpen, setMobileNavOpen)
   const heroIndex = useUiStore((s) => s.homeHeroIndex)
   const setHeroIndex = useUiStore((s) => s.setHomeHeroIndex)
   const desktopCopyRef = useRef<HTMLDivElement | null>(null)
@@ -172,7 +175,7 @@ export function HomeHero() {
           />
           <img
             src="/jerome-portrait-hero-subject.png"
-            alt={profile.name}
+            alt={`Portrait of ${profile.name}, ${profile.headline}`}
             className="absolute inset-0 h-full w-full object-cover"
             style={{
               objectPosition: `${desktopObjectX} 26%`,
@@ -210,22 +213,21 @@ export function HomeHero() {
               </div>
             </div>
 
-            <PrimaryNav onNavigate={() => setMobileNavOpen(false)} />
+            <PrimaryNav onNavigate={close} />
 
-            <button
-              type="button"
-              className="inline-flex items-center justify-center rounded-full border border-sand/10 bg-white/5 p-3 text-sand transition hover:border-gold-500/30 hover:bg-white/10 focus-visible:focus-ring lg:hidden"
-              aria-label={mobileNavOpen ? 'Close menu' : 'Open menu'}
-              onClick={() => setMobileNavOpen(!mobileNavOpen)}
-            >
-              {mobileNavOpen ? <X size={18} /> : <Menu size={18} />}
-            </button>
+            <MobileNavToggle
+              ref={triggerRef}
+              open={mobileNavOpen}
+              menuId={menuId}
+              onToggle={toggle}
+              className="lg:hidden"
+            />
           </Gutter>
 
           {mobileNavOpen ? (
-            <div className="lg:hidden">
+            <div ref={panelRef} className="lg:hidden">
               <Gutter className="pb-4 pt-2">
-                <MobileNavPanel onNavigate={() => setMobileNavOpen(false)} />
+                <MobileNavPanel id={menuId} onNavigate={close} />
               </Gutter>
             </div>
           ) : null}
@@ -244,7 +246,7 @@ export function HomeHero() {
             <div className="relative aspect-[5/6] w-full max-h-[min(72vw,320px)] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/40 shadow-soft">
               <img
                 src="/jerome-portrait-square.jpg"
-                alt={profile.name}
+                alt={`Portrait of ${profile.name}, ${profile.headline}`}
                 className="absolute inset-0 h-full w-full object-cover"
                 style={{ objectPosition: '55% 16%' }}
                 loading="eager"

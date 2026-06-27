@@ -8,12 +8,14 @@ export function NavHashLink({
   activeClassName,
   children,
   onClick,
+  role,
 }: {
   to: string
   className?: string | ((isActive: boolean) => string)
   activeClassName?: string
   children: ReactNode
   onClick?: () => void
+  role?: string
 }) {
   const location = useLocation()
   const hash = to.startsWith('/#') ? to.slice(1) : ''
@@ -22,7 +24,13 @@ export function NavHashLink({
     typeof className === 'function' ? className(isActive) : cn(className, isActive && activeClassName)
 
   return (
-    <Link to={to} onClick={onClick} className={resolvedClassName} aria-current={isActive ? 'page' : undefined}>
+    <Link
+      to={to}
+      onClick={onClick}
+      className={resolvedClassName}
+      aria-current={isActive ? 'page' : undefined}
+      role={role}
+    >
       {children}
     </Link>
   )

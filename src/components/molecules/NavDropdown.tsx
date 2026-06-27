@@ -37,7 +37,36 @@ export function NavDropdown({
     }
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') close()
+      if (!node.open) return
+
+      if (event.key === 'Escape') {
+        close()
+        node.querySelector('summary')?.focus()
+        return
+      }
+
+      const links = Array.from(node.querySelectorAll<HTMLAnchorElement>('a[href]'))
+      if (links.length === 0) return
+
+      const currentIndex = links.findIndex((link) => link === document.activeElement)
+      if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        const next = links[(currentIndex + 1 + links.length) % links.length]
+        next?.focus()
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        const prev = links[(currentIndex - 1 + links.length) % links.length]
+        prev?.focus()
+      }
+      if (event.key === 'Home') {
+        event.preventDefault()
+        links[0]?.focus()
+      }
+      if (event.key === 'End') {
+        event.preventDefault()
+        links[links.length - 1]?.focus()
+      }
     }
 
     document.addEventListener('pointerdown', onPointerDown)
@@ -53,20 +82,27 @@ export function NavDropdown({
       <summary
         className={cn(
           'list-none rounded-full px-2.5 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-sand/70 transition xl:px-3 xl:tracking-[0.24em]',
-          'hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
+          'inline-flex min-h-11 items-center hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
           'cursor-pointer select-none [&::-webkit-details-marker]:hidden',
           isActive && 'bg-white/5 text-sand',
         )}
+        aria-haspopup="menu"
+        aria-label={`${label} navigation links`}
       >
         <span className="inline-flex items-center gap-1">
           {label}
           <ChevronDown
             size={14}
             className="transition group-open:rotate-180 group-open:text-sand"
+            aria-hidden
           />
         </span>
       </summary>
-      <div className="absolute left-1/2 top-[calc(100%+8px)] z-50 w-48 -translate-x-1/2 rounded-2xl border border-sand/10 bg-ink2/95 p-1.5 shadow-soft backdrop-blur">
+      <div
+        role="group"
+        aria-label={`${label} links`}
+        className="absolute left-1/2 top-[calc(100%+8px)] z-50 w-48 -translate-x-1/2 rounded-2xl border border-sand/10 bg-ink2/95 p-1.5 shadow-soft backdrop-blur"
+      >
         {items.map((item) => (
           <NavHashLink
             key={item.to}
@@ -77,7 +113,7 @@ export function NavDropdown({
             }}
             className={(active) =>
               cn(
-                'block rounded-xl px-3 py-2 text-sm font-medium text-sand/75 transition hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
+                'flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-sand/80 transition hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
                 active && 'bg-white/5 text-sand',
               )
             }

@@ -144,12 +144,19 @@ function PortfolioImageModalContent({
                 type="button"
                 onClick={() => setIndex(i)}
                 className={cn(
-                  'h-1.5 rounded-full transition-all focus-visible:focus-ring',
-                  i === index ? 'w-4 bg-gold-300' : 'w-1.5 bg-sand/35 hover:bg-sand/55',
+                  'inline-flex h-11 w-11 items-center justify-center rounded-full transition-all focus-visible:focus-ring',
                 )}
                 aria-label={`Show ${image.label ?? `screenshot ${i + 1}`}`}
                 aria-current={i === index ? 'true' : undefined}
-              />
+              >
+                <span
+                  aria-hidden
+                  className={cn(
+                    'h-1.5 rounded-full',
+                    i === index ? 'w-4 bg-gold-300' : 'w-1.5 bg-sand/35 hover:bg-sand/55',
+                  )}
+                />
+              </button>
             ))}
           </div>
         ) : null}

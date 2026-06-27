@@ -55,10 +55,10 @@ export function PortfolioCarousel({
               event.stopPropagation()
               goPrev()
             }}
-            className="absolute left-2 top-1/2 z-10 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-sand/15 bg-ink2/80 text-sand/80 transition hover:border-gold-500/30 hover:text-sand focus-visible:focus-ring"
+            className="absolute left-2 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-sand/15 bg-ink2/80 text-sand/80 transition hover:border-gold-500/30 hover:text-sand focus-visible:focus-ring"
             aria-label="Previous screenshot"
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={16} aria-hidden />
           </button>
           <button
             type="button"
@@ -66,10 +66,10 @@ export function PortfolioCarousel({
               event.stopPropagation()
               goNext()
             }}
-            className="absolute right-2 top-1/2 z-10 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-sand/15 bg-ink2/80 text-sand/80 transition hover:border-gold-500/30 hover:text-sand focus-visible:focus-ring"
+            className="absolute right-2 top-1/2 z-10 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-sand/15 bg-ink2/80 text-sand/80 transition hover:border-gold-500/30 hover:text-sand focus-visible:focus-ring"
             aria-label="Next screenshot"
           >
-            <ChevronRight size={16} />
+            <ChevronRight size={16} aria-hidden />
           </button>
 
           <div className="absolute right-2 top-2 rounded-full bg-ink2/80 px-2 py-0.5 font-mono text-[10px] text-sand/70">
@@ -86,13 +86,19 @@ export function PortfolioCarousel({
                   setIndex(i)
                 }}
                 className={cn(
-                  'relative z-10',
-                  'h-1.5 rounded-full transition-all focus-visible:focus-ring',
-                  i === index ? 'w-4 bg-gold-300' : 'w-1.5 bg-sand/35 hover:bg-sand/55',
+                  'relative z-10 inline-flex h-11 w-11 items-center justify-center rounded-full focus-visible:focus-ring',
                 )}
                 aria-label={`Show ${image.label ?? `screenshot ${i + 1}`}`}
                 aria-current={i === index ? 'true' : undefined}
-              />
+              >
+                <span
+                  aria-hidden
+                  className={cn(
+                    'h-1.5 rounded-full transition-all',
+                    i === index ? 'w-4 bg-gold-300' : 'w-1.5 bg-sand/35 hover:bg-sand/55',
+                  )}
+                />
+              </button>
             ))}
           </div>
         </>
