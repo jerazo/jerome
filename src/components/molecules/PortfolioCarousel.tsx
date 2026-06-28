@@ -22,7 +22,12 @@ export function PortfolioCarousel({
   const goNext = () => setIndex((i) => (i + 1) % total)
 
   return (
-    <div className={cn('relative h-40 overflow-hidden border-b border-sand/10 bg-ink2/50', className)}>
+    <div
+      className={cn(
+        'relative overflow-hidden border-b border-sand/10 bg-ink2/50',
+        className ?? 'aspect-[16/10] w-full',
+      )}
+    >
       <button
         type="button"
         onClick={() => onImageClick?.(index)}

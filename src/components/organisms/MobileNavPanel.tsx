@@ -10,8 +10,8 @@ type MobileNavPanelProps = {
 
 const navLinkClass = (isActive: boolean) =>
   cn(
-    'flex min-h-11 items-center rounded-xl px-3 py-2.5 text-sm font-medium text-sand/85 transition hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
-    isActive && 'bg-white/5 text-sand',
+    'flex min-h-11 items-center rounded-xl border border-transparent px-3 py-2.5 text-sm font-medium text-sand/85 transition hover:border-gold-500/20 hover:bg-white/5 hover:text-sand focus-visible:focus-ring',
+    isActive && 'border-gold-500/35 bg-white/5 text-sand',
   )
 
 export function MobileNavPanel({ id, onNavigate }: MobileNavPanelProps) {

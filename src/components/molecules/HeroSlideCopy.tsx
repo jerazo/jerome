@@ -30,75 +30,116 @@ export function HeroSlideCopy({
       <p
         className={cn(
           'font-semibold uppercase text-gold-200/80',
-          compact
-            ? 'text-[10px] tracking-[0.22em]'
-            : 'text-[10px] tracking-[0.34em]',
+          compact ? 'text-[10px] tracking-[0.22em]' : 'text-[10px] tracking-[0.28em] sm:tracking-[0.34em]',
         )}
       >
         {slide.eyebrow}
       </p>
 
-      <div className={cn('flex items-start gap-3', compact ? 'mt-3' : 'mt-4 sm:mt-5 sm:gap-4')}>
-        <span
-          aria-hidden
-          className={cn(
-            'font-display leading-none text-gold-300/80',
-            compact ? 'mt-0.5 text-2xl' : 'mt-0.5 text-3xl sm:mt-1 sm:text-4xl',
-          )}
-        >
-          “
-        </span>
-        <p
-          className={cn(
-            'max-w-2xl leading-relaxed text-sand/75',
-            compact ? 'line-clamp-3 text-sm' : 'text-sm sm:text-base',
-          )}
-        >
-          {slide.quote}
-        </p>
-      </div>
-
-      <h1
+      <div
         className={cn(
-          'flex flex-col font-display font-semibold leading-none tracking-tight text-sand',
-          compact ? '-space-y-1' : '-space-y-3 sm:-space-y-5 lg:-space-y-6',
-          compact ? 'mt-4 text-[32px]' : 'mt-5 text-[40px] sm:mt-6 sm:text-[58px] lg:text-[64px]',
-          titleClassName,
+          'flex flex-col gap-1',
+          showCta && 'lg:flex-row lg:items-start lg:justify-between lg:gap-3 xl:gap-4',
+          'mt-0.5',
         )}
       >
-        {slide.titleLines.map((line, lineIndex) => (
-          <span key={`${slide.eyebrow}-${lineIndex}`} className="block">
-            {line.map((part, partIndex) => (
-              <span
-                key={`${part.text}-${partIndex}`}
-                className={cn(part.accent && 'text-gold-300', part.italic && 'italic')}
-              >
-                {part.text}
+        <div className="min-w-0 flex-1 space-y-1 sm:space-y-1.5">
+          <h1
+            className={cn(
+              'flex flex-col font-display font-semibold leading-[0.72] tracking-tight text-sand',
+              compact
+                ? '-space-y-2 text-[clamp(1.65rem,6.5vw,2.1rem)]'
+                : '-space-y-3 text-[clamp(1.875rem,5.5vw,2.5rem)] sm:-space-y-5 sm:text-[clamp(2.25rem,4.5vw,3.15rem)] lg:-space-y-7 lg:text-[clamp(2.5rem,3.8vw,3.5rem)]',
+              titleClassName,
+            )}
+          >
+            {slide.titleLines.map((line, lineIndex) => (
+              <span key={`${slide.eyebrow}-${lineIndex}`} className="block">
+                {line.map((part, partIndex) => (
+                  <span
+                    key={`${part.text}-${partIndex}`}
+                    className={cn(part.accent && 'text-gold-300', part.italic && 'italic')}
+                  >
+                    {part.text}
+                  </span>
+                ))}
+                {lineIndex === slide.titleLines.length - 1 ? (
+                  <span className="text-gold-300">.</span>
+                ) : null}
               </span>
             ))}
-            {lineIndex === slide.titleLines.length - 1 ? (
-              <span className="text-gold-300">.</span>
-            ) : null}
-          </span>
-        ))}
-      </h1>
+          </h1>
 
-      <p
-        className={cn(
-          'max-w-xl leading-relaxed text-sand/75',
-          compact ? 'mt-3 text-sm' : 'mt-4 text-sm sm:mt-5 sm:text-base',
-        )}
-      >
-        {slide.description}
-      </p>
+          <div>
+            <p
+              className={cn(
+                'max-w-2xl font-medium leading-none text-sand2',
+                compact ? 'text-sm' : 'text-[clamp(0.9rem,2vw,1.05rem)]',
+              )}
+            >
+              {slide.subtitle}
+            </p>
+            <p
+              className={cn(
+                'max-w-2xl leading-none text-sand/60',
+                compact ? 'mt-0.5 text-xs' : 'mt-0.5 text-[0.8125rem] sm:text-sm',
+              )}
+            >
+              {slide.tagline}
+            </p>
+          </div>
 
-      {showCta ? (
-        <div className="mt-6 sm:mt-7">
-          <ButtonLink to={slide.ctaTo}>
-            {slide.ctaLabel} <ArrowRight size={16} />
-          </ButtonLink>
+          <div
+            className="inline-flex items-center gap-1.5 rounded-lg border border-gold-500/30 bg-gold-500/10 px-2.5 py-1 shadow-[0_0_24px_rgba(139,92,246,0.12)] backdrop-blur-sm"
+            aria-label={`Impact: ${slide.impactBadge.value} ${slide.impactBadge.label}`}
+          >
+            <span
+              className={cn(
+                'font-display font-semibold leading-none text-gold-300',
+                compact ? 'text-lg' : 'text-[clamp(1.25rem,3vw,1.65rem)]',
+              )}
+            >
+              {slide.impactBadge.value}
+            </span>
+            <span
+              className={cn(
+                'font-semibold uppercase leading-none tracking-[0.16em] text-sand/70',
+                compact ? 'text-[8px]' : 'text-[9px] sm:text-[10px]',
+              )}
+            >
+              {slide.impactBadge.label}
+            </span>
+          </div>
+
+          <p
+            className={cn(
+              'max-w-2xl font-medium leading-tight text-sand/90',
+              compact ? 'text-sm' : 'text-[clamp(0.9rem,2vw,1.05rem)]',
+            )}
+          >
+            {slide.achievement}
+          </p>
         </div>
-      ) : null}
+
+        {showCta ? (
+          <div
+            className={cn(
+              'flex-shrink-0',
+              compact ? 'w-full' : 'w-full lg:w-auto',
+            )}
+          >
+            <ButtonLink
+              to={slide.ctaTo}
+              className={cn(
+                'w-full justify-center shadow-gold-glow lg:w-auto lg:px-5 lg:py-2.5 lg:text-sm',
+                !compact && 'py-2.5 sm:py-2.5',
+              )}
+            >
+              {slide.ctaLabel} <ArrowRight size={15} aria-hidden />
+            </ButtonLink>
+          </div>
+        ) : null}
+      </div>
     </div>
   )
 }

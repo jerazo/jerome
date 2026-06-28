@@ -11,7 +11,7 @@ export const profile = {
   name: 'Jerome Lopez Erazo',
   headline: 'Software Engineer • Tech Lead • AI Enthusiast',
   tagline:
-    'I build high-impact web products, scalable platforms, and front-end systems: fast, reliable, and production-ready.',
+    'Full‑Stack Engineer & Tech Lead · 20+ yrs building production platforms across FinTech, HealthTech, and E‑commerce.',
   location: 'Quezon City, Philippines',
   email: 'monx.erazo@me.com',
   phone: '+63 917 621 7351',
@@ -34,6 +34,12 @@ export const profile = {
     label: "Let's Talk",
     to: '/#contact',
     ariaLabel: "Let's talk — go to the contact form",
+  },
+  footerCta: {
+    label: 'Get in Touch',
+    subtext: "Let's discuss how I can add value to your team.",
+    to: '/#contact',
+    ariaLabel: 'Get in touch — go to the contact form',
   },
   summary: [
     'Seasoned full-stack engineer and technical leader with 20+ years of experience delivering and scaling web platforms.',

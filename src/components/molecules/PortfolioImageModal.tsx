@@ -112,6 +112,8 @@ function PortfolioImageModalContent({
             src={current.src}
             alt={current.alt}
             className="max-h-[78vh] w-full object-contain"
+            loading="lazy"
+            decoding="async"
           />
 
           {total > 1 ? (

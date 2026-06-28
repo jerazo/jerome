@@ -19,7 +19,10 @@ export function NavHashLink({
 }) {
   const location = useLocation()
   const hash = to.startsWith('/#') ? to.slice(1) : ''
-  const isActive = location.pathname === '/' && hash.length > 0 && location.hash === hash
+  const isHashLink = hash.length > 0
+  const isActive = isHashLink
+    ? location.pathname === '/' && location.hash === hash
+    : location.pathname === to
   const resolvedClassName =
     typeof className === 'function' ? className(isActive) : cn(className, isActive && activeClassName)
 

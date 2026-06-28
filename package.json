@@ -13,10 +13,15 @@
     "deploy:infra": "npm install --prefix infrastructure && npm run deploy --prefix infrastructure",
     "bootstrap:infra": "npm install --prefix infrastructure && npm run bootstrap --prefix infrastructure",
     "deploy:site": "node scripts/deploy-site.mjs",
-    "deploy": "npm run deploy:infra && npm run deploy:site"
+    "deploy": "npm run deploy:infra && npm run deploy:site",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.893.0",
+    "@react-spring/three": "^10.1.2",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.14.0",
     "mixpanel-browser": "^2.80.0",
@@ -24,14 +29,17 @@
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2",
     "tailwind-merge": "^3.5.0",
+    "three": "^0.185.0",
     "zod": "^4.4.3",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.57.0",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.185.0",
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.5.0",
     "esbuild": "^0.27.7",

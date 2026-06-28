@@ -23,6 +23,7 @@ export const navOfferGroup: NavGroup = {
   items: [
     { label: 'Services', to: '/#services' },
     { label: 'Portfolio', to: '/#portfolio' },
+    { label: 'Showcase', to: '/showcase' },
   ],
 }
 
@@ -50,6 +51,7 @@ export const navGroups: NavGroup[] = [navOfferGroup, navTrackRecordGroup, navCre
 export const desktopNavLinks: NavLinkItem[] = [
   { label: 'Services', to: '/#services' },
   { label: 'Portfolio', to: '/#portfolio' },
+  { label: 'Showcase', to: '/showcase' },
   { label: 'Experience', to: '/#work' },
 ]
 

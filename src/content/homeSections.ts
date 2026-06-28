@@ -4,88 +4,117 @@ export type HeroTitlePart = {
   italic?: boolean
 }
 
+export type HeroImpactBadge = {
+  value: string
+  label: string
+}
+
 export type HeroSlide = {
   eyebrow: string
-  quote: string
   titleLines: HeroTitlePart[][]
-  description: string
+  subtitle: string
+  tagline: string
+  impactBadge: HeroImpactBadge
+  achievement: string
   ctaLabel: string
   ctaTo: string
 }
 
 export const heroSlides: HeroSlide[] = [
   {
-    eyebrow: '20+ years in production',
-    quote:
-      'Fintech, esports, SaaS, health, education—different domains, same bar: ship work that holds up after launch day.',
+    eyebrow: 'Principal engineer · tech lead · player-coach',
     titleLines: [
-      [{ text: 'ENGINEER' }],
-      [{ text: 'WHO', accent: true, italic: true }, { text: ' SHIPS' }],
-      [{ text: 'FOR REAL' }],
+      [{ text: 'PRINCIPAL ENGINEER' }],
+      [
+        { text: '12+ ' },
+        { text: 'PRODUCTION PLATFORMS', accent: true },
+      ],
     ],
-    description:
-      'Full-stack builder and tech lead. I turn ambitious product goals into systems teams can extend, not rewrite.',
-    ctaLabel: 'Start your project',
+    subtitle:
+      'Full‑Stack Engineer & Tech Lead · 20+ yrs in web engineering · 10+ yrs microservices & distributed systems.',
+    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+    impactBadge: {
+      value: '1M+',
+      label: 'users served',
+    },
+    achievement: 'Reduced API latency by 45% for a fintech platform serving global distributors.',
+    ctaLabel: "Let's Talk",
     ctaTo: '/#contact',
   },
   {
     eyebrow: 'Architecture that survives growth',
-    quote:
-      'The best platform is the one your team can still change confidently six months from now.',
     titleLines: [
-      [{ text: 'BUILD' }],
-      [{ text: 'SYSTEMS', accent: true, italic: true }],
-      [{ text: 'THAT SCALE' }],
-      [{ text: '& STAY MAINTAINABLE', accent: true }],
+      [{ text: 'TECH LEAD' }],
+      [{ text: '15+ YEARS IN' }],
+      [{ text: 'SYSTEM DESIGN', accent: true }],
     ],
-    description:
-      'Clear boundaries, pragmatic patterns, and standards that keep velocity high as the codebase and team grow.',
-    ctaLabel: 'See experience',
-    ctaTo: '/#work',
+    subtitle:
+      'Tech Lead & Principal Engineer · 15+ yrs architecture teams extend—not rewrite · 12+ platforms shipped.',
+    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+    impactBadge: {
+      value: '12+',
+      label: 'platforms shipped',
+    },
+    achievement:
+      'Designed multi-stream product engineering across Growth, Office, and Shop—keeping velocity as teams scaled.',
+    ctaLabel: "Let's Talk",
+    ctaTo: '/#contact',
   },
   {
     eyebrow: 'Measured delivery',
-    quote:
-      'Took a team from one webpage per developer per week to one per day—without trading away quality or review discipline.',
     titleLines: [
-      [{ text: 'MOVE' }],
-      [{ text: 'FAST', accent: true, italic: true }],
-      [{ text: 'WITHOUT' }],
-      [{ text: 'BREAKING TRUST', accent: true }],
+      [{ text: 'FULL-STACK ENGINEER' }],
+      [{ text: '10× DELIVERY GAINS', accent: true }],
     ],
-    description:
-      'CI/CD, observability, and tight feedback loops so speed shows up in production—not just in standup.',
-    ctaLabel: 'Explore services',
-    ctaTo: '/#services',
+    subtitle:
+      'Full‑Stack Engineer · ~8 yrs React · ~10 yrs Node · 10+ yrs CI/CD · gains measured in production, not slides.',
+    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+    impactBadge: {
+      value: '10×',
+      label: 'faster shipping',
+    },
+    achievement:
+      'Took a team from one webpage per developer per week to one per day—without trading away quality or review discipline.',
+    ctaLabel: "Let's Talk",
+    ctaTo: '/#contact',
   },
   {
     eyebrow: 'Player-coach leadership',
-    quote:
-      'Cut key-person risk and raised code quality through mentorship, reviews, and shared architectural direction.',
     titleLines: [
-      [{ text: 'LEAD' }],
-      [{ text: 'TEAMS', accent: true, italic: true }],
-      [{ text: 'THAT' }],
-      [{ text: 'EXECUTE', accent: true }],
+      [{ text: 'ENGINEERING LEAD' }],
+      [{ text: '12+ YEARS' }],
+      [{ text: 'LEADING TEAMS', accent: true }],
     ],
-    description:
-      'Planning, estimation, and coaching that lift the whole team—so delivery doesn’t depend on one hero engineer.',
-    ctaLabel: 'Read recommendations',
-    ctaTo: '/#recommendations',
+    subtitle:
+      'Engineering Lead & Tech Lead · 12+ yrs technical leadership · player-coach shipping in production.',
+    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+    impactBadge: {
+      value: 'Large',
+      label: 'orgs led',
+    },
+    achievement:
+      'Cut key-person risk and raised code quality through mentorship, reviews, and shared architectural direction.',
+    ctaLabel: "Let's Talk",
+    ctaTo: '/#contact',
   },
   {
     eyebrow: 'Systems & culture',
-    quote:
-      'Strong foundations aren’t only services and schemas—they’re how a team makes tradeoffs under pressure.',
     titleLines: [
-      [{ text: 'BUILDER' }],
-      [{ text: 'OF SYSTEMS' }],
-      [{ text: '&', accent: true }, { text: ' TEAMS', accent: true, italic: true }],
+      [{ text: 'SOFTWARE ENGINEER' }],
+      [{ text: '8 INDUSTRIES' }],
+      [{ text: 'ONE PRODUCTION BAR', accent: true }],
     ],
-    description:
-      'I help organizations stand up architecture, engineering culture, and execution from the ground up.',
-    ctaLabel: 'See how I work',
-    ctaTo: '/#about',
+    subtitle:
+      'Software Engineer & Tech Lead · 20+ yrs in web engineering across fintech, esports, SaaS, health & education.',
+    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+    impactBadge: {
+      value: '8',
+      label: 'industry domains',
+    },
+    achievement:
+      'Shipped production platforms across fintech, esports, SaaS, health, and education—same bar after launch day.',
+    ctaLabel: "Let's Talk",
+    ctaTo: '/#contact',
   },
 ]
 

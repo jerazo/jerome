@@ -1,62 +1,49 @@
-import { ArrowUpRight } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { portfolioProjects } from '../../content/portfolio'
 import type { PortfolioProject } from '../../content/portfolio'
-import { cn } from '../../lib/cn'
 import { Gutter } from '../atoms/Gutter'
-import { ImpactBadge } from '../molecules/ImpactBadge'
 import {
   PortfolioImageModal,
   type PortfolioImageModalState,
 } from '../molecules/PortfolioImageModal'
-import { PortfolioCarousel } from '../molecules/PortfolioCarousel'
-import { PortfolioTechStack } from '../molecules/PortfolioTechStack'
+import { PortfolioProjectCard } from '../molecules/PortfolioProjectCard'
 import { SectionHeading } from '../molecules/SectionHeading'
+import { ShowcaseCarouselControls } from '../molecules/ShowcaseCarouselControls'
 
-function PortfolioMedia({
-  project,
-  onOpenImage,
-}: {
-  project: PortfolioProject
-  onOpenImage: (project: PortfolioProject, index: number) => void
-}) {
-  if (project.images && project.images.length > 0) {
-    return (
-      <PortfolioCarousel
-        images={project.images}
-        onImageClick={(index) => onOpenImage(project, index)}
-      />
-    )
-  }
+function useMobilePortfolioCarousel() {
+  const [isMobile, setIsMobile] = useState(false)
 
-  if (project.imageSrc) {
-    return (
-      <button
-        type="button"
-        onClick={() => onOpenImage(project, 0)}
-        className="relative block h-40 w-full cursor-zoom-in overflow-hidden border-b border-sand/10 bg-ink2/50 text-left focus-visible:focus-ring"
-        aria-label={`View larger ${project.title} screenshot`}
-      >
-        <img
-          src={project.imageSrc}
-          alt={project.imageAlt ?? project.title}
-          className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-[1.02]"
-          loading="lazy"
-        />
-      </button>
-    )
-  }
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 639px)')
 
-  return (
-    <div
-      className={`h-28 bg-gradient-to-br ${project.accent} border-b border-sand/10`}
-      aria-hidden
-    />
-  )
+    const update = () => setIsMobile(mql.matches)
+    update()
+    mql.addEventListener('change', update)
+    return () => mql.removeEventListener('change', update)
+  }, [])
+
+  return isMobile
 }
 
 export function PortfolioSection() {
+  const navigate = useNavigate()
+  const isMobileCarousel = useMobilePortfolioCarousel()
+  const [activeIndex, setActiveIndex] = useState(0)
   const [modalState, setModalState] = useState<PortfolioImageModalState | null>(null)
+
+  const carouselItems = useMemo(
+    () =>
+      portfolioProjects.map((project) => ({
+        id: project.id,
+        label: project.title,
+      })),
+    [],
+  )
+
+  const safeIndex =
+    portfolioProjects.length > 0 ? activeIndex % portfolioProjects.length : 0
+  const activeProject = portfolioProjects[safeIndex]
 
   const openImage = (project: PortfolioProject, index: number) => {
     const images =
@@ -65,12 +52,40 @@ export function PortfolioSection() {
         ? [{ src: project.imageSrc, alt: project.imageAlt ?? project.title }]
         : [])
 
+    if (images.length === 0) return
+
     setModalState({
       images,
       index,
       projectTitle: project.title,
       impactMetrics: project.impactMetrics,
     })
+  }
+
+  const openProjectDetails = (project: PortfolioProject) => {
+    navigate(`/work/${project.id}`)
+  }
+
+  const goPrev = useCallback(() => {
+    if (portfolioProjects.length <= 1) return
+    setActiveIndex((index) => (index - 1 + portfolioProjects.length) % portfolioProjects.length)
+  }, [])
+
+  const goNext = useCallback(() => {
+    if (portfolioProjects.length <= 1) return
+    setActiveIndex((index) => (index + 1) % portfolioProjects.length)
+  }, [])
+
+  const onCarouselKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!isMobileCarousel) return
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      goPrev()
+    }
+    if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      goNext()
+    }
   }
 
   return (
@@ -87,53 +102,55 @@ export function PortfolioSection() {
               description="A sample of platforms, client engagements, and leadership work from the last two decades."
             />
 
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {portfolioProjects.map((project) => (
-                <article
-                  key={project.id}
-                  className={cn(
-                    'group flex min-h-full flex-col overflow-hidden rounded-3xl border border-sand/10 bg-white/5 shadow-soft transition hover:border-gold-500/25 hover:bg-white/[0.07]',
-                    project.span === 'full' && 'sm:col-span-2 lg:col-span-3',
-                  )}
+            {isMobileCarousel ? (
+              <div className="mt-10">
+                <div
+                  role="region"
+                  aria-label="Portfolio project carousel"
+                  aria-roledescription="carousel"
+                  tabIndex={0}
+                  onKeyDown={onCarouselKeyDown}
+                  className="focus-visible:focus-ring rounded-3xl"
                 >
-                  <PortfolioMedia project={project} onOpenImage={openImage} />
-                  <div className="flex flex-1 flex-col p-5">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-sand/45">
-                          {project.client}
-                        </p>
-                        <h3 className="mt-2 font-display text-xl font-semibold tracking-tight text-sand">
-                          {project.title}
-                        </h3>
-                      </div>
-                      {project.url ? (
-                        <a
-                          href={project.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-full border border-sand/10 bg-ink2/70 text-sand/55 transition hover:border-gold-500/30 hover:text-gold-200 focus-visible:focus-ring"
-                          aria-label={`Open ${project.title} in a new tab`}
-                        >
-                          <ArrowUpRight size={16} aria-hidden />
-                        </a>
-                      ) : null}
-                    </div>
+                  {activeProject ? (
+                    <PortfolioProjectCard
+                      key={activeProject.id}
+                      project={activeProject}
+                      onOpenImage={openImage}
+                      onViewDetails={openProjectDetails}
+                    />
+                  ) : null}
+                </div>
 
-                    <p className="mt-1 font-mono text-xs text-sand/45">{project.period}</p>
-                    <p className="mt-3 flex-1 text-sm leading-relaxed text-sand/70">
-                      {project.summary}
+                {portfolioProjects.length > 1 ? (
+                  <div className="mt-6 flex flex-col gap-4 border-t border-sand/10 pt-6">
+                    <p className="font-mono text-xs text-sand/50">
+                      Project {safeIndex + 1} of {portfolioProjects.length}
                     </p>
-
-                    {project.impactMetrics?.length ? (
-                      <ImpactBadge metrics={project.impactMetrics} className="mt-4" />
-                    ) : null}
-
-                    <PortfolioTechStack tags={project.tags} />
+                    <ShowcaseCarouselControls
+                      items={carouselItems}
+                      activeIndex={safeIndex}
+                      onPrev={goPrev}
+                      onNext={goNext}
+                      onSelect={setActiveIndex}
+                      ariaLabel="Portfolio carousel controls"
+                    />
                   </div>
-                </article>
-              ))}
-            </div>
+                ) : null}
+              </div>
+            ) : (
+              <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {portfolioProjects.map((project) => (
+                  <PortfolioProjectCard
+                    key={project.id}
+                    project={project}
+                    onOpenImage={openImage}
+                    onViewDetails={openProjectDetails}
+                    className={project.span === 'full' ? 'sm:col-span-2 lg:col-span-3' : undefined}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </Gutter>
       </section>

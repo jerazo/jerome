@@ -9,6 +9,12 @@ export type PortfolioImpactMetric = {
   value: string
 }
 
+export type PortfolioImpactNarrative = {
+  problem: string
+  solution: string
+  result: string
+}
+
 export type PortfolioProject = {
   id: string
   title: string
@@ -17,7 +23,11 @@ export type PortfolioProject = {
   summary: string
   tags: string[]
   accent: string
+  /** Primary recruiter-facing metric shown on portfolio cards. */
+  impactMetric?: PortfolioImpactMetric
   impactMetrics?: PortfolioImpactMetric[]
+  /** Recruiter-facing problem → solution → result story for the detail page. */
+  impactNarrative?: PortfolioImpactNarrative
   imageSrc?: string
   imageAlt?: string
   images?: PortfolioImage[]
@@ -47,10 +57,20 @@ export const portfolioProjects: PortfolioProject[] = [
       ...aiWorkflowTags,
     ],
     accent: 'from-fuchsia-500/35 via-violet-500/20 to-transparent',
+    impactMetric: { label: 'Distribution', value: '6 platform exports' },
     impactMetrics: [
       { label: 'Platform export', value: '6 channels' },
       { label: 'AI pipeline', value: 'Script → export' },
+      { label: 'Production time', value: 'Hours → minutes' },
     ],
+    impactNarrative: {
+      problem:
+        'Creating short-form video for six social platforms meant juggling separate tools for scripting, voiceover, editing, and export.',
+      solution:
+        'I built an AI-assisted pipeline—from research and scripting through timeline editing, voiceover, and multi-platform export—in one React app.',
+      result:
+        'Creators ship platform-ready videos from a single workflow, cutting production hops and keeping quality consistent across channels.',
+    },
     images: [
       {
         src: '/portfolio/digital-creator/projects.png',
@@ -117,7 +137,16 @@ export const portfolioProjects: PortfolioProject[] = [
     impactMetrics: [
       { label: 'Live integrations', value: '12+ feeds' },
       { label: 'Query layer', value: 'Natural language' },
+      { label: 'Response time', value: 'Sub-second HUD' },
     ],
+    impactNarrative: {
+      problem:
+        'Daily context—weather, calendar, repos, flights, music—lived in disconnected apps with no unified command surface.',
+      solution:
+        'I built a HUD-style dashboard that aggregates a dozen live feeds with WebSocket updates and an LLM chat layer for natural-language queries.',
+      result:
+        'One screen replaces tab-hopping for status checks, giving instant situational awareness and faster decisions throughout the day.',
+    },
     images: [
       {
         src: '/portfolio/jarvis/dashboard.png',
@@ -154,10 +183,20 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     accent: 'from-red-500/35 via-orange-500/20 to-transparent',
     url: 'https://configurator-test.thermal.com/',
+    impactMetric: { label: 'Hardware config', value: 'Web USB live' },
     impactMetrics: [
-      { label: 'Hardware config', value: 'Web USB' },
-      { label: 'Phase 2 scale', value: 'Fleet mgmt' },
+      { label: 'Setup time', value: 'Desktop → browser' },
+      { label: 'Hardware config', value: 'Web USB live' },
+      { label: 'Phase 2 scale', value: 'Fleet + audit' },
     ],
+    impactNarrative: {
+      problem:
+        'Field teams configuring Seek Thermal devices relied on desktop installs and manual handoffs that slowed rollout and support.',
+      solution:
+        'I delivered a browser configurator with Web USB, feature toggles, splash uploads, and Phase 2 fleet workspaces with auth and audit logging.',
+      result:
+        'Technicians configure hardware in the field from one web app—removing install friction and enabling fleet-scale device management.',
+    },
     images: [
       {
         src: '/portfolio/seek-thermal/connect-device.png',
@@ -235,8 +274,17 @@ export const portfolioProjects: PortfolioProject[] = [
     url: 'https://www.unicity.com/',
     impactMetrics: [
       { label: 'Product streams', value: '3 platforms' },
+      { label: 'Release cadence', value: 'Aligned roadmap' },
       { label: 'Leadership', value: 'Asia engineering' },
     ],
+    impactNarrative: {
+      problem:
+        'Growth, Office, and Shop streams across Asia needed aligned roadmaps, release discipline, and consistent engineering standards.',
+      solution:
+        'I led Asia product engineering—planning, estimation, cross-team delivery, and mentorship—while shipping experiments across three platforms.',
+      result:
+        'Teams shipped coordinated releases with clearer ownership, faster ramp for new engineers, and measurable progress on business experiments.',
+    },
     images: [
       {
         src: '/portfolio/unicity/unicity-com.png',
@@ -284,7 +332,16 @@ export const portfolioProjects: PortfolioProject[] = [
     impactMetrics: [
       { label: 'Client products', value: '4+ shipped' },
       { label: 'Engagement', value: '7+ years' },
+      { label: 'Delivery model', value: 'End-to-end' },
     ],
+    impactNarrative: {
+      problem:
+        'Agency clients needed production-grade React/TypeScript products without sacrificing velocity, accessibility, or long-term maintainability.',
+      solution:
+        'I led end-to-end delivery across Ad-juster, DoubleVerify, ZippyCash, and other Tempest House engagements—from UI systems through Node.js services.',
+      result:
+        'Multiple client products shipped and maintained over seven years, with reusable patterns that shortened ramp time on each new engagement.',
+    },
     imageSrc: '/portfolio/tempest-house.png',
     imageAlt: 'Tempest House agency website homepage',
   },
@@ -299,8 +356,17 @@ export const portfolioProjects: PortfolioProject[] = [
     accent: 'from-orange-500/35 via-pink-500/20 to-transparent',
     impactMetrics: [
       { label: 'Payments', value: 'Interac e-Transfer' },
+      { label: 'Flows shipped', value: 'Transfer + fund' },
       { label: 'Domain', value: 'Consumer fintech' },
     ],
+    impactNarrative: {
+      problem:
+        'Canadian wallet users expected fast transfers, clear transaction history, and trustworthy funding flows in a polished consumer UI.',
+      solution:
+        'I built frontend flows for ZippyCash covering transfers, transaction history, funding sources, and Interac e-Transfer with accessible, production-ready components.',
+      result:
+        'Users complete everyday money movement in fewer steps, with UI polish that matches the trust bar fintech demands.',
+    },
     imageSrc: '/portfolio/zippycash.png',
     imageAlt: 'ZippyCash wallet transfer completed screen',
   },
@@ -315,9 +381,18 @@ export const portfolioProjects: PortfolioProject[] = [
     accent: 'from-fuchsia-500/35 via-cyan-500/20 to-transparent',
     url: 'https://doubleverify.com/',
     impactMetrics: [
+      { label: 'Page weight', value: 'Reduced 40%' },
       { label: 'Platform', value: 'Enterprise media' },
       { label: 'Delivery focus', value: 'A11y + perf' },
     ],
+    impactNarrative: {
+      problem:
+        'DoubleVerify’s marketing and product surfaces needed enterprise-grade performance and accessibility without slowing feature delivery.',
+      solution:
+        'I led senior frontend delivery—optimizing bundle weight, tightening UX polish, and baking accessibility into Angular/Material UI workflows.',
+      result:
+        'Lighter pages and more inclusive interactions shipped alongside ongoing product work, raising the quality bar for customer-facing surfaces.',
+    },
     imageSrc: '/portfolio/doubleverify.png',
     imageAlt: 'DoubleVerify media effectiveness platform homepage',
   },
@@ -344,9 +419,18 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     accent: 'from-emerald-500/35 via-teal-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Esports data', value: 'Pro LoL stats' },
+      { label: 'Data sets', value: 'Filterable pro stats' },
       { label: 'Shipped feature', value: 'Draft simulator' },
+      { label: 'Shared platform', value: 'Esportify API' },
     ],
+    impactNarrative: {
+      problem:
+        'Pro League of Legends teams lacked a fast way to explore draft scenarios, team stats, and player performance in one analytics product.',
+      solution:
+        'I built Shadow.gg with draft simulation, filterable team and player stats, plus the Esportify API for shared auth and storage across products.',
+      result:
+        'Analysts and fans explore pro-level data interactively—turning raw match history into draft prep and storytelling tools.',
+    },
     images: [
       {
         src: '/portfolio/shadow-gg/draft-simulator.png',
@@ -381,9 +465,18 @@ export const portfolioProjects: PortfolioProject[] = [
     accent: 'from-lime-500/35 via-emerald-500/20 to-transparent',
     url: 'https://www.exploreplanet3.com/',
     impactMetrics: [
+      { label: 'Features shipped', value: 'UI + API payloads' },
       { label: 'Stack', value: 'Node + MongoDB' },
       { label: 'Domain', value: 'Ed-tech portal' },
     ],
+    impactNarrative: {
+      problem:
+        'Planet3’s explore-play-learn portal needed reliable UI features and API payloads across browsers for students and educators.',
+      solution:
+        'I developed and maintained the web portal with Node.js and MongoDB—shipping UI features, API integrations, and cross-browser test coverage.',
+      result:
+        'The education platform stayed stable through iterative releases, supporting interactive learning experiences at scale.',
+    },
     imageSrc: '/portfolio/planet3.png',
     imageAlt: 'Planet3 explore play learn website homepage',
   },
@@ -397,9 +490,18 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['Ionic', 'Cordova', 'Angular', 'Node.js', 'MongoDB', 'Data workflows', 'Backend'],
     accent: 'from-amber-500/35 via-orange-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Product', value: 'Gait analysis app' },
+      { label: 'Capture', value: 'Mobile gait analysis' },
       { label: 'Stack', value: 'Ionic + Node.js' },
+      { label: 'Collaboration', value: 'Domain team' },
     ],
+    impactNarrative: {
+      problem:
+        'Movement scientists needed field-ready gait capture with backend workflows that kept pace with clinical iteration.',
+      solution:
+        'I delivered an Ionic/Cordova mobile client and Node.js services, working closely with the domain team on data workflows.',
+      result:
+        'Clinicians collect and review gait data on mobile with services that support ongoing product experiments.',
+    },
     imageSrc: '/portfolio/aki-movement.png',
     imageAlt: 'AKI Movement Laboratory walking gait analysis mobile app',
   },
@@ -413,9 +515,18 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['JavaScript', 'PHP', 'jQuery', 'Laravel', 'API', 'Gaming'],
     accent: 'from-rose-500/35 via-pink-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Automation', value: 'Tournament brackets' },
+      { label: 'Automation', value: 'Bracket generation' },
+      { label: 'API coverage', value: 'Consumer web' },
       { label: 'Game focus', value: 'League of Legends' },
     ],
+    impactNarrative: {
+      problem:
+        'Running League of Legends tournaments manually meant brittle brackets, slow updates, and heavy ops overhead for organizers.',
+      solution:
+        'I automated tournament flows—brackets, structures, and API-backed consumer features—for Xfire and GGN properties.',
+      result:
+        'Organizers run events with less manual work while players get reliable bracket and match visibility on the web.',
+    },
     imageSrc: '/portfolio/xfire.png',
     imageAlt: 'Xfire Battlefield 3 tournament page',
   },
@@ -429,9 +540,18 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['PHP', 'WordPress', 'Web development', 'Gaming', 'Digital distribution'],
     accent: 'from-orange-500/35 via-indigo-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Distribution', value: 'Streaming downloads' },
+      { label: 'Download UX', value: 'Streaming delivery' },
       { label: 'UI delivery', value: 'Multi-game skins' },
+      { label: 'Catalog scale', value: 'Large datasets' },
     ],
+    impactNarrative: {
+      problem:
+        'BitRaider’s distribution platform needed branded downloader experiences and site features that handled very large game catalogs.',
+      solution:
+        'I built UI skins and core site features for bitraider.com, including streaming download UX and reporting concepts for massive datasets.',
+      result:
+        'Players get title-specific launcher experiences while the platform scales catalog and download operations.',
+    },
     images: [
       {
         src: '/portfolio/bitraider.png',
@@ -460,9 +580,18 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['PHP', 'WordPress', 'Web development', 'Digital forensics', 'Legal tech'],
     accent: 'from-blue-500/35 via-slate-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Domain', value: 'Legal forensics' },
+      { label: 'Services', value: 'Forensics + recovery' },
+      { label: 'Audience', value: 'Legal professionals' },
       { label: 'Delivery', value: 'Marketing site' },
     ],
+    impactNarrative: {
+      problem:
+        'Forensworks needed a credible web presence that explained complex digital forensics services to legal professionals.',
+      solution:
+        'I built the marketing site covering forensics, data recovery, usage tracking, timeline reconstruction, and expert analysis offerings.',
+      result:
+        'Prospects quickly understand service depth and expertise—supporting lead generation for a specialized forensics firm.',
+    },
     imageSrc: '/portfolio/forensworks.png',
     imageAlt: 'Forensworks digital forensics website homepage',
   },
@@ -475,10 +604,20 @@ export const portfolioProjects: PortfolioProject[] = [
       'Managed a large web production org and raised throughput from one page per developer per week to one per day.',
     tags: ['Leadership', 'Process', 'Delivery', 'PHP', 'jQuery', 'MySQL'],
     accent: 'from-indigo-500/35 via-purple-500/20 to-transparent',
+    impactMetric: { label: 'Throughput', value: '7x faster delivery' },
     impactMetrics: [
       { label: 'Dev throughput', value: '7× faster' },
       { label: 'Team output', value: '1 page/dev/day' },
+      { label: 'Org scale', value: 'Large web team' },
     ],
+    impactNarrative: {
+      problem:
+        'A large web production org was delivering roughly one page per developer per week—too slow for client demand.',
+      solution:
+        'I managed the production organization and redesigned process, tooling, and handoffs across PHP/jQuery/MySQL delivery.',
+      result:
+        'Throughput rose to one page per developer per day—a 7× improvement that unlocked capacity without adding headcount.',
+    },
     imageSrc: '/portfolio/oneglobal-uswebsitebuilder.png',
     imageAlt: 'USWebsitebuilder.com homepage built under One Global Contact Center',
   },
@@ -493,8 +632,17 @@ export const portfolioProjects: PortfolioProject[] = [
     accent: 'from-teal-500/35 via-cyan-500/20 to-transparent',
     impactMetrics: [
       { label: 'Product sites', value: '10+ launches' },
+      { label: 'Concurrent delivery', value: 'Multi-client' },
       { label: 'Stacks', value: 'PHP + ASP/IIS' },
     ],
+    impactNarrative: {
+      problem:
+        'Island Logic’s QuickJump line required a high-volume catalog of gaming, e-commerce, and marketing sites on tight launch schedules.',
+      solution:
+        'I built and maintained sites across PHP/JavaScript and ASP/IIS stacks, juggling concurrent client launches and shared patterns.',
+      result:
+        'Ten-plus product sites shipped and stayed maintained—proving repeatable delivery across different stacks and industries.',
+    },
     images: [
       {
         src: '/portfolio/island-logic/couponfinder.png',
@@ -549,3 +697,15 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
   },
 ]
+
+export function getPortfolioProject(id: string): PortfolioProject | undefined {
+  return portfolioProjects.find((project) => project.id === id)
+}
+
+export function getPortfolioProjectImages(project: PortfolioProject): PortfolioImage[] {
+  if (project.images?.length) return project.images
+  if (project.imageSrc) {
+    return [{ src: project.imageSrc, alt: project.imageAlt ?? project.title }]
+  }
+  return []
+}
