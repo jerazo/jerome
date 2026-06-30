@@ -1,8 +1,7 @@
 import { Search } from 'lucide-react'
 import { capabilityTopics } from '../../content/homeSections'
-import { Gutter } from '../atoms/Gutter'
+import { Gutter, Tag } from '@/components/atomic'
 import { SectionHeading } from '../molecules/SectionHeading'
-import { Tag } from '../atoms/Tag'
 
 export function FeaturedLibrary() {
   return (

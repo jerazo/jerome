@@ -24,7 +24,7 @@ cdk-outputs.json
 
 # Playwright
 playwright-report/
-test-results/
+storybook-static
 
 # Editor directories and files
 .vscode/*
@@ -36,3 +36,6 @@ test-results/
 *.njsproj
 *.sln
 *.sw?
+
+*storybook.log
+storybook-static

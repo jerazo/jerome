@@ -698,8 +698,19 @@ export const portfolioProjects: PortfolioProject[] = [
   },
 ]
 
-export function getPortfolioProject(id: string): PortfolioProject | undefined {
-  return portfolioProjects.find((project) => project.id === id)
+const portfolioSlugAliases: Record<string, string> = {
+  'fire-products-configurator': 'seek-thermal',
+  'unicity-platform': 'unicity-asia',
+  'doubleverify-platform': 'doubleverify',
+}
+
+export function resolvePortfolioSlug(slug: string): string {
+  return portfolioSlugAliases[slug] ?? slug
+}
+
+export function getPortfolioProject(slug: string): PortfolioProject | undefined {
+  const resolved = resolvePortfolioSlug(slug)
+  return portfolioProjects.find((project) => project.id === resolved)
 }
 
 export function getPortfolioProjectImages(project: PortfolioProject): PortfolioImage[] {

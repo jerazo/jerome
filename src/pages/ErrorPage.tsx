@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
-import { Button } from '../components/atoms/Button'
-import { ButtonLink } from '../components/atoms/ButtonLink'
-import { Container } from '../components/atoms/Container'
+import { Button, ButtonLink, Container } from '@/components/atomic'
 import { formatPageTitle } from '../content/profile'
 import type { RouteErrorDetails } from '../lib/routeError'
 

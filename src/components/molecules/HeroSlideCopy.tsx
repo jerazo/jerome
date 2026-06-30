@@ -1,11 +1,12 @@
 import { ArrowRight } from 'lucide-react'
 import type { HeroSlide } from '../../content/homeSections'
 import { cn } from '../../lib/cn'
-import { ButtonLink } from '../atoms/ButtonLink'
+import { ButtonLink } from '@/components/atomic'
 
 type HeroSlideCopyProps = {
   slide: HeroSlide
   animate?: boolean
+  glowActive?: boolean
   className?: string
   titleClassName?: string
   showCta?: boolean
@@ -15,6 +16,7 @@ type HeroSlideCopyProps = {
 export function HeroSlideCopy({
   slide,
   animate = false,
+  glowActive = false,
   className,
   titleClassName,
   showCta = true,
@@ -50,6 +52,7 @@ export function HeroSlideCopy({
               compact
                 ? '-space-y-2 text-[clamp(1.65rem,6.5vw,2.1rem)]'
                 : '-space-y-3 text-[clamp(1.875rem,5.5vw,2.5rem)] sm:-space-y-5 sm:text-[clamp(2.25rem,4.5vw,3.15rem)] lg:-space-y-7 lg:text-[clamp(2.5rem,3.8vw,3.5rem)]',
+              glowActive && 'hero-glow-pulse motion-reduce:animate-none',
               titleClassName,
             )}
           >
@@ -90,7 +93,10 @@ export function HeroSlideCopy({
           </div>
 
           <div
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gold-500/30 bg-gold-500/10 px-2.5 py-1 shadow-[0_0_24px_rgba(139,92,246,0.12)] backdrop-blur-sm"
+            className={cn(
+              'inline-flex items-center gap-1.5 rounded-lg border border-gold-500/30 bg-gold-500/10 px-2.5 py-1 shadow-[0_0_24px_rgba(139,92,246,0.12)] backdrop-blur-sm',
+              glowActive && 'hero-glow-pulse motion-reduce:animate-none border-gold-500/45',
+            )}
             aria-label={`Impact: ${slide.impactBadge.value} ${slide.impactBadge.label}`}
           >
             <span

@@ -12,6 +12,13 @@
 
 ---
 
+## Documentation
+
+- **Atomic composition:** [`pages/atomic-composition.md`](pages/atomic-composition.md) — code examples for assembling atoms into molecules and organisms (project cards, hero carousel, contact section).
+- **Page overrides:** [`pages/home.md`](pages/home.md) — home-specific layout and component rules.
+
+---
+
 ## Global Rules
 
 ### Color Palette
@@ -39,6 +46,7 @@
 - **Google Fonts:** [Inter + Playfair Display](https://fonts.google.com/share?selection.family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400|JetBrains+Mono:wght@400|Playfair+Display:ital@1)
 
 **CSS Import:**
+
 ```css
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400&family=Playfair+Display:ital@1&display=swap');
 ```

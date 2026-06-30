@@ -1,7 +1,6 @@
-import { formatBuildLabel } from '../../lib/buildInfo'
 import { footerNavColumns } from '../../content/nav'
-import { Container } from '../atoms/Container'
-import { NavHashLink } from '../atoms/NavHashLink'
+import { BuildVersionLabel } from '../molecules/BuildVersionLabel'
+import { Container, NavHashLink } from '@/components/atomic'
 import { FooterContactCta } from '../molecules/FooterContactCta'
 import { MaskedContactValue } from '../molecules/MaskedContactValue'
 import { profile } from '../../content/profile'
@@ -80,8 +79,8 @@ export function Footer({ inert }: { inert?: boolean }) {
             <p>
               © {new Date().getFullYear()} {profile.name}. All rights reserved.
             </p>
-            <p>
-              {formatBuildLabel()} · Built with React • TypeScript • Tailwind
+            <p className="min-w-0 break-words">
+              <BuildVersionLabel /> · Built with React • TypeScript • Tailwind
             </p>
           </Container>
         </div>

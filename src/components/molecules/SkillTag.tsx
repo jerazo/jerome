@@ -1,4 +1,4 @@
-import { Tag } from '../atoms/Tag'
+import { Tag } from '@/components/atomic'
 import { cn } from '../../lib/cn'
 import type { SkillHighlightTier, SkillItem } from '../../content/techStack'
 

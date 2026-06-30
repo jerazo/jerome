@@ -5,8 +5,8 @@ import { getPortfolioProject } from '../content/portfolio'
 import { formatPageTitle } from '../content/profile'
 
 export function ProjectDetailPageRoute() {
-  const { projectId } = useParams<{ projectId: string }>()
-  const project = projectId ? getPortfolioProject(projectId) : undefined
+  const { slug } = useParams<{ slug: string }>()
+  const project = slug ? getPortfolioProject(slug) : undefined
 
   useEffect(() => {
     if (project) {
@@ -14,7 +14,7 @@ export function ProjectDetailPageRoute() {
     }
   }, [project])
 
-  if (!projectId || !project) {
+  if (!slug || !project) {
     return <Navigate to="/" replace />
   }
 

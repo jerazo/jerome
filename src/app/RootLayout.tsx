@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { SkipToContent } from '../components/atoms/SkipToContent'
+import { SkipToContent } from '@/components/atomic'
 import { ContactAccessModal } from '../components/molecules/ContactAccessModal'
 import { Footer } from '../components/organisms/Footer'
 import { Header } from '../components/organisms/Header'
@@ -37,7 +37,7 @@ export default function RootLayout() {
         <Outlet />
       </main>
 
-      {isShowcase ? null : <Footer inert={lockBackgroundFocus ? true : undefined} />}
+      <Footer inert={lockBackgroundFocus ? true : undefined} />
       <ContactAccessModal />
     </div>
   )

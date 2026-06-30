@@ -1,8 +1,10 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Container } from '../atoms/Container'
+import { Container } from '@/components/atomic'
+import { pickHeroBannerMessage } from '../../content/homeSections'
 import { showcaseItems } from '../../content/showcase'
 import type { PortfolioProject } from '../../content/portfolio'
+import { resolvePortfolioSlug } from '../../content/portfolio'
 import { showcasePageSeo } from '../../content/seo'
 import { formatPageTitle } from '../../content/profile'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
@@ -11,11 +13,13 @@ import {
   filterShowcaseItems,
   loadShowcaseFilter,
 } from '../../lib/showcaseFilter'
+import { parseShowcaseProjectSlug, syncShowcaseProjectHash } from '../../lib/showcaseProjectHash'
 import { showcaseItemToPortfolio } from '../../lib/showcasePortfolio'
 import {
   PortfolioImageModal,
   type PortfolioImageModalState,
 } from '../molecules/PortfolioImageModal'
+import { PrefetchProjectImages } from '../molecules/PrefetchProjectImages'
 import { ShowcaseAlbumFlow } from '../molecules/ShowcaseAlbumFlow'
 import { ShowcaseFilter } from '../molecules/ShowcaseFilter'
 import { ShowcaseLayout } from './ShowcaseLayout'
@@ -38,9 +42,12 @@ function readInitialHeroIndex() {
   return 0
 }
 
-function readInitialProjectIndex() {
+function readInitialProjectIndex(projects: PortfolioProject[]) {
+  const hashSlug = parseShowcaseProjectSlug(window.location.hash)
+  if (hashSlug) return findProjectIndex(projects, hashSlug)
+
   const initial = readShowcaseDeepLink()
-  return findProjectIndex(showcaseItems.map(showcaseItemToPortfolio), initial.project)
+  return findProjectIndex(projects, initial.project)
 }
 
 export function ShowcasePage() {
@@ -48,8 +55,8 @@ export function ShowcasePage() {
   const [filter, setFilter] = useState(loadShowcaseFilter)
   const debouncedFilter = useDebouncedValue(filter, 180)
   const [heroIndex, setHeroIndex] = useState(readInitialHeroIndex)
-  const [projectIndex, setProjectIndex] = useState(readInitialProjectIndex)
   const [modalState, setModalState] = useState<PortfolioImageModalState | null>(null)
+  const [bannerMessage] = useState(pickHeroBannerMessage)
 
   const filteredItems = useMemo(
     () => filterShowcaseItems(showcaseItems, debouncedFilter),
@@ -61,17 +68,31 @@ export function ShowcasePage() {
     [filteredItems],
   )
 
+  const [projectIndex, setProjectIndex] = useState(() =>
+    readInitialProjectIndex(filteredItems.map(showcaseItemToPortfolio)),
+  )
+
   const safeProjectIndex =
     portfolioProjects.length > 0
       ? Math.min(projectIndex, portfolioProjects.length - 1)
       : 0
+
+  const handleProjectHash = useCallback(
+    (slug: string | null) => {
+      if (!slug) return
+      setProjectIndex(findProjectIndex(portfolioProjects, slug))
+    },
+    [portfolioProjects],
+  )
 
   const handlePopState = useCallback(
     (state: { slide?: number; project?: string | null }) => {
       if (state.slide != null && Number.isFinite(state.slide)) {
         setHeroIndex(Math.max(0, state.slide))
       }
-      setProjectIndex(findProjectIndex(portfolioProjects, state.project))
+
+      const hashSlug = parseShowcaseProjectSlug(window.location.hash)
+      setProjectIndex(findProjectIndex(portfolioProjects, hashSlug ?? state.project))
     },
     [portfolioProjects],
   )
@@ -97,9 +118,11 @@ export function ShowcasePage() {
   const handleProjectIndexChange = (index: number, userInitiated = false) => {
     setProjectIndex(index)
     if (userInitiated) {
+      const project = portfolioProjects[index]
+      syncShowcaseProjectHash(project?.id ?? null)
       syncShowcaseDeepLink({
         slide: heroIndex,
-        project: portfolioProjects[index]?.id ?? null,
+        project: project?.id ?? null,
       })
     }
   }
@@ -107,6 +130,7 @@ export function ShowcasePage() {
   const handleFilterChange = (value: string) => {
     setFilter(value)
     setProjectIndex(0)
+    syncShowcaseProjectHash(null)
   }
 
   const openImage = (project: PortfolioProject, index: number) => {
@@ -127,11 +151,11 @@ export function ShowcasePage() {
   }
 
   const openProjectDetails = (project: PortfolioProject) => {
-    navigate(`/work/${project.id}`)
+    navigate(`/project/${resolvePortfolioSlug(project.id)}`)
   }
 
   return (
-    <ShowcaseLayout>
+    <ShowcaseLayout onProjectHash={handleProjectHash}>
       <Suspense
         fallback={
           <section
@@ -145,6 +169,7 @@ export function ShowcasePage() {
         <LazyThreeJsHero
           activeIndex={heroIndex}
           onActiveIndexChange={handleHeroIndexChange}
+          bannerMessage={bannerMessage}
         />
       </Suspense>
 
@@ -182,13 +207,16 @@ export function ShowcasePage() {
                 projects.
               </p>
             ) : (
-              <ShowcaseAlbumFlow
-                projects={portfolioProjects}
-                activeIndex={safeProjectIndex}
-                onActiveIndexChange={handleProjectIndexChange}
-                onOpenImage={openImage}
-                onViewDetails={openProjectDetails}
-              />
+              <>
+                <PrefetchProjectImages projects={portfolioProjects} activeIndex={safeProjectIndex} />
+                <ShowcaseAlbumFlow
+                  projects={portfolioProjects}
+                  activeIndex={safeProjectIndex}
+                  onActiveIndexChange={handleProjectIndexChange}
+                  onOpenImage={openImage}
+                  onViewDetails={openProjectDetails}
+                />
+              </>
             )}
           </div>
         </Container>

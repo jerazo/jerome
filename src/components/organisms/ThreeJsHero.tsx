@@ -1,122 +1,47 @@
-import { Suspense, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { Float, Html } from '@react-three/drei'
-import { animated, useSpring } from '@react-spring/three'
-import type { Group } from 'three'
-import { heroSlides, type HeroSlide } from '../../content/homeSections'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { Canvas } from '@react-three/fiber'
+import { heroSlides } from '../../content/homeSections'
+import { profile } from '../../content/profile'
 import { cn } from '../../lib/cn'
+import {
+  detectWebGLSupport,
+  HERO_FALLBACK_IMAGE,
+  HERO_FALLBACK_SUBJECT,
+  SLIDE_INTERVAL_MS,
+  threeHeroCanvasProps,
+} from '../../lib/threeSetup'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { HeroCarouselControls } from '../molecules/HeroCarouselControls'
 import { HeroSlideCopy } from '../molecules/HeroSlideCopy'
 
-const SLIDE_INTERVAL_MS = 7000
-const CAROUSEL_RADIUS = 3.2
+const LazyHeroScene = lazy(() =>
+  import('./ThreeJsHeroScene').then((module) => ({ default: module.ThreeJsHeroScene })),
+)
 
-const AnimatedGroup = animated.group
-
-function slideAngle(index: number, activeIndex: number, total: number) {
-  const offset = index - activeIndex
-  const wrapped =
-    offset > total / 2 ? offset - total : offset < -total / 2 ? offset + total : offset
-  return wrapped * 0.72
-}
-
-function HeroSlidePanel({
-  slide,
-  index,
-  activeIndex,
-  total,
-}: {
-  slide: HeroSlide
-  index: number
-  activeIndex: number
-  total: number
-}) {
-  const isActive = index === activeIndex
-  const angle = slideAngle(index, activeIndex, total)
-
-  const spring = useSpring({
-    posX: Math.sin(angle) * CAROUSEL_RADIUS,
-    posY: isActive ? 0.15 : -0.05,
-    posZ: Math.cos(angle) * CAROUSEL_RADIUS - 2.4,
-    rotY: -angle + Math.PI,
-    scale: isActive ? 1.08 : 0.82,
-    config: { tension: 170, friction: 22 },
-  })
+function StaticHeroFallback({ activeIndex }: { activeIndex: number }) {
+  const slide = heroSlides[activeIndex % heroSlides.length]
 
   return (
-    <AnimatedGroup
-      position-x={spring.posX}
-      position-y={spring.posY}
-      position-z={spring.posZ}
-      rotation-y={spring.rotY}
-      scale={spring.scale}
-    >
-      <mesh castShadow receiveShadow>
-        <boxGeometry args={[2.35, 1.45, 0.08]} />
-        <meshStandardMaterial
-          color={isActive ? '#ca8a04' : '#1a1a1a'}
-          emissive={isActive ? '#ca8a04' : '#000000'}
-          emissiveIntensity={isActive ? 0.35 : 0}
-          metalness={0.55}
-          roughness={0.35}
-        />
-      </mesh>
-      <mesh position={[0, 0, 0.05]}>
-        <boxGeometry args={[2.2, 1.3, 0.02]} />
-        <meshStandardMaterial color="#0b0b0b" metalness={0.2} roughness={0.85} />
-      </mesh>
-      {isActive ? (
-        <Html transform distanceFactor={6} position={[0, 0, 0.12]} occlude>
-          <div className="pointer-events-none w-[220px] select-none text-center">
-            <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-gold-200/80">
-              {slide.eyebrow}
-            </p>
-            <p className="mt-1 font-display text-sm font-semibold text-sand">
-              {slide.titleLines.flat().map((part) => part.text).join(' ')}
-            </p>
-          </div>
-        </Html>
-      ) : null}
-    </AnimatedGroup>
-  )
-}
-
-function HeroScene({
-  activeIndex,
-  paused,
-}: {
-  activeIndex: number
-  paused: boolean
-}) {
-  const rigRef = useRef<Group>(null)
-
-  useFrame((state) => {
-    if (!rigRef.current || paused) return
-    const t = state.clock.getElapsedTime()
-    rigRef.current.rotation.y = Math.sin(t * 0.18) * 0.08
-    rigRef.current.position.y = Math.sin(t * 0.35) * 0.04
-  })
-
-  return (
-    <>
-      <ambientLight intensity={0.45} />
-      <directionalLight position={[4, 6, 3]} intensity={1.1} color="#fff7ed" />
-      <pointLight position={[-3, 2, 2]} intensity={0.65} color="#ca8a04" />
-      <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
-        <group ref={rigRef}>
-          {heroSlides.map((slide, index) => (
-            <HeroSlidePanel
-              key={slide.eyebrow}
-              slide={slide}
-              index={index}
-              activeIndex={activeIndex}
-              total={heroSlides.length}
-            />
-          ))}
-        </group>
-      </Float>
-    </>
+    <div className="absolute inset-0 overflow-hidden" aria-hidden>
+      <img
+        src={HERO_FALLBACK_IMAGE}
+        alt=""
+        className="h-full w-full object-cover opacity-90"
+        style={{ objectPosition: '54% 26%' }}
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        src={HERO_FALLBACK_SUBJECT}
+        alt={`Portrait of ${profile.name}`}
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ objectPosition: '54% 26%' }}
+        loading="lazy"
+        decoding="async"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#070707] via-black/45 to-black/70" />
+      <p className="sr-only">{slide.eyebrow}</p>
+    </div>
   )
 }
 
@@ -128,14 +53,9 @@ function ThreeJsHeroCanvas({
   paused: boolean
 }) {
   return (
-    <Canvas
-      className="absolute inset-0"
-      camera={{ position: [0, 0.35, 5.2], fov: 42 }}
-      dpr={[1, 1.75]}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-    >
+    <Canvas className="absolute inset-0" {...threeHeroCanvasProps}>
       <Suspense fallback={null}>
-        <HeroScene activeIndex={activeIndex} paused={paused} />
+        <LazyHeroScene activeIndex={activeIndex} paused={paused} />
       </Suspense>
     </Canvas>
   )
@@ -144,20 +64,32 @@ function ThreeJsHeroCanvas({
 export function ThreeJsHero({
   activeIndex,
   onActiveIndexChange,
+  bannerMessage,
   className,
 }: {
   activeIndex: number
   onActiveIndexChange: (index: number, userInitiated?: boolean) => void
+  bannerMessage?: string
   className?: string
 }) {
   const reducedMotion = useReducedMotion()
+  const parallaxRef = useRef<HTMLDivElement | null>(null)
   const [paused, setPaused] = useState(false)
   const [sceneReady, setSceneReady] = useState(false)
+  const [webglSupported] = useState(() => detectWebGLSupport())
 
   const slide = useMemo(
     () => heroSlides[activeIndex % heroSlides.length],
     [activeIndex],
   )
+
+  const slideTitle = useMemo(
+    () => slide.titleLines.flat().map((part) => part.text).join(' '),
+    [slide],
+  )
+
+  const useStaticFallback = reducedMotion || !webglSupported
+  const showCanvas = !useStaticFallback && sceneReady
 
   useEffect(() => {
     const id = window.requestAnimationFrame(() => setSceneReady(true))
@@ -165,12 +97,53 @@ export function ThreeJsHero({
   }, [])
 
   useEffect(() => {
-    if (reducedMotion || paused) return
+    if (useStaticFallback || paused) return
     const id = window.setInterval(() => {
       onActiveIndexChange((activeIndex + 1) % heroSlides.length)
     }, SLIDE_INTERVAL_MS)
     return () => window.clearInterval(id)
-  }, [activeIndex, onActiveIndexChange, paused, reducedMotion])
+  }, [activeIndex, onActiveIndexChange, paused, useStaticFallback])
+
+  useEffect(() => {
+    if (reducedMotion || useStaticFallback) return
+    const root = parallaxRef.current
+    if (!root) return
+
+    let raf = 0
+    let rect = root.getBoundingClientRect()
+    const state = { tx: 0, ty: 0 }
+
+    const apply = () => {
+      raf = 0
+      root.style.setProperty('--hero-foreground-x', `${state.tx.toFixed(2)}px`)
+      root.style.setProperty('--hero-foreground-y', `${state.ty.toFixed(2)}px`)
+      root.style.setProperty('--hero-background-x', `${(state.tx * 0.35).toFixed(2)}px`)
+      root.style.setProperty('--hero-background-y', `${(state.ty * 0.35).toFixed(2)}px`)
+    }
+
+    const schedule = () => {
+      if (raf) return
+      raf = window.requestAnimationFrame(apply)
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return
+      rect = root.getBoundingClientRect()
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
+      const nx = rect.width ? (event.clientX - cx) / (rect.width / 2) : 0
+      const ny = rect.height ? (event.clientY - cy) / (rect.height / 2) : 0
+      state.tx = Math.max(-1, Math.min(1, nx)) * 14
+      state.ty = Math.max(-1, Math.min(1, ny)) * 10
+      schedule()
+    }
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf)
+      window.removeEventListener('pointermove', onPointerMove)
+    }
+  }, [reducedMotion, useStaticFallback])
 
   const goPrev = () => {
     onActiveIndexChange((activeIndex - 1 + heroSlides.length) % heroSlides.length, true)
@@ -193,8 +166,9 @@ export function ThreeJsHero({
 
   return (
     <section
+      ref={parallaxRef}
       className={cn('relative min-h-[min(92vh,860px)] w-full', className)}
-      aria-label="Showcase hero carousel"
+      aria-label={`Showcase hero carousel, slide ${activeIndex + 1} of ${heroSlides.length}: ${slide.eyebrow}. ${slideTitle}`}
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -206,13 +180,19 @@ export function ThreeJsHero({
       }}
     >
       <div className="absolute inset-0 overflow-hidden">
-        {reducedMotion ? (
+        {useStaticFallback ? (
+          <StaticHeroFallback activeIndex={activeIndex} />
+        ) : showCanvas ? (
           <div
-            className="absolute inset-0 bg-gradient-to-br from-gold-900/20 via-black to-black"
-            aria-hidden
-          />
-        ) : sceneReady ? (
-          <ThreeJsHeroCanvas activeIndex={activeIndex} paused={paused} />
+            className="absolute inset-0"
+            style={{
+              transform:
+                'translate3d(var(--hero-background-x, 0px), var(--hero-background-y, 0px), 0)',
+              willChange: 'transform',
+            }}
+          >
+            <ThreeJsHeroCanvas activeIndex={activeIndex} paused={paused} />
+          </div>
         ) : (
           <div
             className="absolute inset-0 animate-pulse bg-gradient-to-br from-ink2/80 via-black to-black"
@@ -224,6 +204,11 @@ export function ThreeJsHero({
 
       <div
         className="relative z-10 flex min-h-[min(92vh,860px)] flex-col justify-end px-4 pb-10 pt-28 sm:px-6 sm:pb-12 lg:px-10"
+        style={{
+          transform:
+            'translate3d(var(--hero-foreground-x, 0px), var(--hero-foreground-y, 0px), 0)',
+          willChange: 'transform',
+        }}
         tabIndex={0}
         onKeyDown={onKeyDown}
       >
@@ -231,7 +216,8 @@ export function ThreeJsHero({
           <HeroSlideCopy
             key={activeIndex}
             slide={slide}
-            animate={!reducedMotion}
+            animate={!useStaticFallback}
+            glowActive={!useStaticFallback}
             showCta={false}
           />
 
@@ -244,6 +230,12 @@ export function ThreeJsHero({
               onSelect={(index) => onActiveIndexChange(index, true)}
             />
           </div>
+
+          {bannerMessage ? (
+            <p className="mt-5 rounded-2xl border border-sand/10 bg-sand/5 px-4 py-3 text-center text-sm leading-relaxed text-sand/75 backdrop-blur-sm">
+              {bannerMessage}
+            </p>
+          ) : null}
         </div>
       </div>
     </section>

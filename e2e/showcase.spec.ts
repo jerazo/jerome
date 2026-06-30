@@ -1,9 +1,30 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 import { showcasePageSeo } from '../src/content/seo'
+
+async function gotoHomePage(page: Page) {
+  await page.goto('/', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByRole('navigation', { name: 'Footer' })).toBeVisible()
+}
+
+async function gotoHomePageDesktop(page: Page) {
+  await gotoHomePage(page)
+  await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible()
+}
+
+async function gotoHomePageMobile(page: Page) {
+  await gotoHomePage(page)
+  await expect(page.getByRole('button', { name: 'Open navigation menu' })).toBeVisible()
+}
+
+async function gotoShowcasePage(page: Page) {
+  const response = await page.goto('/showcase', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByRole('heading', { level: 1, name: showcasePageSeo.title })).toBeVisible()
+  return response
+}
 
 test.describe('Showcase page route', () => {
   test('direct navigation returns 200 and renders accessible placeholder', async ({ page }) => {
-    const response = await page.goto('/showcase')
+    const response = await gotoShowcasePage(page)
 
     expect(response?.status()).toBe(200)
     await expect(page).toHaveURL('/showcase')
@@ -11,11 +32,12 @@ test.describe('Showcase page route', () => {
     await expect(page.getByText(showcasePageSeo.description)).toBeVisible()
     await expect(page.locator('section[aria-labelledby="showcase-heading"]')).toBeVisible()
     await expect(page).toHaveTitle(new RegExp(showcasePageSeo.title, 'i'))
+    await expect(page.getByRole('navigation', { name: 'Footer' })).toBeVisible()
   })
 
   test('desktop primary nav links to showcase without full reload', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
-    await page.goto('/')
+    await gotoHomePageDesktop(page)
 
     const primaryNav = page.getByRole('navigation', { name: 'Primary' })
     const showcaseLink = primaryNav.getByRole('link', { name: 'Showcase' })
@@ -30,7 +52,7 @@ test.describe('Showcase page route', () => {
 
   test('mobile navigation includes showcase link', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto('/')
+    await gotoHomePageMobile(page)
 
     await page.getByRole('button', { name: 'Open navigation menu' }).click()
 
@@ -45,13 +67,13 @@ test.describe('Showcase page route', () => {
   })
 
   test('footer showcase link navigates to bookmarkable route', async ({ page }) => {
-    await page.goto('/')
+    await gotoHomePage(page)
 
     await page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'Showcase' }).click()
 
     await expect(page).toHaveURL('/showcase')
 
-    await page.reload()
+    await page.reload({ waitUntil: 'domcontentloaded' })
 
     await expect(page).toHaveURL('/showcase')
     await expect(page.getByRole('heading', { level: 1, name: showcasePageSeo.title })).toBeVisible()
@@ -59,7 +81,7 @@ test.describe('Showcase page route', () => {
 
   test('showcase link is reachable via keyboard', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
-    await page.goto('/')
+    await gotoHomePageDesktop(page)
 
     const showcaseLink = page.getByRole('navigation', { name: 'Primary' }).getByRole('link', {
       name: 'Showcase',

@@ -1,4 +1,4 @@
-import { Gutter } from '../atoms/Gutter'
+import { Gutter } from '@/components/atomic'
 import { ContactSection } from './ContactSection'
 
 export function ContactCta() {

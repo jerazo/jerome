@@ -1,4 +1,6 @@
+import { portfolioProjects } from './portfolio.ts'
 import { profile } from './profile.ts'
+import { portfolioProjectShowcaseHashId } from '../lib/showcasePortfolio.ts'
 
 export type NavLinkItem = {
   label: string
@@ -46,6 +48,20 @@ export const navCredibilityGroup: NavGroup = {
 }
 
 export const navGroups: NavGroup[] = [navOfferGroup, navTrackRecordGroup, navCredibilityGroup]
+
+/** Showcase and detail links for each portfolio project. */
+export const navProjectLinks: NavLinkItem[] = portfolioProjects.map((project) => {
+  const showcaseHashId = portfolioProjectShowcaseHashId(project.id)
+  return {
+    label: project.title,
+    to: showcaseHashId ? `/showcase#project-${showcaseHashId}` : `/project/${project.id}`,
+  }
+})
+
+export const navProjectsGroup: NavGroup = {
+  label: 'Projects',
+  items: navProjectLinks,
+}
 
 /** Top nav: main work links beside Featured. */
 export const desktopNavLinks: NavLinkItem[] = [

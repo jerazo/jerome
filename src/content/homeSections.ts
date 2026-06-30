@@ -22,9 +22,9 @@ export type HeroSlide = {
 
 export const heroSlides: HeroSlide[] = [
   {
-    eyebrow: 'Principal engineer · tech lead · player-coach',
+    eyebrow: 'Tech lead · player-coach',
     titleLines: [
-      [{ text: 'PRINCIPAL ENGINEER' }],
+      [{ text: 'TECH LEAD' }],
       [
         { text: '12+ ' },
         { text: 'PRODUCTION PLATFORMS', accent: true },
@@ -49,14 +49,14 @@ export const heroSlides: HeroSlide[] = [
       [{ text: 'SYSTEM DESIGN', accent: true }],
     ],
     subtitle:
-      'Tech Lead & Principal Engineer · 15+ yrs architecture teams extend—not rewrite · 12+ platforms shipped.',
+      'Tech Lead · 15+ yrs architecture teams extend—not rewrite · 12+ platforms shipped.',
     tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
     impactBadge: {
       value: '12+',
       label: 'platforms shipped',
     },
     achievement:
-      'Designed multi-stream product engineering across Growth, Office, and Shop—keeping velocity as teams scaled.',
+      'Led cross-functional squads across Growth, Office, and Shop streams—keeping velocity as delivery scaled.',
     ctaLabel: "Let's Talk",
     ctaTo: '/#contact',
   },
@@ -154,7 +154,7 @@ export type FeaturedOfferPillar = {
 
 export const featuredOffer = {
   eyebrow: 'Featured',
-  title: 'Principal Engineer / Tech Lead (player‑coach)',
+  title: 'Tech Lead (player‑coach)',
   intro:
     '20+ years building and scaling web platforms—with hands-on engineering, system design, and team leadership in one role.',
   lead:

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ButtonAnchor } from '../atoms/ButtonAnchor'
-import { Gutter } from '../atoms/Gutter'
+import { ButtonAnchor, Gutter } from '@/components/atomic'
 import { SectionHeading } from '../molecules/SectionHeading'
 import { profile } from '../../content/profile'
 

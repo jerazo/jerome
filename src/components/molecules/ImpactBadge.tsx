@@ -11,14 +11,17 @@ type ImpactBadgeProps = {
 type ImpactMetricHighlightProps = {
   metric: PortfolioImpactMetric
   className?: string
+  glow?: boolean
 }
 
-export function ImpactMetricHighlight({ metric, className }: ImpactMetricHighlightProps) {
+export function ImpactMetricHighlight({ metric, className, glow = false }: ImpactMetricHighlightProps) {
   return (
     <span
       aria-label={`${metric.label}: ${metric.value}`}
       className={cn(
-        'inline-flex max-w-full items-center rounded-full bg-gold-600 px-3 py-1 text-[11px] font-semibold text-white shadow-soft',
+        'inline-flex max-w-full items-center rounded-full border border-transparent bg-gold-600 px-3 py-1 text-[11px] font-semibold text-white shadow-soft transition-[border-color,box-shadow,filter] duration-300',
+        glow &&
+          'border-gold-400/70 shadow-gold-glow hero-glow-pulse ring-1 ring-gold-500/35',
         className,
       )}
     >

@@ -1,5 +1,7 @@
 # Home Page Overrides
 
+> **Updated:** Role title changed from Principal Engineer to Tech Lead on 2025-09-23.
+
 > **PROJECT:** Jerome Erazo
 > **Generated:** 2026-05-02 13:21:24
 > **Page Type:** Landing / Marketing
@@ -40,6 +42,21 @@
 - Avoid: No feedback during loading
 - Avoid: Override system gestures
 - Avoid: Cramped or excessive line height
+
+### Content Overrides
+
+Hero and about copy use **Tech Lead** (player-coach framing)—not Principal Engineer. Source of truth: `src/content/homeSections.ts` (`heroSlides`, `featuredOffer`) and `src/content/profile.ts` (`headline`, `tagline`, `aboutBriefSummary`).
+
+- **Hero headline:** `TECH LEAD`, `ENGINEERING LEAD`, or related variants from carousel slides; primary eyebrow uses “Tech lead · player-coach”
+- **Hero subtitle:** Lead with “Full‑Stack Engineer & Tech Lead” or “Tech Lead · …” plus years of experience, platforms shipped, or technical leadership scope
+- **Hero tagline:** Industry domains (FinTech, HealthTech, SaaS & E‑commerce)—unchanged beneath subtitle
+- **Tech Lead duties reflected in copy:**
+  - Cross-functional squad leadership and roadmap alignment
+  - Technical strategy, architecture, and delivery discipline (planning, estimation, releases)
+  - Mentorship, code review standards, and hiring support
+  - Player-coach shipping in production—still opens PRs and sits in architecture review
+- **About section:** “Tech Lead experience” bullet—leading squads at Unicity, Tempest House, Ryze, and OneGlobal; driving technical strategy and mentoring engineers
+- **Avoid:** “Principal Engineer” in hero, about, featured offer, or CTA copy
 
 ---
 

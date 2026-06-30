@@ -1,8 +1,12 @@
 import { ArrowUpRight } from 'lucide-react'
-import { useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import type { PortfolioProject } from '../../content/portfolio'
+import { getPortfolioProjectImages } from '../../content/portfolio'
+import { useInView } from '../../hooks/useInView'
+import { useIntersectionObserver } from '../../hooks/useIntersectionObserver'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { cn } from '../../lib/cn'
-import { buttonClassName } from '../atoms/buttonStyles'
+import { buttonClassName, CopyLinkButton, PortfolioImage } from '@/components/atomic'
 import { ImpactMetricHighlight } from './ImpactBadge'
 import { PortfolioCarousel } from './PortfolioCarousel'
 import { PortfolioTechStack } from './PortfolioTechStack'
@@ -10,15 +14,42 @@ import { PortfolioTechStack } from './PortfolioTechStack'
 const mediaAspectClassName = 'aspect-[16/10] w-full'
 const galleryMediaAspectClassName = 'aspect-[4/3] w-full'
 
+function PortfolioCardMediaPlaceholder({
+  project,
+  aspectClassName,
+}: {
+  project: PortfolioProject
+  aspectClassName: string
+}) {
+  return (
+    <div
+      className={cn(
+        project.imageSrc || project.images?.length
+          ? 'animate-pulse bg-ink2/60'
+          : `bg-gradient-to-br ${project.accent}`,
+        'border-b border-sand/10',
+        aspectClassName,
+      )}
+      aria-hidden
+    />
+  )
+}
+
 function PortfolioCardMedia({
   project,
   onOpenImage,
   aspectClassName = mediaAspectClassName,
+  mediaReady,
 }: {
   project: PortfolioProject
   onOpenImage: (project: PortfolioProject, index: number) => void
   aspectClassName?: string
+  mediaReady: boolean
 }) {
+  if (!mediaReady) {
+    return <PortfolioCardMediaPlaceholder project={project} aspectClassName={aspectClassName} />
+  }
+
   if (project.images && project.images.length > 0) {
     return (
       <PortfolioCarousel
@@ -40,10 +71,10 @@ function PortfolioCardMedia({
         )}
         aria-label={`View larger ${project.title} screenshot`}
       >
-        <img
+        <PortfolioImage
           src={project.imageSrc}
           alt={project.imageAlt ?? project.title}
-          className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-[1.02]"
+          className="h-full w-full transition duration-300 group-hover:scale-[1.02]"
           loading="lazy"
         />
       </button>
@@ -62,9 +93,10 @@ function PortfolioCardMedia({
   )
 }
 
-function useGalleryTilt(enabled: boolean) {
+function useCardTilt(enabled: boolean) {
   const cardRef = useRef<HTMLElement>(null)
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
+  const [hovered, setHovered] = useState(false)
 
   const onPointerMove = (event: PointerEvent<HTMLElement>) => {
     if (!enabled) return
@@ -76,9 +108,26 @@ function useGalleryTilt(enabled: boolean) {
     setTilt({ x: py * -6, y: px * 8 })
   }
 
-  const resetTilt = () => setTilt({ x: 0, y: 0 })
+  const resetTilt = () => {
+    setTilt({ x: 0, y: 0 })
+    setHovered(false)
+  }
 
-  return { cardRef, tilt, onPointerMove, resetTilt }
+  const onPointerEnter = () => setHovered(true)
+
+  return { cardRef, tilt, hovered, onPointerMove, onPointerEnter, resetTilt }
+}
+
+function resolveShareUrl(project: PortfolioProject, shareUrl?: string) {
+  if (shareUrl) return shareUrl
+  if (typeof window === 'undefined') return `/project/${project.id}`
+
+  const { origin, pathname, hash } = window.location
+  if (pathname === '/showcase') {
+    return `${origin}/showcase#project-${project.id}`
+  }
+
+  return `${origin}/project/${project.id}${hash}`
 }
 
 export function PortfolioProjectCard({
@@ -88,67 +137,133 @@ export function PortfolioProjectCard({
   className,
   variant = 'default',
   isActive = false,
+  disableCoverFlowMotion = false,
+  shareUrl,
 }: {
   project: PortfolioProject
   onOpenImage: (project: PortfolioProject, index: number) => void
   onViewDetails: (project: PortfolioProject) => void
   className?: string
-  variant?: 'default' | 'gallery'
+  variant?: 'default' | 'gallery' | 'album'
   isActive?: boolean
+  disableCoverFlowMotion?: boolean
+  shareUrl?: string
 }) {
   const highlightMetric = project.impactMetric ?? project.impactMetrics?.[0]
   const isGallery = variant === 'gallery'
-  const { cardRef, tilt, onPointerMove, resetTilt } = useGalleryTilt(isGallery && isActive)
+  const isAlbum = variant === 'album'
+  const isCoverFlow = Boolean(disableCoverFlowMotion)
+  const reducedMotion = useReducedMotion()
+  const { ref: inViewRef, inView } = useInView<HTMLElement>()
+  const { ref: mediaObserverRef, inView: mediaInView } = useIntersectionObserver<HTMLElement>({
+    threshold: 0.12,
+    rootMargin: '120px 0px',
+    fallbackInView: true,
+  })
+  const [mediaReady, setMediaReady] = useState(false)
+  const tiltEnabled = !isCoverFlow && ((isGallery && isActive) || isAlbum)
+  const { cardRef, tilt, hovered, onPointerMove, onPointerEnter, resetTilt } =
+    useCardTilt(tiltEnabled && !reducedMotion)
+
+  useEffect(() => {
+    if (!mediaInView || mediaReady) return
+
+    let cancelled = false
+
+    void import('../../lib/preloadPortfolioImage')
+      .then(({ preloadPortfolioImages: preloadImages }) =>
+        preloadImages(getPortfolioProjectImages(project).map((image) => image.src)),
+      )
+      .then(() => {
+        if (!cancelled) setMediaReady(true)
+      })
+      .catch(() => {
+        if (!cancelled) setMediaReady(true)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [mediaInView, mediaReady, project])
+
+  const badgeGlowClassName =
+    !isCoverFlow && (isAlbum || isGallery)
+      ? cn(
+          inView && 'border-gold-400/70 shadow-gold-glow hero-glow-pulse ring-1 ring-gold-500/35',
+          'group-hover:border-gold-400/70 group-hover:shadow-gold-glow group-hover:hero-glow-pulse group-hover:ring-1 group-hover:ring-gold-500/35',
+          'group-focus-within:border-gold-400/70 group-focus-within:shadow-gold-glow group-focus-within:hero-glow-pulse group-focus-within:ring-1 group-focus-within:ring-gold-500/35',
+        )
+      : undefined
+
+  const cardLabel = `${project.title}, ${project.client}. ${project.summary}`
+  const resolvedShareUrl = resolveShareUrl(project, shareUrl)
+
+  const setCardRef = (node: HTMLElement | null) => {
+    cardRef.current = node
+    inViewRef.current = node
+    mediaObserverRef.current = node
+  }
+
+  const transformStyle =
+    tiltEnabled && !reducedMotion
+      ? {
+          transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y + (isAlbum && hovered ? 4 : 0)}deg) scale(${isAlbum && hovered ? 1.05 : 1})`,
+          transformStyle: 'preserve-3d' as const,
+        }
+      : undefined
 
   return (
     <article
-      ref={cardRef}
-      onPointerMove={onPointerMove}
-      onPointerLeave={resetTilt}
+      ref={setCardRef}
+      onPointerMove={isCoverFlow ? undefined : onPointerMove}
+      onPointerEnter={isCoverFlow ? undefined : onPointerEnter}
+      onPointerLeave={isCoverFlow ? undefined : resetTilt}
+      aria-label={cardLabel}
       className={cn(
-        'group flex h-full flex-col overflow-hidden rounded-3xl border border-sand/10 bg-white/5 shadow-soft transition duration-300',
-        isGallery
-          ? 'min-h-[24rem] hover:scale-[1.02] hover:border-gold-500/40 hover:shadow-[0_20px_48px_rgba(0,0,0,0.35)]'
-          : 'min-h-[28rem] hover:border-gold-500/35 hover:bg-white/[0.07]',
+        'group flex h-full flex-col overflow-hidden rounded-3xl border border-sand/10 bg-white/5 shadow-soft transition-[border-color,box-shadow,background-color] duration-300',
+        isAlbum &&
+          'min-h-[24rem] hover:border-gold-500/45 hover:bg-white/[0.07] hover:shadow-[0_24px_56px_rgba(0,0,0,0.42),0_0_0_1px_rgba(139,92,246,0.28)] focus-within:border-gold-500/45 focus-within:shadow-[0_24px_56px_rgba(0,0,0,0.42),0_0_0_1px_rgba(139,92,246,0.28)]',
+        isGallery &&
+          (isCoverFlow
+            ? 'min-h-[24rem]'
+            : 'min-h-[24rem] hover:scale-[1.02] hover:border-gold-500/40 hover:shadow-[0_20px_48px_rgba(0,0,0,0.35)]'),
+        !isGallery && !isAlbum && 'min-h-[28rem] hover:border-gold-500/35 hover:bg-white/[0.07]',
         className,
       )}
-      style={
-        isGallery && isActive
-          ? {
-              transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-              transformStyle: 'preserve-3d',
-            }
-          : undefined
-      }
+      style={transformStyle}
     >
       <div className="relative flex-none">
         <PortfolioCardMedia
           project={project}
           onOpenImage={onOpenImage}
-          aspectClassName={isGallery ? galleryMediaAspectClassName : mediaAspectClassName}
+          aspectClassName={isGallery || isAlbum ? galleryMediaAspectClassName : mediaAspectClassName}
+          mediaReady={mediaReady}
         />
         {highlightMetric ? (
           <ImpactMetricHighlight
             metric={highlightMetric}
-            className="absolute right-3 top-3 z-10 max-w-[calc(100%-1.5rem)]"
+            className={cn('absolute right-3 top-3 z-10 max-w-[calc(100%-1.5rem)]', badgeGlowClassName)}
           />
         ) : null}
       </div>
 
-      <div className={cn('flex flex-1 flex-col', isGallery ? 'p-4 sm:p-5' : 'p-5')}>
+      <div className={cn('flex flex-1 flex-col', isGallery || isAlbum ? 'p-4 sm:p-5' : 'p-5')}>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-sand/45">
               {project.client}
             </p>
-            <h3
-              className={cn(
-                'mt-2 font-display font-semibold tracking-tight text-sand',
-                isGallery ? 'text-lg sm:text-xl' : 'text-xl',
-              )}
-            >
-              {project.title}
-            </h3>
+            <div className="mt-2 flex items-start gap-2">
+              <h3
+                className={cn(
+                  'min-w-0 font-display font-semibold tracking-tight text-sand',
+                  isGallery || isAlbum ? 'text-lg sm:text-xl' : 'text-xl',
+                )}
+              >
+                {project.title}
+              </h3>
+              <CopyLinkButton url={resolvedShareUrl} />
+            </div>
           </div>
           {project.url ? (
             <a
@@ -165,18 +280,20 @@ export function PortfolioProjectCard({
 
         <PortfolioTechStack tags={project.tags} className="mt-3 border-t-0 pt-0" />
 
-        {!isGallery ? <p className="mt-2 font-mono text-xs text-sand/45">{project.period}</p> : null}
+        {!isGallery && !isAlbum ? (
+          <p className="mt-2 font-mono text-xs text-sand/45">{project.period}</p>
+        ) : null}
 
         <p
           className={cn(
             'mt-3 flex-1 text-sm leading-relaxed text-sand/70',
-            isGallery ? 'line-clamp-4' : 'line-clamp-3',
+            isGallery || isAlbum ? 'line-clamp-4' : 'line-clamp-3',
           )}
         >
           {project.summary}
         </p>
 
-        <div className="mt-4">
+        <div className={cn('mt-4', isAlbum && 'relative min-h-[2.5rem]')}>
           {isGallery && project.url ? (
             <a
               href={project.url}
@@ -192,6 +309,24 @@ export function PortfolioProjectCard({
               View live demo
               <ArrowUpRight size={14} aria-hidden />
             </a>
+          ) : isAlbum ? (
+            <button
+              type="button"
+              onClick={() => onViewDetails(project)}
+              className={buttonClassName({
+                variant: 'primary',
+                size: 'sm',
+                className: cn(
+                  'absolute inset-x-0 bottom-0 w-full justify-center opacity-0 transition-opacity duration-300',
+                  'group-hover:opacity-100 group-focus-within:opacity-100',
+                  'focus-visible:opacity-100 focus-visible:focus-ring',
+                ),
+              })}
+              aria-label={`View details for ${project.title}`}
+            >
+              View Details
+              <ArrowUpRight size={14} aria-hidden />
+            </button>
           ) : (
             <button
               type="button"

@@ -2,7 +2,7 @@ import { ChevronDown } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { cn } from '../../lib/cn'
-import { NavHashLink } from '../atoms/NavHashLink'
+import { NavHashLink } from '@/components/atomic'
 
 export function NavDropdown({
   label,
@@ -17,12 +17,21 @@ export function NavDropdown({
   const location = useLocation()
   const activeHash = location.hash
   const isHome = location.pathname === '/'
-  const isActive =
-    isHome &&
-    items.some((item) => {
-      const hash = item.to.startsWith('/#') ? item.to.slice(1) : ''
-      return hash.length > 0 && hash === activeHash
-    })
+  const isShowcase = location.pathname === '/showcase'
+  const isActive = items.some((item) => {
+    if (item.to.includes('#')) {
+      const hashIndex = item.to.indexOf('#')
+      const path = item.to.slice(0, hashIndex) || '/'
+      const hash = item.to.slice(hashIndex)
+      if (isShowcase && path === '/showcase') return hash === activeHash
+      if (isHome && path === '/') return hash === activeHash
+      return location.pathname === path && hash === activeHash
+    }
+
+    if (isHome) return false
+
+    return location.pathname === item.to
+  })
 
   useEffect(() => {
     const node = detailsRef.current

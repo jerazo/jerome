@@ -1,12 +1,11 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { formatBuildLabel } from '../../lib/buildInfo'
 import { profile } from '../../content/profile'
+import { useShowcaseProjectHash } from '../../hooks/useShowcaseProjectHash'
 import { useMobileNav } from '../../hooks/useMobileNav'
 import { useUiStore } from '../../store/uiStore'
 import { cn } from '../../lib/cn'
-import { Gutter } from '../atoms/Gutter'
-import { LogoMark } from '../atoms/LogoMark'
+import { Gutter, LogoMark } from '@/components/atomic'
 import { MobileNavToggle } from '../molecules/MobileNavToggle'
 import { MobileNavPanel } from './MobileNavPanel'
 import { PrimaryNav } from './PrimaryNav'
@@ -14,13 +13,17 @@ import { PrimaryNav } from './PrimaryNav'
 export function ShowcaseLayout({
   children,
   className,
+  onProjectHash,
 }: {
   children: ReactNode
   className?: string
+  onProjectHash?: (slug: string | null) => void
 }) {
   const mobileNavOpen = useUiStore((s) => s.mobileNavOpen)
   const setMobileNavOpen = useUiStore((s) => s.setMobileNavOpen)
   const { menuId, triggerRef, panelRef, toggle, close } = useMobileNav(mobileNavOpen, setMobileNavOpen)
+
+  useShowcaseProjectHash({ onProjectSlug: onProjectHash })
 
   return (
     <div
@@ -73,15 +76,6 @@ export function ShowcaseLayout({
       </div>
 
       <div className="relative z-10">{children}</div>
-
-      <footer
-        className="relative z-10 border-t border-sand/10 px-4 py-4 sm:px-6"
-        aria-label="Showcase build information"
-      >
-        <p className="text-center font-mono text-[11px] text-sand/45">
-          {formatBuildLabel()} · Built with React • TypeScript • Three.js
-        </p>
-      </footer>
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import { Download } from 'lucide-react'
 import { trackEvent } from '../../lib/analytics'
-import { ButtonAnchor } from '../atoms/ButtonAnchor'
-import { Gutter } from '../atoms/Gutter'
+import { ButtonAnchor, Gutter } from '@/components/atomic'
 import { SectionHeading } from '../molecules/SectionHeading'
 
 export function FeaturedResume() {

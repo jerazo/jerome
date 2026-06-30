@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { featuredItems } from '../../content/homeSections'
-import { Gutter } from '../atoms/Gutter'
+import { Gutter } from '@/components/atomic'
 import { SectionHeading } from '../molecules/SectionHeading'
 
 export function TopItems() {

@@ -7,6 +7,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react'
+import { showcaseProjectElementId } from '../../lib/showcaseProjectHash'
 import type { PortfolioProject } from '../../content/portfolio'
 import { cn } from '../../lib/cn'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
@@ -165,13 +166,15 @@ function AlbumFlowTile({
 }) {
   const tileRef = useRef<HTMLDivElement>(null)
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
+  const [isPointerOver, setIsPointerOver] = useState(false)
 
+  const absOffset = Math.abs(offset)
   const translateX = offset * 58
-  const translateZ = isActive ? 80 : -abs(offset) * 90
-  const scale = isActive ? 1 : Math.max(0.72, 1 - Math.abs(offset) * 0.12)
+  const translateZ = isActive ? 80 : -absOffset * 90
+  const scale = isActive ? 1 : Math.max(0.72, 1 - absOffset * 0.12)
   const rotateY = offset * -14
-  const opacity = hidden ? 0 : isActive ? 1 : Math.max(0.35, 1 - Math.abs(offset) * 0.28)
-  const zIndex = 20 - Math.abs(offset)
+  const opacity = hidden ? 0 : isActive ? 1 : Math.max(0.35, 1 - absOffset * 0.28)
+  const zIndex = 20 - absOffset
 
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!isActive || reducedMotion) return
@@ -183,13 +186,18 @@ function AlbumFlowTile({
     setTilt({ x: py * -8, y: px * 10 })
   }
 
-  const resetTilt = () => setTilt({ x: 0, y: 0 })
+  const resetTilt = () => {
+    setTilt({ x: 0, y: 0 })
+    setIsPointerOver(false)
+  }
 
   return (
     <div
       ref={tileRef}
+      id={showcaseProjectElementId(project.id)}
       className={cn(
-        'absolute inset-x-8 top-1/2 mx-auto w-[min(100%,420px)] -translate-y-1/2 transition-[transform,opacity] duration-500 ease-out sm:inset-x-16 lg:w-[min(100%,480px)]',
+        'absolute inset-x-8 top-1/2 mx-auto w-[min(100%,420px)] -translate-y-1/2 ease-out sm:inset-x-16 lg:w-[min(100%,480px)]',
+        isPointerOver ? 'transition-opacity duration-500' : 'transition-[transform,opacity] duration-500',
         hidden && 'pointer-events-none',
         !isActive && !hidden && 'cursor-pointer',
       )}
@@ -203,6 +211,7 @@ function AlbumFlowTile({
       onClick={() => {
         if (!isActive) onActivate()
       }}
+      onPointerEnter={() => setIsPointerOver(true)}
       onPointerMove={onPointerMove}
       onPointerLeave={resetTilt}
       aria-hidden={!isActive}
@@ -211,17 +220,15 @@ function AlbumFlowTile({
         project={project}
         variant="gallery"
         isActive={isActive}
+        disableCoverFlowMotion
         onOpenImage={onOpenImage}
         onViewDetails={onViewDetails}
         className={cn(
+          !isActive && 'pointer-events-none select-none',
           isActive &&
             'border-gold-500/45 shadow-[0_24px_60px_rgba(202,138,4,0.18)] ring-1 ring-gold-500/25',
         )}
       />
     </div>
   )
-}
-
-function abs(value: number) {
-  return Math.abs(value)
 }

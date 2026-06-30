@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ButtonLink } from '../atoms/ButtonLink'
-import { Container } from '../atoms/Container'
-import { LogoMark } from '../atoms/LogoMark'
+import { ButtonLink, Container, LogoMark } from '@/components/atomic'
 import { profile } from '../../content/profile'
 import { useMobileNav } from '../../hooks/useMobileNav'
 import { useUiStore } from '../../store/uiStore'

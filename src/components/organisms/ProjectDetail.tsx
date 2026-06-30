@@ -1,11 +1,11 @@
-import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { PortfolioProject } from '../../content/portfolio'
 import { getPortfolioProjectImages } from '../../content/portfolio'
+import { portfolioProjectShowcaseHashId } from '../../lib/showcasePortfolio'
 import { cn } from '../../lib/cn'
-import { ButtonLink } from '../atoms/ButtonLink'
-import { buttonClassName } from '../atoms/buttonStyles'
-import { Container } from '../atoms/Container'
+import { buttonClassName, ButtonLink, Container, CopyLinkButton } from '@/components/atomic'
 import { ImpactBadge } from '../molecules/ImpactBadge'
 import {
   PortfolioImageModal,
@@ -17,10 +17,23 @@ import { PortfolioTechStack } from '../molecules/PortfolioTechStack'
 const projectDetailCtaClass =
   'w-full justify-center shadow-gold-glow sm:w-auto sm:px-7 sm:py-4 sm:text-[15px]'
 
+function resolveProjectShareUrl(project: PortfolioProject) {
+  if (typeof window === 'undefined') return `/project/${project.id}`
+  return `${window.location.origin}/project/${project.id}`
+}
+
+function resolveShowcaseBackLink(project: PortfolioProject) {
+  const showcaseHashId = portfolioProjectShowcaseHashId(project.id)
+  if (showcaseHashId) return `/showcase#project-${showcaseHashId}`
+  return '/showcase'
+}
+
 export function ProjectDetail({ project }: { project: PortfolioProject }) {
   const images = getPortfolioProjectImages(project)
   const [modalState, setModalState] = useState<PortfolioImageModalState | null>(null)
   const impactMetrics = project.impactMetrics ?? (project.impactMetric ? [project.impactMetric] : [])
+  const shareUrl = resolveProjectShareUrl(project)
+  const showcaseBackLink = resolveShowcaseBackLink(project)
 
   const openImage = (index: number) => {
     if (images.length === 0) return
@@ -36,26 +49,53 @@ export function ProjectDetail({ project }: { project: PortfolioProject }) {
     <>
       <section className="py-16 sm:py-20" aria-labelledby="project-detail-heading">
         <Container>
+          <nav aria-label="Breadcrumb" className="mb-8">
+            <ol className="flex flex-wrap items-center gap-1.5 text-sm text-sand/60">
+              <li>
+                <Link to="/" className="transition hover:text-sand focus-visible:focus-ring">
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden>
+                <ChevronRight size={14} className="text-sand/35" />
+              </li>
+              <li>
+                <Link to="/showcase" className="transition hover:text-sand focus-visible:focus-ring">
+                  Showcase
+                </Link>
+              </li>
+              <li aria-hidden>
+                <ChevronRight size={14} className="text-sand/35" />
+              </li>
+              <li aria-current="page" className="font-medium text-sand">
+                {project.title}
+              </li>
+            </ol>
+          </nav>
+
           <ButtonLink
-            to="/#portfolio"
+            to={showcaseBackLink}
             variant="ghost"
             size="sm"
             className="mb-8 -ml-1 inline-flex items-center gap-2 px-2 text-sand/70 hover:text-sand"
           >
             <ArrowLeft size={14} aria-hidden />
-            Back to portfolio
+            Back to Showcase
           </ButtonLink>
 
           <div className="max-w-3xl">
             <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-sand/45">
               {project.client}
             </p>
-            <h1
-              id="project-detail-heading"
-              className="mt-2 font-display text-3xl font-semibold leading-[1.02] tracking-tight text-sand sm:text-4xl"
-            >
-              {project.title}
-            </h1>
+            <div className="mt-2 flex items-start gap-3">
+              <h1
+                id="project-detail-heading"
+                className="font-display text-3xl font-semibold leading-[1.02] tracking-tight text-sand sm:text-4xl"
+              >
+                {project.title}
+              </h1>
+              <CopyLinkButton url={shareUrl} />
+            </div>
             <p className="mt-2 font-mono text-xs text-sand/45">{project.period}</p>
           </div>
 

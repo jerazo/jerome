@@ -8,6 +8,50 @@ Professional portfolio/service site built with:
 - React Router
 - Atomic design folder structure (`src/components/atoms|molecules|organisms`)
 
+## Atomic component typings
+
+Shared prop contracts live in `src/components/atomic/types.ts`. Every atom imports its props from that file instead of defining inline interfaces.
+
+**Import atoms and types from the barrel**
+
+```tsx
+import { Button, PortfolioImage } from '@/components/atomic'
+import type { IButtonAtomProps } from '@/components/atomic'
+```
+
+`src/components/atomic/index.ts` re-exports all atom components, `buttonClassName` / button style types, and prop interfaces. Prefer this entry point over deep relative paths such as `../atoms/PortfolioImage`. Atoms keep importing prop types from `../atomic/types` internally to avoid circular dependencies.
+
+The `@/*` path alias maps to `src/*` in `tsconfig.app.json` and Vite. The legacy `@atomic/*` alias still resolves files under `src/components/atomic/`.
+
+Base interfaces:
+
+- `AtomProps` — HTML attributes plus an explicit `role` field for accessibility overrides
+- `IImageProps` / `IImageAltProps` — image source and required alt text
+- `IClickableProps` — clickable controls with optional `label`
+- `IImpactMetricProps` — label/value pairs for metric badges
+
+Atom-specific interfaces (for example `IButtonAtomProps`, `INavHashLinkProps`) extend these bases.
+
+**Extend the system**
+
+1. Add or extend an interface in `src/components/atomic/types.ts` with JSDoc describing purpose and expected values.
+2. Update the atom to import that interface and remove any local prop types.
+3. Add a minimal-props case to `src/tests/atomic/TypeSafety.test.tsx` so compile-time and render checks stay in sync.
+
+Run `npm run lint:types` and `npm test` after changes.
+
+## ESLint atomic structure
+
+Component folder placement and import paths are enforced by the custom ESLint rule `atomic-structure/atomic-component-path`. Categories are defined in `src/config/atomic-structure.json`.
+
+```bash
+npm run lint          # check compliance
+npm run lint:fix      # auto-fix import paths
+npm run lint:atomic:fix  # move misplaced files + fix imports
+```
+
+See [`docs/eslint-atomic.md`](docs/eslint-atomic.md) for configuration, exemptions, and plugin details.
+
 ## Run
 
 ```bash
@@ -25,6 +69,9 @@ npm run dev
 
 - Global: `design-system/jerome-erazo/MASTER.md`
 - Home overrides: `design-system/jerome-erazo/pages/home.md`
+- **Atomic composition (new contributors):** [`design-system/jerome-erazo/pages/atomic-composition.md`](design-system/jerome-erazo/pages/atomic-composition.md) — how to combine atoms into molecules and organisms with import examples and props.
+
+Validate design-system markdown with `npm run lint:docs`.
 
 ## Deploy to AWS
 
@@ -80,11 +127,43 @@ The frontend defaults to `POST /api/contact`, so no `VITE_CONTACT_API_URL` is ne
 
 ### Versioning
 
-- App version lives in `package.json` (`1.0.0` semver)
-- Each build injects git commit + timestamp into the bundle and writes `dist/version.json`
-- Footer shows `v{version} · {commit}` (e.g. `v1.0.0 · a1b2c3d`)
-- Check current build metadata locally: `npm run version:info`
-- Deployed builds expose `https://<your-domain>/version.json`
+Build metadata is generated from `package.json`, the current git commit, and the build timestamp. Each production build writes `dist/version.json`:
+
+```json
+{
+  "version": "1.0.0",
+  "commit": "a1b2c3d",
+  "timestamp": "2026-05-02T13:21:24.000Z"
+}
+```
+
+The site footer and showcase footer fetch `/version.json` at runtime and display `v{version} · {commit}`. Hover the version text to see the full build timestamp. `scripts/deploy-site.mjs` uploads `version.json` with short cache headers so recruiters always see the latest deployed build.
+
+**Bump the version and redeploy**
+
+1. Update `version` in `package.json` using [semver](https://semver.org/) (e.g. `1.0.0` → `1.1.0`).
+2. Commit your changes.
+3. Redeploy the frontend:
+
+```bash
+npm run deploy:site
+```
+
+Or run a local build to refresh `dist/version.json`:
+
+```bash
+npm run build
+```
+
+**Inspect metadata locally**
+
+```bash
+npm run version:info
+```
+
+During `npm run dev`, Vite serves a live `/version.json` endpoint. Deployed builds expose `https://<your-domain>/version.json`.
+
+To link the footer version to release notes later, set `releaseNotesUrl` in `src/content/version.ts`.
 
 ### Custom domain (optional)
 
@@ -235,4 +314,3 @@ The OIDC deploy role uses `AdministratorAccess` and can pass CDK execution roles
 Attach `infrastructure/policies/github-actions-deploy-policy.json` to the IAM user, or attach `AdministratorAccess`.
 
 After the first successful deploy, every push to `main` updates the live site automatically.
-

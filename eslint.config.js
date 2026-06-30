@@ -1,13 +1,18 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from 'eslint-plugin-storybook'
+
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
+import atomicStructure from 'eslint-plugin-atomic-structure'
 
 export default defineConfig([
   globalIgnores([
     'dist',
+    'storybook-static',
     '.venv/**',
     '.codex/**',
     'design-system/**',
@@ -28,11 +33,18 @@ export default defineConfig([
   {
     files: ['src/**/*.{ts,tsx}'],
     extends: [reactHooks.configs.flat.recommended, reactRefresh.configs.vite],
+    plugins: {
+      'atomic-structure': atomicStructure,
+    },
     languageOptions: {
       globals: globals.browser,
     },
     rules: {
       'react-refresh/only-export-components': ['error', { allowConstantExport: true }],
+      'atomic-structure/atomic-component-path': [
+        'error',
+        { configPath: 'src/config/atomic-structure.json' },
+      ],
     },
   },
   {
@@ -54,4 +66,5 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+  ...storybook.configs['flat/recommended'],
 ])

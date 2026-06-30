@@ -1,5 +1,16 @@
 import type { PortfolioProject } from '../content/portfolio'
-import type { ShowcaseItem } from '../content/showcase'
+import { showcaseItems, type ShowcaseItem } from '../content/showcase'
+
+const portfolioToShowcaseId: Record<string, string> = {
+  'seek-thermal': 'fire-products-configurator',
+  'unicity-asia': 'unicity-platform',
+  doubleverify: 'doubleverify-platform',
+}
+
+export function portfolioProjectShowcaseHashId(portfolioId: string): string | null {
+  if (showcaseItems.some((item) => item.id === portfolioId)) return portfolioId
+  return portfolioToShowcaseId[portfolioId] ?? null
+}
 
 export function showcaseItemToPortfolio(item: ShowcaseItem): PortfolioProject {
   return {

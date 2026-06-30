@@ -1,16 +1,11 @@
-import type { AnchorHTMLAttributes } from 'react'
-import { buttonClassName, type ButtonSize, type ButtonVariant } from './buttonStyles'
-
-export type ButtonAnchorProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
-  variant?: ButtonVariant
-  size?: ButtonSize
-}
+import type { IButtonAnchorProps } from '../atomic/types'
+import { buttonClassName } from './buttonStyles'
 
 export function ButtonAnchor({
   className,
   variant = 'primary',
   size = 'md',
   ...props
-}: ButtonAnchorProps) {
+}: IButtonAnchorProps) {
   return <a className={buttonClassName({ variant, size, className })} {...props} />
 }

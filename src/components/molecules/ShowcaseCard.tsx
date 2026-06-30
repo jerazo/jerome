@@ -1,7 +1,7 @@
 import { ArrowUpRight } from 'lucide-react'
 import type { ShowcaseItem } from '../../content/showcase'
 import { cn } from '../../lib/cn'
-import { buttonClassName } from '../atoms/buttonStyles'
+import { buttonClassName } from '@/components/atomic'
 import { PortfolioTechStack } from './PortfolioTechStack'
 
 export function ShowcaseCard({

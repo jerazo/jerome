@@ -1,6 +1,7 @@
+import type { ILogoMarkProps } from '../atomic/types'
 import { cn } from '../../lib/cn'
 
-export function LogoMark({ className }: { className?: string }) {
+export function LogoMark({ className }: ILogoMarkProps) {
   return (
     <span
       className={cn(

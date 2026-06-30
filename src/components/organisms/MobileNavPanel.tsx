@@ -1,7 +1,6 @@
-import { navGroups, navTopLink } from '../../content/nav'
+import { navGroups, navProjectsGroup, navTopLink } from '../../content/nav'
 import { cn } from '../../lib/cn'
-import { ButtonLink } from '../atoms/ButtonLink'
-import { NavHashLink } from '../atoms/NavHashLink'
+import { ButtonLink, NavHashLink } from '@/components/atomic'
 
 type MobileNavPanelProps = {
   id: string
@@ -61,6 +60,28 @@ export function MobileNavPanel({ id, onNavigate }: MobileNavPanelProps) {
           </ul>
         </div>
       ))}
+
+      <div className="mt-4 border-t border-sand/10 pt-4">
+        <p
+          id={`${id}-projects-label`}
+          className="px-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-sand/60"
+        >
+          {navProjectsGroup.label}
+        </p>
+        <ul
+          role="list"
+          aria-labelledby={`${id}-projects-label`}
+          className="mt-2 max-h-48 space-y-1 overflow-y-auto"
+        >
+          {navProjectsGroup.items.map((item) => (
+            <li key={item.to}>
+              <NavHashLink to={item.to} onClick={onNavigate} className={navLinkClass}>
+                {item.label}
+              </NavHashLink>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <ButtonLink to="/#contact" className="mt-4 w-full justify-center" onClick={onNavigate}>
         Book a Call

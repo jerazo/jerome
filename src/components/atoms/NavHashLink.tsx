@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import type { INavHashLinkProps } from '../atomic/types'
 import { cn } from '../../lib/cn'
 
 export function NavHashLink({
@@ -9,19 +9,13 @@ export function NavHashLink({
   children,
   onClick,
   role,
-}: {
-  to: string
-  className?: string | ((isActive: boolean) => string)
-  activeClassName?: string
-  children: ReactNode
-  onClick?: () => void
-  role?: string
-}) {
+}: INavHashLinkProps) {
   const location = useLocation()
-  const hash = to.startsWith('/#') ? to.slice(1) : ''
+  const hash = to.startsWith('/#') ? to.slice(1) : to.includes('#') ? to.slice(to.indexOf('#')) : ''
+  const path = to.includes('#') ? to.slice(0, to.indexOf('#')) || '/' : to
   const isHashLink = hash.length > 0
   const isActive = isHashLink
-    ? location.pathname === '/' && location.hash === hash
+    ? location.pathname === path && location.hash === hash
     : location.pathname === to
   const resolvedClassName =
     typeof className === 'function' ? className(isActive) : cn(className, isActive && activeClassName)

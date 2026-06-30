@@ -7,7 +7,7 @@ import {
 } from '../../lib/contactAccessSchema'
 import { requestContactAccessOtp, verifyContactAccessOtp } from '../../lib/submitContactAccess'
 import { useUiStore } from '../../store/uiStore'
-import { Button } from '../atoms/Button'
+import { Button } from '@/components/atomic'
 import { OtpInput } from './OtpInput'
 
 const inputClassName =

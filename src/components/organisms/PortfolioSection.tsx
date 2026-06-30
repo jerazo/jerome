@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from 'r
 import { useNavigate } from 'react-router-dom'
 import { portfolioProjects } from '../../content/portfolio'
 import type { PortfolioProject } from '../../content/portfolio'
-import { Gutter } from '../atoms/Gutter'
+import { Gutter } from '@/components/atomic'
 import {
   PortfolioImageModal,
   type PortfolioImageModalState,
@@ -63,7 +63,7 @@ export function PortfolioSection() {
   }
 
   const openProjectDetails = (project: PortfolioProject) => {
-    navigate(`/work/${project.id}`)
+    navigate(`/project/${project.id}`)
   }
 
   const goPrev = useCallback(() => {
