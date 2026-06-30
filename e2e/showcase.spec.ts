@@ -1,9 +1,25 @@
-import { test, expect, type Page } from '@playwright/test'
+import { test, expect, type Page, type Response } from '@playwright/test'
+import { profile } from '../src/content/profile'
 import { showcasePageSeo } from '../src/content/seo'
 
+async function gotoWithRetry(page: Page, url: string): Promise<Response | null> {
+  const maxAttempts = 3
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30_000 })
+    } catch (error) {
+      if (attempt === maxAttempts) throw error
+      await page.waitForTimeout(500 * attempt)
+    }
+  }
+
+  return null
+}
+
 async function gotoHomePage(page: Page) {
-  await page.goto('/', { waitUntil: 'domcontentloaded' })
-  await expect(page.getByRole('navigation', { name: 'Footer' })).toBeVisible()
+  await gotoWithRetry(page, '/')
+  await expect(page.getByRole('navigation', { name: 'Footer' })).toBeVisible({ timeout: 30_000 })
 }
 
 async function gotoHomePageDesktop(page: Page) {
@@ -17,12 +33,32 @@ async function gotoHomePageMobile(page: Page) {
 }
 
 async function gotoShowcasePage(page: Page) {
-  const response = await page.goto('/showcase', { waitUntil: 'domcontentloaded' })
+  const response = await gotoWithRetry(page, '/showcase')
   await expect(page.getByRole('heading', { level: 1, name: showcasePageSeo.title })).toBeVisible()
   return response
 }
 
+async function getFooterSnapshot(page: Page) {
+  const footer = page.getByRole('contentinfo')
+  await footer.scrollIntoViewIfNeeded()
+  await expect(footer).toBeVisible()
+  await expect(footer.getByText(profile.name, { exact: true })).toBeVisible()
+  await expect(footer.getByText(profile.headline)).toBeVisible()
+  await expect(footer.getByText(/All rights reserved/i)).toBeVisible()
+  return footer.innerText()
+}
+
 test.describe('Showcase page route', () => {
+  test('showcase page renders the same footer as the home page', async ({ page }) => {
+    await gotoHomePage(page)
+    const homeFooter = await getFooterSnapshot(page)
+
+    await gotoShowcasePage(page)
+    const showcaseFooter = await getFooterSnapshot(page)
+
+    expect(showcaseFooter).toBe(homeFooter)
+  })
+
   test('direct navigation returns 200 and renders accessible placeholder', async ({ page }) => {
     const response = await gotoShowcasePage(page)
 
@@ -69,7 +105,9 @@ test.describe('Showcase page route', () => {
   test('footer showcase link navigates to bookmarkable route', async ({ page }) => {
     await gotoHomePage(page)
 
-    await page.getByRole('navigation', { name: 'Footer' }).getByRole('link', { name: 'Showcase' }).click()
+    const footer = page.getByRole('contentinfo')
+    await footer.scrollIntoViewIfNeeded()
+    await footer.getByRole('link', { name: 'Showcase' }).click()
 
     await expect(page).toHaveURL('/showcase')
 

@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-30T05:54:22.853Z",
+  "updatedAt": "2026-06-30T09:50:00.915Z",
   "clickupListId": "901615576532",
   "clickupListName": "List",
   "clickupStatuses": {
     "planning": "to do",
     "uiUxReady": "ui/ux ready",
-    "leadDevReady": "dev ready",
+    "leadDevReady": "lead dev ready",
     "devReady": "dev ready",
     "inProgress": "in progress",
     "qaReady": "qa ready",

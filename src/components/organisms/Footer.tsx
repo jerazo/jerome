@@ -25,6 +25,7 @@ export function Footer({ inert }: { inert?: boolean }) {
 
       <footer
         {...inertProps}
+        role="contentinfo"
         className="border-t border-sand/10 bg-ink [--section-slant:clamp(18px,3vw,38px)] pt-[calc(var(--section-slant)+3rem)] sm:pt-[calc(var(--section-slant)+3.5rem)]"
       >
         <Container className="flex flex-col gap-10 pb-10 lg:flex-row lg:items-start lg:justify-between">

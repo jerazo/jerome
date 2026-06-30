@@ -12,9 +12,10 @@ export default function RootLayout() {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const isShowcase = location.pathname === '/showcase'
+  const usesEmbeddedNav = isHome || isShowcase
   const mobileNavOpen = useUiStore((state) => state.mobileNavOpen)
-  const lockBackgroundFocus = !isHome && mobileNavOpen
-  const hideDefaultHeader = isHome || isShowcase
+  const lockBackgroundFocus = !usesEmbeddedNav && mobileNavOpen
+  const hideDefaultHeader = usesEmbeddedNav
 
   useSectionHashScroll()
   useAnalyticsPageView()
