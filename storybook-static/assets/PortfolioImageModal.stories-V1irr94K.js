@@ -1,0 +1,41 @@
+import{a as e,n as t}from"./chunk-DnJy8xQt.js";import{t as n}from"./react-dom-CSpjfmQL.js";import{M as r,t as i}from"./iframe-PvspA9v5.js";import{n as a,t as o}from"./storyParameters-DAWmaSlC.js";import{n as s,t as c}from"./cn-B39jY00a.js";import{l,n as u,t as d,u as f}from"./lucide-react-D_dXB7QH.js";import{n as p,t as m}from"./portfolio-D6kqb6O8.js";import{i as h,t as g}from"./fixtures-ByHyF4UG.js";import{r as _,t as v}from"./ImpactBadge-UU0uRHXw.js";function y({state:e,onClose:t}){return e?(0,C.jsxDEV)(b,{state:e,onClose:t},`${e.projectTitle}:${e.index}:${e.images.map(e=>e.src).join(`|`)}`,!1,{fileName:w,lineNumber:25,columnNumber:5},this):null}function b({state:e,onClose:t}){let[n,r]=(0,x.useState)(e.index);(0,x.useEffect)(()=>{let n=n=>{n.key===`Escape`&&t(),!(e.images.length<=1)&&(n.key===`ArrowLeft`&&r(t=>(t-1+e.images.length)%e.images.length),n.key===`ArrowRight`&&r(t=>(t+1)%e.images.length))},i=document.body.style.overflow;return document.body.style.overflow=`hidden`,window.addEventListener(`keydown`,n),()=>{document.body.style.overflow=i,window.removeEventListener(`keydown`,n)}},[t,e.images.length]);let i=e.images.length,a=e.images[n];return a?(0,S.createPortal)((0,C.jsxDEV)(`div`,{className:`fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8`,role:`dialog`,"aria-modal":`true`,"aria-label":a.label??e.projectTitle,children:[(0,C.jsxDEV)(`button`,{type:`button`,className:`absolute inset-0 bg-black/85 backdrop-blur-sm`,"aria-label":`Close preview`,onClick:t},void 0,!1,{fileName:w,lineNumber:78,columnNumber:7},this),(0,C.jsxDEV)(`div`,{className:`relative z-10 flex w-full max-w-6xl flex-col gap-3`,children:[(0,C.jsxDEV)(`div`,{className:`flex items-center justify-between gap-4 px-1`,children:[(0,C.jsxDEV)(`div`,{className:`min-w-0`,children:[(0,C.jsxDEV)(`p`,{className:`truncate font-display text-lg font-semibold text-sand sm:text-xl`,children:a.label??e.projectTitle},void 0,!1,{fileName:w,lineNumber:88,columnNumber:13},this),e.impactMetrics?.length?(0,C.jsxDEV)(v,{metrics:e.impactMetrics,className:`mt-2`},void 0,!1,{fileName:w,lineNumber:92,columnNumber:15},this):null,i>1?(0,C.jsxDEV)(`p`,{className:`mt-0.5 font-mono text-xs text-sand/55`,children:[n+1,` of `,i]},void 0,!0,{fileName:w,lineNumber:95,columnNumber:15},this):null]},void 0,!0,{fileName:w,lineNumber:87,columnNumber:11},this),(0,C.jsxDEV)(`button`,{type:`button`,onClick:t,className:`inline-flex h-10 w-10 flex-none items-center justify-center rounded-full border border-sand/15 bg-ink2/90 text-sand transition hover:border-gold-500/30 hover:text-gold-200 focus-visible:focus-ring`,"aria-label":`Close preview`,children:(0,C.jsxDEV)(u,{size:18},void 0,!1,{fileName:w,lineNumber:106,columnNumber:13},this)},void 0,!1,{fileName:w,lineNumber:100,columnNumber:11},this)]},void 0,!0,{fileName:w,lineNumber:86,columnNumber:9},this),(0,C.jsxDEV)(`div`,{className:`relative overflow-hidden rounded-3xl border border-sand/10 bg-ink2 shadow-soft`,children:[(0,C.jsxDEV)(`img`,{src:a.src,alt:a.alt,className:`max-h-[78vh] w-full object-contain`,loading:`lazy`,decoding:`async`},void 0,!1,{fileName:w,lineNumber:111,columnNumber:11},this),i>1?(0,C.jsxDEV)(C.Fragment,{children:[(0,C.jsxDEV)(`button`,{type:`button`,onClick:()=>r(e=>(e-1+i)%i),className:`absolute left-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-sand/15 bg-ink2/90 text-sand/80 transition hover:border-gold-500/30 hover:text-sand focus-visible:focus-ring`,"aria-label":`Previous screenshot`,children:(0,C.jsxDEV)(f,{size:18},void 0,!1,{fileName:w,lineNumber:127,columnNumber:17},this)},void 0,!1,{fileName:w,lineNumber:121,columnNumber:15},this),(0,C.jsxDEV)(`button`,{type:`button`,onClick:()=>r(e=>(e+1)%i),className:`absolute right-3 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-sand/15 bg-ink2/90 text-sand/80 transition hover:border-gold-500/30 hover:text-sand focus-visible:focus-ring`,"aria-label":`Next screenshot`,children:(0,C.jsxDEV)(l,{size:18},void 0,!1,{fileName:w,lineNumber:135,columnNumber:17},this)},void 0,!1,{fileName:w,lineNumber:129,columnNumber:15},this)]},void 0,!0):null]},void 0,!0,{fileName:w,lineNumber:110,columnNumber:9},this),i>1?(0,C.jsxDEV)(`div`,{className:`flex justify-center gap-1.5 px-1`,children:e.images.map((e,t)=>(0,C.jsxDEV)(`button`,{type:`button`,onClick:()=>r(t),className:c(`inline-flex h-11 w-11 items-center justify-center rounded-full transition-all focus-visible:focus-ring`),"aria-label":`Show ${e.label??`screenshot ${t+1}`}`,"aria-current":t===n?`true`:void 0,children:(0,C.jsxDEV)(`span`,{"aria-hidden":!0,className:c(`h-1.5 rounded-full`,t===n?`w-4 bg-gold-300`:`w-1.5 bg-sand/35 hover:bg-sand/55`)},void 0,!1,{fileName:w,lineNumber:154,columnNumber:17},this)},e.src,!1,{fileName:w,lineNumber:144,columnNumber:15},this))},void 0,!1,{fileName:w,lineNumber:142,columnNumber:11},this):null]},void 0,!0,{fileName:w,lineNumber:85,columnNumber:7},this)]},void 0,!0,{fileName:w,lineNumber:72,columnNumber:5},this),document.body):null}var x,S,C,w,T=t((()=>{d(),x=e(r(),1),S=e(n(),1),s(),_(),C=i(),w=`/Volumes/t7/Development/monx/jerome/src/components/molecules/PortfolioImageModal.tsx`,y.__docgenInfo={description:``,methods:[],displayName:`PortfolioImageModal`,props:{state:{required:!0,tsType:{name:`union`,raw:`PortfolioImageModalState | null`,elements:[{name:`signature`,type:`object`,raw:`{
+  projectTitle: string
+  images: PortfolioImage[]
+  index: number
+  impactMetrics?: PortfolioImpactMetric[]
+}`,signature:{properties:[{key:`projectTitle`,value:{name:`string`,required:!0}},{key:`images`,value:{name:`Array`,elements:[{name:`signature`,type:`object`,raw:`{
+  src: string
+  alt: string
+  label?: string
+}`,signature:{properties:[{key:`src`,value:{name:`string`,required:!0}},{key:`alt`,value:{name:`string`,required:!0}},{key:`label`,value:{name:`string`,required:!1}}]}}],raw:`PortfolioImage[]`,required:!0}},{key:`index`,value:{name:`number`,required:!0}},{key:`impactMetrics`,value:{name:`Array`,elements:[{name:`signature`,type:`object`,raw:`{
+  label: string
+  value: string
+}`,signature:{properties:[{key:`label`,value:{name:`string`,required:!0}},{key:`value`,value:{name:`string`,required:!0}}]}}],raw:`PortfolioImpactMetric[]`,required:!1}}]}},{name:`null`}]},description:``},onClose:{required:!0,tsType:{name:`signature`,type:`function`,raw:`() => void`,signature:{arguments:[],return:{name:`void`}}},description:``}}}})),E,D,O,k,A,j,M,N;t((()=>{p(),g(),a(),T(),E=i(),D=`/Volumes/t7/Development/monx/jerome/src/components/molecules/PortfolioImageModal.stories.tsx`,O={title:`Molecules/PortfolioImageModal`,component:y,tags:[`autodocs`],parameters:{layout:`fullscreen`}},k=m(h),A={args:{state:{projectTitle:h.title,images:k,index:0,impactMetrics:h.impactMetrics},onClose:()=>void 0}},j={render:()=>(0,E.jsxDEV)(y,{state:{projectTitle:h.title,images:k,index:1,impactMetrics:h.impactMetrics},onClose:()=>void 0},void 0,!1,{fileName:D,lineNumber:29,columnNumber:17},void 0)},M={args:{state:{projectTitle:h.title,images:k,index:0,impactMetrics:h.impactMetrics},onClose:()=>void 0},...o},A.parameters={...A.parameters,docs:{...A.parameters?.docs,source:{originalSource:`{
+  args: {
+    state: {
+      projectTitle: samplePortfolioProject.title,
+      images,
+      index: 0,
+      impactMetrics: samplePortfolioProject.impactMetrics
+    },
+    onClose: () => undefined
+  }
+}`,...A.parameters?.docs?.source}}},j.parameters={...j.parameters,docs:{...j.parameters?.docs,source:{originalSource:`{
+  render: () => <PortfolioImageModal state={{
+    projectTitle: samplePortfolioProject.title,
+    images,
+    index: 1,
+    impactMetrics: samplePortfolioProject.impactMetrics
+  }} onClose={() => undefined} />
+}`,...j.parameters?.docs?.source}}},M.parameters={...M.parameters,docs:{...M.parameters?.docs,source:{originalSource:`{
+  args: {
+    state: {
+      projectTitle: samplePortfolioProject.title,
+      images,
+      index: 0,
+      impactMetrics: samplePortfolioProject.impactMetrics
+    },
+    onClose: () => undefined
+  },
+  ...a11yStoryParameters
+}`,...M.parameters?.docs?.source}}},N=[`Default`,`Variants`,`Accessibility`]}))();export{M as Accessibility,A as Default,j as Variants,N as __namedExportsOrder,O as default};

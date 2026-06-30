@@ -49,4 +49,13 @@ export const showcasePageSeo = {
     'Browse interactive live demos of shipped web products — a curated gallery of production-ready sites you can explore directly in the browser.',
 } as const
 
-export const sitemapPaths = ['/', '/about', '/services', '/work', '/contact', '/showcase'] as const
+export const sitemapPaths = [
+  '/',
+  '/about',
+  '/services',
+  '/work',
+  '/contact',
+  '/showcase',
+  '/privacy',
+  '/terms',
+] as const

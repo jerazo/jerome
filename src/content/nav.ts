@@ -78,7 +78,19 @@ export const desktopMoreLinks: NavLinkItem[] = [
   { label: 'Recommendations', to: '/#recommendations' },
 ]
 
-/** Footer: three columns with Featured under Offer. */
+/** Footer bottom bar: legal/compliance pages. */
+export const legalNavLinks: NavLinkItem[] = [
+  { label: 'Privacy Policy', to: '/privacy' },
+  { label: 'Terms of Use', to: '/terms' },
+]
+
+/** Group 4 — legal / compliance. */
+export const navLegalGroup: NavGroup = {
+  label: 'Legal',
+  items: legalNavLinks,
+}
+
+/** Footer: four columns with Featured under Offer and Legal at the end. */
 export const footerNavColumns: NavGroup[] = [
   {
     label: navOfferGroup.label,
@@ -92,6 +104,7 @@ export const footerNavColumns: NavGroup[] = [
       { label: 'LinkedIn', to: profile.links.linkedin, external: true },
     ],
   },
+  navLegalGroup,
 ]
 
 export const primaryNavLinks: NavLinkItem[] = [
