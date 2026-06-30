@@ -25,7 +25,7 @@ export function Footer({ inert }: { inert?: boolean }) {
         </div>
 
         <nav
-          className="grid shrink-0 grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-3 lg:ml-auto lg:justify-items-start"
+          className="grid shrink-0 grid-cols-2 gap-x-10 gap-y-8 sm:grid-cols-4 lg:ml-auto lg:justify-items-start"
           aria-label="Footer"
         >
           {footerNavColumns.map((column) => (

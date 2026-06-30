@@ -26,6 +26,7 @@ export function ContactAccessModal() {
 function ContactAccessModalContent({ onClose }: { onClose: () => void }) {
   const formId = useId()
   const revealContactDetails = useUiStore((state) => state.revealContactDetails)
+  const intent = useUiStore((state) => state.contactAccessIntent)
   const [step, setStep] = useState<'details' | 'verify'>('details')
   const [company, setCompany] = useState('')
   const [email, setEmail] = useState('')
@@ -149,10 +150,18 @@ function ContactAccessModalContent({ onClose }: { onClose: () => void }) {
     setStatus('idle')
   }
 
-  const title = step === 'details' ? 'View my contact details' : 'Check your email'
+  const isCvIntent = intent === 'cv'
+  const title =
+    step === 'details'
+      ? isCvIntent
+        ? 'Download my CV'
+        : 'View my contact details'
+      : 'Check your email'
   const description =
     step === 'details'
-      ? 'Share your company and work email. I’ll send a one-time code to verify you, then your email, phone, and location will be shown for this visit.'
+      ? isCvIntent
+        ? 'Share your company and work email. I’ll send a one-time code to verify you, then your CV download will start automatically for this visit.'
+        : 'Share your company and work email. I’ll send a one-time code to verify you, then your email, phone, and location will be shown for this visit.'
       : `We sent a 6-digit code to ${email || 'your email'}. Enter it below to continue.`
 
   return createPortal(
@@ -289,7 +298,11 @@ function ContactAccessModalContent({ onClose }: { onClose: () => void }) {
             ) : null}
 
             <Button type="submit" disabled={status === 'submitting'} className="w-full justify-center">
-              {status === 'submitting' ? 'Verifying…' : 'Verify and show details'}
+              {status === 'submitting'
+                ? 'Verifying…'
+                : isCvIntent
+                  ? 'Verify and download CV'
+                  : 'Verify and show details'}
             </Button>
 
             <div className="flex flex-wrap items-center justify-between gap-3 text-sm">

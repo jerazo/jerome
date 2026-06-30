@@ -43,4 +43,12 @@ export function personJsonLd(siteUrl: string) {
   }
 }
 
-export const sitemapPaths = ['/', '/about', '/services', '/work', '/contact'] as const
+export const sitemapPaths = [
+  '/',
+  '/about',
+  '/services',
+  '/work',
+  '/contact',
+  '/privacy',
+  '/terms',
+] as const
