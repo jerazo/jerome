@@ -6,8 +6,8 @@ import { useInView } from '../../hooks/useInView'
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { cn } from '../../lib/cn'
-import { buttonClassName, CopyLinkButton, PortfolioImage } from '@/components/atomic'
-import { ImpactMetricHighlight } from './ImpactBadge'
+import { buttonClassName, PortfolioImage } from '@/components/atomic'
+import { ImpactBadge, ImpactMetricHighlight } from './ImpactBadge'
 import { PortfolioCarousel } from './PortfolioCarousel'
 import { PortfolioTechStack } from './PortfolioTechStack'
 
@@ -118,18 +118,6 @@ function useCardTilt(enabled: boolean) {
   return { cardRef, tilt, hovered, onPointerMove, onPointerEnter, resetTilt }
 }
 
-function resolveShareUrl(project: PortfolioProject, shareUrl?: string) {
-  if (shareUrl) return shareUrl
-  if (typeof window === 'undefined') return `/project/${project.id}`
-
-  const { origin, pathname, hash } = window.location
-  if (pathname === '/showcase') {
-    return `${origin}/showcase#project-${project.id}`
-  }
-
-  return `${origin}/project/${project.id}${hash}`
-}
-
 export function PortfolioProjectCard({
   project,
   onOpenImage,
@@ -138,7 +126,6 @@ export function PortfolioProjectCard({
   variant = 'default',
   isActive = false,
   disableCoverFlowMotion = false,
-  shareUrl,
 }: {
   project: PortfolioProject
   onOpenImage: (project: PortfolioProject, index: number) => void
@@ -147,9 +134,11 @@ export function PortfolioProjectCard({
   variant?: 'default' | 'gallery' | 'album'
   isActive?: boolean
   disableCoverFlowMotion?: boolean
-  shareUrl?: string
 }) {
   const highlightMetric = project.impactMetric ?? project.impactMetrics?.[0]
+  const secondaryMetrics =
+    project.impactMetrics?.filter((_, index) => (project.impactMetric ? true : index > 0)).slice(0, 2) ??
+    []
   const isGallery = variant === 'gallery'
   const isAlbum = variant === 'album'
   const isCoverFlow = Boolean(disableCoverFlowMotion)
@@ -196,7 +185,6 @@ export function PortfolioProjectCard({
       : undefined
 
   const cardLabel = `${project.title}, ${project.client}. ${project.summary}`
-  const resolvedShareUrl = resolveShareUrl(project, shareUrl)
 
   const setCardRef = (node: HTMLElement | null) => {
     cardRef.current = node
@@ -239,12 +227,6 @@ export function PortfolioProjectCard({
           aspectClassName={isGallery || isAlbum ? galleryMediaAspectClassName : mediaAspectClassName}
           mediaReady={mediaReady}
         />
-        {highlightMetric ? (
-          <ImpactMetricHighlight
-            metric={highlightMetric}
-            className={cn('absolute right-3 top-3 z-10 max-w-[calc(100%-1.5rem)]', badgeGlowClassName)}
-          />
-        ) : null}
       </div>
 
       <div className={cn('flex flex-1 flex-col', isGallery || isAlbum ? 'p-4 sm:p-5' : 'p-5')}>
@@ -253,7 +235,7 @@ export function PortfolioProjectCard({
             <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-sand/45">
               {project.client}
             </p>
-            <div className="mt-2 flex items-start gap-2">
+            <div className="mt-2">
               <h3
                 className={cn(
                   'min-w-0 font-display font-semibold tracking-tight text-sand',
@@ -262,7 +244,9 @@ export function PortfolioProjectCard({
               >
                 {project.title}
               </h3>
-              <CopyLinkButton url={resolvedShareUrl} />
+              {!isGallery && !isAlbum ? (
+                <p className="mt-1 font-mono text-xs text-sand/45">{project.period}</p>
+              ) : null}
             </div>
           </div>
           {project.url ? (
@@ -278,20 +262,27 @@ export function PortfolioProjectCard({
           ) : null}
         </div>
 
-        <PortfolioTechStack tags={project.tags} className="mt-3 border-t-0 pt-0" />
-
-        {!isGallery && !isAlbum ? (
-          <p className="mt-2 font-mono text-xs text-sand/45">{project.period}</p>
-        ) : null}
-
         <p
           className={cn(
             'mt-3 flex-1 text-sm leading-relaxed text-sand/70',
-            isGallery || isAlbum ? 'line-clamp-4' : 'line-clamp-3',
+            (isGallery || isAlbum) && 'line-clamp-4',
           )}
         >
           {project.summary}
         </p>
+
+        <PortfolioTechStack tags={project.tags} className="mt-3 border-t-0 pt-0" />
+
+        {(highlightMetric || secondaryMetrics.length > 0) ? (
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+            {highlightMetric ? (
+              <ImpactMetricHighlight metric={highlightMetric} className={badgeGlowClassName} />
+            ) : null}
+            {secondaryMetrics.length > 0 ? (
+              <ImpactBadge metrics={secondaryMetrics} />
+            ) : null}
+          </div>
+        ) : null}
 
         <div className={cn('mt-4', isAlbum && 'relative min-h-[2.5rem]')}>
           {isGallery && project.url ? (

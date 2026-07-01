@@ -51,7 +51,6 @@ export const Accessibility: Story = {
     project: samplePortfolioProject,
     onOpenImage: () => undefined,
     onViewDetails: () => undefined,
-    shareUrl: 'https://jerome.erazo.dev/showcase/digital-creator',
   },
   ...a11yStoryParameters,
 }

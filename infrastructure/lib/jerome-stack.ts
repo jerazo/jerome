@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import * as cdk from 'aws-cdk-lib'
 import * as apigatewayv2 from 'aws-cdk-lib/aws-apigatewayv2'
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as iam from 'aws-cdk-lib/aws-iam'
@@ -19,6 +20,12 @@ export type JeromeStackProps = cdk.StackProps & {
   notifyEmail?: string
   sesFromEmail?: string
   contactAccessOtpSecret?: string
+  /** Custom CloudFront aliases, e.g. ['monx.dev', 'www.monx.dev']. Requires certificateArn. */
+  siteDomainNames?: string[]
+  /** ACM certificate ARN in us-east-1 for the custom domain(s). */
+  certificateArn?: string
+  /** Canonical public site URL; defaults to the primary custom domain or CloudFront URL. */
+  siteUrl?: string
 }
 
 export class JeromeStack extends cdk.Stack {
@@ -123,8 +130,31 @@ export class JeromeStack extends cdk.Stack {
       enableAcceptEncodingGzip: true,
     })
 
+    const siteDomainNames = props.siteDomainNames?.filter(Boolean)
+    const certificateArn = props.certificateArn?.trim()
+    const hasCustomDomain = Boolean(siteDomainNames?.length && certificateArn)
+
+    if (siteDomainNames?.length && !certificateArn) {
+      throw new Error(
+        'ACM_CERTIFICATE_ARN must be set when SITE_DOMAIN_NAMES is configured for CloudFront.',
+      )
+    }
+
+    if (certificateArn && !siteDomainNames?.length) {
+      throw new Error(
+        'SITE_DOMAIN_NAMES must be set when ACM_CERTIFICATE_ARN is configured for CloudFront.',
+      )
+    }
+
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultRootObject: 'index.html',
+      ...(hasCustomDomain
+        ? {
+            domainNames: siteDomainNames,
+            certificate: acm.Certificate.fromCertificateArn(this, 'SiteCertificate', certificateArn!),
+            minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
+          }
+        : {}),
       defaultBehavior: {
         origin: siteOrigin,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
@@ -162,7 +192,12 @@ export class JeromeStack extends cdk.Stack {
       ],
     })
 
-    contactHandler.addEnvironment('SITE_URL', `https://${distribution.distributionDomainName}`)
+    const publicSiteUrl =
+      props.siteUrl?.replace(/\/$/, '') ??
+      (siteDomainNames?.[0] ? `https://${siteDomainNames[0]}` : undefined) ??
+      `https://${distribution.distributionDomainName}`
+
+    contactHandler.addEnvironment('SITE_URL', publicSiteUrl)
 
     new cdk.CfnOutput(this, 'SiteBucketName', {
       value: siteBucket.bucketName,
@@ -175,13 +210,20 @@ export class JeromeStack extends cdk.Stack {
     })
 
     new cdk.CfnOutput(this, 'SiteUrl', {
-      value: `https://${distribution.distributionDomainName}`,
+      value: publicSiteUrl,
       description: 'Public site URL',
     })
 
     new cdk.CfnOutput(this, 'ContactApiUrl', {
-      value: `https://${distribution.distributionDomainName}/api/contact`,
+      value: `${publicSiteUrl}/api/contact`,
       description: 'Contact form endpoint (same-origin via CloudFront)',
     })
+
+    if (siteDomainNames?.length) {
+      new cdk.CfnOutput(this, 'SiteDomainNames', {
+        value: siteDomainNames.join(','),
+        description: 'CloudFront alternate domain names (CNAMEs)',
+      })
+    }
   }
 }

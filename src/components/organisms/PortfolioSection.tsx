@@ -58,12 +58,11 @@ export function PortfolioSection() {
       images,
       index,
       projectTitle: project.title,
-      impactMetrics: project.impactMetrics,
     })
   }
 
   const openProjectDetails = (project: PortfolioProject) => {
-    navigate(`/project/${project.id}`)
+    navigate(`/portfolio/${project.id}`)
   }
 
   const goPrev = useCallback(() => {

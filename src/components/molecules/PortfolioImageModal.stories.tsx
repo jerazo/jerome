@@ -24,7 +24,6 @@ export const Default: Story = {
       projectTitle: samplePortfolioProject.title,
       images,
       index: 0,
-      impactMetrics: samplePortfolioProject.impactMetrics,
     },
     onClose: () => undefined,
   },
@@ -37,7 +36,6 @@ export const Variants: Story = {
         projectTitle: samplePortfolioProject.title,
         images,
         index: 1,
-        impactMetrics: samplePortfolioProject.impactMetrics,
       }}
       onClose={() => undefined}
     />
@@ -50,7 +48,6 @@ export const Accessibility: Story = {
       projectTitle: samplePortfolioProject.title,
       images,
       index: 0,
-      impactMetrics: samplePortfolioProject.impactMetrics,
     },
     onClose: () => undefined,
   },

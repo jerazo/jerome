@@ -6,7 +6,7 @@ import { PrivacyPage } from '../pages/PrivacyPage'
 import { RouteErrorPage } from '../pages/RouteErrorPage'
 import { ShowcasePageRoute } from '../pages/ShowcasePage'
 import { ProjectDetailPageRoute } from '../pages/ProjectDetailPage'
-import { LegacyWorkRedirect } from '../pages/LegacyWorkRedirect'
+import { LegacyProjectRedirect, LegacyWorkRedirect } from '../pages/LegacyWorkRedirect'
 import { TermsPage } from '../pages/TermsPage'
 
 export const router = createBrowserRouter([
@@ -17,7 +17,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage />, errorElement: <RouteErrorPage /> },
       { path: 'services', element: <Navigate to="/#services" replace /> },
-      { path: 'project/:slug', element: <ProjectDetailPageRoute />, errorElement: <RouteErrorPage /> },
+      { path: 'portfolio/:slug', element: <ProjectDetailPageRoute />, errorElement: <RouteErrorPage /> },
+      { path: 'project/:slug', element: <LegacyProjectRedirect />, errorElement: <RouteErrorPage /> },
       {
         path: 'work/:projectId',
         element: <LegacyWorkRedirect />,

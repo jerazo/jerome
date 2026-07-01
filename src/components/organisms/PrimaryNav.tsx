@@ -1,5 +1,5 @@
 import { cn } from '../../lib/cn'
-import { desktopMoreLinks, desktopNavLinks, navProjectsGroup, navTopLink } from '../../content/nav'
+import { desktopMoreLinks, desktopNavLinks, navTopLink } from '../../content/nav'
 import { NavHashLink } from '@/components/atomic'
 import { NavDropdown } from '../molecules/NavDropdown'
 
@@ -20,7 +20,6 @@ export function PrimaryNav({ onNavigate }: { onNavigate?: () => void }) {
           {item.label}
         </NavHashLink>
       ))}
-      <NavDropdown label={navProjectsGroup.label} items={navProjectsGroup.items} onNavigate={onNavigate} />
       <NavDropdown label="More" items={[...desktopMoreLinks]} onNavigate={onNavigate} />
     </nav>
   )

@@ -135,7 +135,7 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     accent: 'from-cyan-500/35 via-sky-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Live integrations', value: '12+ feeds' },
+      { label: 'Live integrations', value: 'how mind works' },
       { label: 'Query layer', value: 'Natural language' },
       { label: 'Response time', value: 'Sub-second HUD' },
     ],
@@ -183,10 +183,10 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     accent: 'from-red-500/35 via-orange-500/20 to-transparent',
     url: 'https://configurator-test.thermal.com/',
-    impactMetric: { label: 'Hardware config', value: 'Web USB live' },
+    impactMetric: { label: 'Hardware config', value: 'device online configurator' },
     impactMetrics: [
       { label: 'Setup time', value: 'Desktop → browser' },
-      { label: 'Hardware config', value: 'Web USB live' },
+      { label: 'Hardware config', value: 'device online configurator' },
       { label: 'Phase 2 scale', value: 'Fleet + audit' },
     ],
     impactNarrative: {
@@ -330,7 +330,7 @@ export const portfolioProjects: PortfolioProject[] = [
     accent: 'from-sky-500/35 via-cyan-500/20 to-transparent',
     url: 'https://www.tempest.house/',
     impactMetrics: [
-      { label: 'Client products', value: '4+ shipped' },
+      { label: 'Client products', value: 'multiple projects' },
       { label: 'Engagement', value: '7+ years' },
       { label: 'Delivery model', value: 'End-to-end' },
     ],
@@ -355,7 +355,7 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['React', 'TypeScript', 'Fintech', 'UI engineering', 'PostgreSQL'],
     accent: 'from-orange-500/35 via-pink-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Payments', value: 'Interac e-Transfer' },
+      { label: 'Payments', value: 'frontend dev (React)' },
       { label: 'Flows shipped', value: 'Transfer + fund' },
       { label: 'Domain', value: 'Consumer fintech' },
     ],
@@ -381,7 +381,7 @@ export const portfolioProjects: PortfolioProject[] = [
     accent: 'from-fuchsia-500/35 via-cyan-500/20 to-transparent',
     url: 'https://doubleverify.com/',
     impactMetrics: [
-      { label: 'Page weight', value: 'Reduced 40%' },
+      { label: 'Focus', value: 'Angular expert FE' },
       { label: 'Platform', value: 'Enterprise media' },
       { label: 'Delivery focus', value: 'A11y + perf' },
     ],
@@ -419,7 +419,7 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     accent: 'from-emerald-500/35 via-teal-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Data sets', value: 'Filterable pro stats' },
+      { label: 'Product', value: 'egames pro analytics' },
       { label: 'Shipped feature', value: 'Draft simulator' },
       { label: 'Shared platform', value: 'Esportify API' },
     ],
@@ -465,7 +465,7 @@ export const portfolioProjects: PortfolioProject[] = [
     accent: 'from-lime-500/35 via-emerald-500/20 to-transparent',
     url: 'https://www.exploreplanet3.com/',
     impactMetrics: [
-      { label: 'Features shipped', value: 'UI + API payloads' },
+      { label: 'Role', value: 'back office support dev' },
       { label: 'Stack', value: 'Node + MongoDB' },
       { label: 'Domain', value: 'Ed-tech portal' },
     ],
@@ -515,7 +515,7 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['JavaScript', 'PHP', 'jQuery', 'Laravel', 'API', 'Gaming'],
     accent: 'from-rose-500/35 via-pink-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Automation', value: 'Bracket generation' },
+      { label: 'Automation', value: 'eGames pro Tournament website' },
       { label: 'API coverage', value: 'Consumer web' },
       { label: 'Game focus', value: 'League of Legends' },
     ],
@@ -540,7 +540,7 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['PHP', 'WordPress', 'Web development', 'Gaming', 'Digital distribution'],
     accent: 'from-orange-500/35 via-indigo-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Download UX', value: 'Streaming delivery' },
+      { label: 'Download UX', value: 'Game Streaming delivery' },
       { label: 'UI delivery', value: 'Multi-game skins' },
       { label: 'Catalog scale', value: 'Large datasets' },
     ],
@@ -580,7 +580,7 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['PHP', 'WordPress', 'Web development', 'Digital forensics', 'Legal tech'],
     accent: 'from-blue-500/35 via-slate-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Services', value: 'Forensics + recovery' },
+      { label: 'Platform', value: 'WP website' },
       { label: 'Audience', value: 'Legal professionals' },
       { label: 'Delivery', value: 'Marketing site' },
     ],
@@ -604,7 +604,7 @@ export const portfolioProjects: PortfolioProject[] = [
       'Managed a large web production org and raised throughput from one page per developer per week to one per day.',
     tags: ['Leadership', 'Process', 'Delivery', 'PHP', 'jQuery', 'MySQL'],
     accent: 'from-indigo-500/35 via-purple-500/20 to-transparent',
-    impactMetric: { label: 'Throughput', value: '7x faster delivery' },
+    impactMetric: { label: 'Throughput', value: 'SME website builder' },
     impactMetrics: [
       { label: 'Dev throughput', value: '7× faster' },
       { label: 'Team output', value: '1 page/dev/day' },
@@ -631,7 +631,7 @@ export const portfolioProjects: PortfolioProject[] = [
     tags: ['PHP', 'JavaScript', 'Lua', 'C++', 'MySQL', 'MSSQL', 'Gaming', 'E-commerce'],
     accent: 'from-teal-500/35 via-cyan-500/20 to-transparent',
     impactMetrics: [
-      { label: 'Product sites', value: '10+ launches' },
+      { label: 'Product sites', value: 'Game Database and Marketing' },
       { label: 'Concurrent delivery', value: 'Multi-client' },
       { label: 'Stacks', value: 'PHP + ASP/IIS' },
     ],

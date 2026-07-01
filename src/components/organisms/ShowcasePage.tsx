@@ -146,12 +146,11 @@ export function ShowcasePage() {
       images,
       index,
       projectTitle: project.title,
-      impactMetrics: project.impactMetrics,
     })
   }
 
   const openProjectDetails = (project: PortfolioProject) => {
-    navigate(`/project/${resolvePortfolioSlug(project.id)}`)
+    navigate(`/portfolio/${resolvePortfolioSlug(project.id)}`)
   }
 
   return (

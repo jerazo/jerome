@@ -167,7 +167,13 @@ To link the footer version to release notes later, set `releaseNotesUrl` in `src
 
 ### Custom domain (optional)
 
-Add an ACM certificate in `us-east-1`, then extend `infrastructure/lib/jerome-stack.ts` with `domainNames` and `certificate` on the CloudFront distribution.
+Add an ACM certificate in **us-east-1** that covers your domain(s), then set these GitHub environment variables (or export them for `npm run deploy:infra`):
+
+- `SITE_DOMAIN_NAMES` — comma-separated aliases, e.g. `monx.dev,www.monx.dev`
+- `ACM_CERTIFICATE_ARN` — the ACM certificate ARN in `us-east-1`
+- `SITE_URL` — canonical public URL, e.g. `https://monx.dev`
+
+CDK applies the certificate and alternate domain names on the CloudFront distribution so infra deploys do not strip console-only SSL settings.
 
 ## GitHub Actions deploy
 
@@ -240,7 +246,9 @@ The deploy IAM principal still needs permission to create **S3**, **IAM roles**,
 | `SES_FROM_EMAIL` | Verified SES sender (default matches `NOTIFY_EMAIL`) |
 | `SITE_BUCKET_NAME` | Optional override if CloudFormation lookup is unavailable |
 | `CLOUDFRONT_DISTRIBUTION_ID` | Optional override for site deploy |
-| `SITE_URL` | Optional public site URL for deploy logs |
+| `SITE_URL` | Public site URL (SEO build + Lambda `SITE_URL`) |
+| `SITE_DOMAIN_NAMES` | CloudFront CNAMEs, comma-separated (requires `ACM_CERTIFICATE_ARN`) |
+| `ACM_CERTIFICATE_ARN` | ACM cert ARN in `us-east-1` for CloudFront custom domain |
 | `VITE_MIXPANEL_TOKEN` | Mixpanel project token for client analytics (omit to disable) |
 
 **OIDC setup**

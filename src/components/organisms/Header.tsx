@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ButtonLink, Container, LogoMark } from '@/components/atomic'
+import { Gutter, LogoMark } from '@/components/atomic'
 import { profile } from '../../content/profile'
 import { useMobileNav } from '../../hooks/useMobileNav'
 import { useUiStore } from '../../store/uiStore'
@@ -16,52 +16,41 @@ export function Header() {
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="h-2 bg-gold-600" />
       <div className="border-b border-sand/10 bg-ink/70 backdrop-blur">
-        <Container className="flex h-14 items-center justify-between sm:h-16">
+        <Gutter className="flex h-14 items-center justify-between gap-3 sm:h-16 sm:gap-4">
           <Link
             to="/"
-            className="group inline-flex items-center gap-3 focus-visible:focus-ring"
+            className="group inline-flex min-w-0 items-center gap-3 focus-visible:focus-ring"
           >
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-gold-500 text-white shadow-soft">
+            <span className="grid h-9 w-9 flex-none place-items-center rounded-xl bg-gold-500 text-white shadow-soft">
               <LogoMark />
             </span>
-            <div className="leading-tight">
-              <p className="text-sm font-semibold tracking-tight text-sand">{profile.name}</p>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/60">
+            <div className="min-w-0 leading-tight">
+              <p className="truncate text-sm font-semibold tracking-tight text-sand">{profile.name}</p>
+              <p className="hidden truncate text-[10px] font-semibold uppercase tracking-[0.32em] text-sand/60 sm:block">
                 {profile.headline}
               </p>
             </div>
           </Link>
 
-          <div className="hidden items-center gap-3 lg:flex">
-            <PrimaryNav onNavigate={close} />
-            <ButtonLink to="/#contact" size="sm" className="ml-1">
-              Book a Call
-            </ButtonLink>
-          </div>
+          <PrimaryNav onNavigate={close} />
 
           <MobileNavToggle
             ref={triggerRef}
             open={mobileNavOpen}
             menuId={menuId}
             onToggle={toggle}
-            className="md:hidden"
+            className="lg:hidden"
           />
-        </Container>
-      </div>
+        </Gutter>
 
-      {mobileNavOpen ? (
-        <div ref={panelRef} className="md:hidden">
-          <button
-            type="button"
-            className="fixed inset-0 z-40 bg-black/60"
-            aria-label="Close navigation menu"
-            onClick={close}
-          />
-          <div className="fixed inset-x-4 top-20 z-50 md:inset-x-auto md:right-4 md:left-auto md:w-[min(100%,20rem)]">
-            <MobileNavPanel id={menuId} onNavigate={close} />
+        {mobileNavOpen ? (
+          <div ref={panelRef} className="lg:hidden">
+            <Gutter className="pb-4 pt-2">
+              <MobileNavPanel id={menuId} onNavigate={close} />
+            </Gutter>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </header>
   )
 }

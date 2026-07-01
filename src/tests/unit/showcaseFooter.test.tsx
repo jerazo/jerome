@@ -32,7 +32,7 @@ describe('showcase page footer', () => {
 
     const footerNav = screen.getByRole('navigation', { name: 'Footer' })
     expect(footerNav).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Showcase' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Showcase' })).not.toBeInTheDocument()
     expect(screen.getByText(profile.name)).toBeInTheDocument()
     expect(screen.getByText(/Tech Lead/i)).toBeInTheDocument()
     expect(screen.getByText(/All rights reserved/i)).toBeInTheDocument()
@@ -42,6 +42,6 @@ describe('showcase page footer', () => {
     renderAt('/')
 
     expect(screen.getByRole('navigation', { name: 'Footer' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Showcase' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Showcase' })).not.toBeInTheDocument()
   })
 })
