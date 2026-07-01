@@ -1,1 +1,0 @@
-import{n as e}from"./chunk-DnJy8xQt.js";var t,n=e((()=>{t={parameters:{a11y:{test:`error`}}}}));export{n,t};

@@ -22,8 +22,13 @@ child.on('close', (code) => {
     process.exit(code ?? 1)
   }
 
-  const warningPattern = /(\(!\)|\[PLUGIN_TIMINGS\]|Warning:|warn -)/i
-  if (warningPattern.test(output)) {
+  const outputWithoutPluginTimings = output
+    .split('\n')
+    .filter((line) => !/\[PLUGIN_TIMINGS\]/i.test(line))
+    .join('\n')
+
+  const warningPattern = /(\(!\)|Warning:|warn -)/i
+  if (warningPattern.test(outputWithoutPluginTimings)) {
     console.error('\nStorybook build failed: warnings were reported during the build.')
     process.exit(1)
   }

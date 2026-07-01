@@ -1,3 +1,5 @@
+import { heroIndustryTagline, industryDomainCount } from './industries.ts'
+
 export type HeroTitlePart = {
   text: string
   accent?: boolean
@@ -26,16 +28,16 @@ export const heroSlides: HeroSlide[] = [
     titleLines: [
       [{ text: 'TECH LEAD' }],
       [
-        { text: '12+ ' },
+        { text: 'MULTIPLE ' },
         { text: 'PRODUCTION PLATFORMS', accent: true },
       ],
     ],
     subtitle:
       'Full‑Stack Engineer & Tech Lead · 20+ yrs in web engineering · 10+ yrs microservices & distributed systems.',
-    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+    tagline: 'High traffic is a happy problem.',
     impactBadge: {
       value: '1M+',
-      label: 'users served',
+      label: 'concurrent users served',
     },
     achievement: 'Reduced API latency by 45% for a fintech platform serving global distributors.',
     ctaLabel: "Let's Talk",
@@ -49,14 +51,14 @@ export const heroSlides: HeroSlide[] = [
       [{ text: 'SYSTEM DESIGN', accent: true }],
     ],
     subtitle:
-      'Tech Lead · 15+ yrs architecture teams extend—not rewrite · 12+ platforms shipped.',
-    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+      'Tech Lead · 15+ yrs · architecture teams extend instead of rewrite · multiple platforms shipped.',
+    tagline: 'Finding solutions that matter.',
     impactBadge: {
-      value: '12+',
+      value: 'Multiple',
       label: 'platforms shipped',
     },
     achievement:
-      'Led cross-functional squads across Growth, Office, and Shop streams—keeping velocity as delivery scaled.',
+      'Led cross-functional squads across the production streams, keeping velocity up as delivery scaled.',
     ctaLabel: "Let's Talk",
     ctaTo: '/#contact',
   },
@@ -68,13 +70,13 @@ export const heroSlides: HeroSlide[] = [
     ],
     subtitle:
       'Full‑Stack Engineer · ~8 yrs React · ~10 yrs Node · 10+ yrs CI/CD · gains measured in production, not slides.',
-    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+    tagline: 'Product of measuring and not guessing.',
     impactBadge: {
       value: '10×',
       label: 'faster shipping',
     },
     achievement:
-      'Took a team from one webpage per developer per week to one per day—without trading away quality or review discipline.',
+      'Took a team from one webpage per developer per week to one per day, without trading away quality or review discipline.',
     ctaLabel: "Let's Talk",
     ctaTo: '/#contact',
   },
@@ -87,7 +89,7 @@ export const heroSlides: HeroSlide[] = [
     ],
     subtitle:
       'Engineering Lead & Tech Lead · 12+ yrs technical leadership · player-coach shipping in production.',
-    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+    tagline: 'About 60% hands-on in the code, 40% on people and delivery.',
     impactBadge: {
       value: 'Large',
       label: 'orgs led',
@@ -101,18 +103,18 @@ export const heroSlides: HeroSlide[] = [
     eyebrow: 'Systems & culture',
     titleLines: [
       [{ text: 'SOFTWARE ENGINEER' }],
-      [{ text: '8 INDUSTRIES' }],
+      [{ text: `${industryDomainCount} INDUSTRIES` }],
       [{ text: 'ONE PRODUCTION BAR', accent: true }],
     ],
     subtitle:
-      'Software Engineer & Tech Lead · 20+ yrs in web engineering across fintech, esports, SaaS, health & education.',
-    tagline: 'FinTech, HealthTech, SaaS & E‑commerce.',
+      `Software Engineer & Tech Lead · 20+ yrs in web engineering across ${industryDomainCount} industry domains.`,
+    tagline: heroIndustryTagline,
     impactBadge: {
-      value: '8',
+      value: String(industryDomainCount),
       label: 'industry domains',
     },
     achievement:
-      'Shipped production platforms across fintech, esports, SaaS, health, and education—same bar after launch day.',
+      'Shipped production platforms from healthcare and fintech to gaming, SaaS, IoT, and edtech. Same bar after launch day.',
     ctaLabel: "Let's Talk",
     ctaTo: '/#contact',
   },
@@ -156,9 +158,9 @@ export const featuredOffer = {
   eyebrow: 'Featured',
   title: 'Tech Lead (player‑coach)',
   intro:
-    '20+ years building and scaling web platforms—with hands-on engineering, system design, and team leadership in one role.',
+    '20+ years building and scaling web platforms, with hands-on engineering, system design, and team leadership in one role.',
   lead:
-    'I still open PRs, write runbooks, and sit in architecture review—shipping myself while raising the bar on CI/CD, reliability, and observability. I partner with product and design so speed does not cost maintainability.',
+    'I still open PRs, write runbooks, and sit in architecture review. I ship myself while raising the bar on CI/CD, reliability, and observability. I partner with product and design so speed does not cost maintainability.',
   pillars: [
     {
       title: 'Ship in production',
@@ -192,7 +194,7 @@ export const featuredOffer = {
     },
   ] satisfies FeaturedOfferPillar[],
   closing:
-    'Standing up a new platform or unblocking a team that has outgrown its first architecture—I bring senior judgment, execution speed, and leadership that compounds.',
+    'Standing up a new platform or unblocking a team that has outgrown its first architecture? I bring senior judgment, execution speed, and leadership that compounds.',
 }
 
 export const heroBannerMessages = [
@@ -200,9 +202,9 @@ export const heroBannerMessages = [
   'Do not guess, measure it!',
   'Build systems your team can still change six months from now.',
   'Player-coach engineering: I ship the PR and raise the bar.',
-  'Velocity without sacrificing maintainability—or the next hire.',
+  'Velocity without sacrificing maintainability, or the next hire.',
   'Strong foundations: architecture, culture, and delivery under pressure.',
-  'From spike to production—with observability baked in.',
+  'From spike to production, with observability baked in.',
   'Pragmatic architecture. Measured delivery. Real outcomes.',
   'Code that ships. Standards that stick. Teams that compound.',
   'Turn ambitious goals into platforms teams can extend.',

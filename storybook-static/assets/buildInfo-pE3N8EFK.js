@@ -1,1 +1,0 @@
-import{n as e}from"./chunk-DnJy8xQt.js";function t(e){let t=[`v${e.version}`];return e.commit&&e.commit!==`local`&&t.push(e.commit),t.join(` · `)}var n,r=e((()=>{n={name:`jerome`,version:`1.0.0`,commit:`6783442`,timestamp:`2026-06-28T03:49:05.745Z`}}));export{t as n,r,n as t};

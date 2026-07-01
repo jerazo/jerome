@@ -1,9 +1,10 @@
+import { industryDomainCount } from './industries'
 import { profile } from './profile'
 
 export const siteSeo = {
   title: 'Jerome Lopez Erazo – Software Engineer Portfolio',
   description:
-    'Jerome Lopez Erazo is a Full‑Stack Engineer and Tech Lead with 20+ years building production platforms across FinTech, HealthTech, and E‑commerce.',
+    `Jerome Lopez Erazo is a Full‑Stack Engineer and Tech Lead with 20+ years building production platforms across ${industryDomainCount} industry domains.`,
   jobTitle: 'Full‑Stack Engineer & Tech Lead',
   locale: 'en_US',
   type: 'website' as const,

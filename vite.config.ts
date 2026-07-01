@@ -12,9 +12,16 @@ export default defineConfig(({ mode }) => {
 
   return {
     resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-      },
+      alias: [
+        {
+          find: '@/components/atomic',
+          replacement: fileURLToPath(new URL('./src/components/atomic/index.ts', import.meta.url)),
+        },
+        {
+          find: '@',
+          replacement: fileURLToPath(new URL('./src', import.meta.url)),
+        },
+      ],
     },
     plugins: [
       react(),

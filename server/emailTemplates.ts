@@ -15,6 +15,7 @@ type EmailLayoutOptions = {
 }
 
 const BRAND_NAME = profile.name
+const BRAND_INITIALS = 'JE'
 const BRAND_LOCATION = profile.location
 const LINKEDIN_URL = profile.links.linkedin
 
@@ -63,7 +64,7 @@ function renderFooter(siteUrl?: string) {
           ${escapeHtml(BRAND_LOCATION)}
         </p>
         <p style="margin:18px 0 0;font-size:18px;line-height:1;color:#111111;font-weight:700;letter-spacing:0.08em;">
-          JL
+          ${escapeHtml(BRAND_INITIALS)}
         </p>
       </td>
     </tr>
@@ -99,7 +100,7 @@ function renderEmailLayout({
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                   <tr>
                     <td style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#111111;">
-                      <span style="display:inline-block;width:22px;height:22px;margin-right:10px;border-radius:4px;background-color:#111111;color:#ffffff;font-size:11px;line-height:22px;text-align:center;vertical-align:middle;">JL</span>
+                      <span style="display:inline-block;width:22px;height:22px;margin-right:10px;border-radius:4px;background-color:#111111;color:#ffffff;font-size:11px;line-height:22px;text-align:center;vertical-align:middle;">${escapeHtml(BRAND_INITIALS)}</span>
                       ${escapeHtml(BRAND_NAME)}
                     </td>
                     <td align="right" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#888888;white-space:nowrap;">

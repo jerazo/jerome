@@ -1,3 +1,5 @@
+import { industryDomainCount } from './industries.ts'
+
 export type ExperienceItem = {
   company: string
   role: string
@@ -11,7 +13,7 @@ export const profile = {
   name: 'Jerome Lopez Erazo',
   headline: 'Software Engineer • Tech Lead • AI Enthusiast',
   tagline:
-    'Full‑Stack Engineer & Tech Lead · 20+ yrs building production platforms across FinTech, HealthTech, and E‑commerce.',
+    `Full‑Stack Engineer & Tech Lead · 20+ yrs building production platforms across ${industryDomainCount} industry domains.`,
   location: 'Quezon City, Philippines',
   email: 'monx.erazo@me.com',
   phone: '+63 917 621 7351',
