@@ -1,17 +1,12 @@
-import type { ButtonHTMLAttributes } from 'react'
-import { buttonClassName, type ButtonSize, type ButtonVariant } from './buttonStyles'
-
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: ButtonVariant
-  size?: ButtonSize
-}
+import type { IButtonAtomProps } from '../atomic/types'
+import { buttonClassName } from './buttonStyles'
 
 export function Button({
   className,
   variant = 'primary',
   size = 'md',
   ...props
-}: ButtonProps) {
+}: IButtonAtomProps) {
   return (
     <button
       className={buttonClassName({ variant, size, className })}

@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "typeRoots": ["./node_modules/@types", "./src/components/atomic"]
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

@@ -180,6 +180,9 @@ jobs:
           NOTIFY_EMAIL: ${{ vars.NOTIFY_EMAIL || 'jerome.erazo@gmail.com' }}
           SES_FROM_EMAIL: ${{ vars.SES_FROM_EMAIL || vars.NOTIFY_EMAIL || 'jerome.erazo@gmail.com' }}
           CONTACT_ACCESS_OTP_SECRET: ${{ secrets.CONTACT_ACCESS_OTP_SECRET }}
+          SITE_DOMAIN_NAMES: ${{ vars.SITE_DOMAIN_NAMES }}
+          ACM_CERTIFICATE_ARN: ${{ vars.ACM_CERTIFICATE_ARN }}
+          SITE_URL: ${{ vars.SITE_URL }}
         run: npx cdk deploy --require-approval never --outputs-file ../cdk-outputs.json
 
       - name: Upload CDK outputs

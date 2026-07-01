@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
-import { ButtonLink } from '../components/atoms/ButtonLink'
-import { Container } from '../components/atoms/Container'
+import { ButtonLink, Container } from '@/components/atomic'
 import { formatPageTitle } from '../content/profile'
 
 export function NotFoundPage() {

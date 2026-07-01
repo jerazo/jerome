@@ -1,14 +1,15 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '../../lib/cn'
-import type { PortfolioImage } from '../../content/portfolio'
+import type { PortfolioImage as PortfolioImageType } from '../../content/portfolio'
+import { PortfolioImage } from '@/components/atomic'
 
 export function PortfolioCarousel({
   images,
   className,
   onImageClick,
 }: {
-  images: PortfolioImage[]
+  images: PortfolioImageType[]
   className?: string
   onImageClick?: (index: number) => void
 }) {
@@ -22,7 +23,15 @@ export function PortfolioCarousel({
   const goNext = () => setIndex((i) => (i + 1) % total)
 
   return (
-    <div className={cn('relative h-40 overflow-hidden border-b border-sand/10 bg-ink2/50', className)}>
+    <div
+      className={cn(
+        'relative overflow-hidden border-b border-sand/10 bg-ink2/50',
+        className ?? 'aspect-[16/10] w-full',
+      )}
+      role="group"
+      aria-roledescription="carousel"
+      aria-label={`Project screenshots, slide ${index + 1} of ${total}`}
+    >
       <button
         type="button"
         onClick={() => onImageClick?.(index)}
@@ -32,11 +41,11 @@ export function PortfolioCarousel({
         )}
         aria-label={`View larger ${current.label ?? 'screenshot'}`}
       >
-        <img
+        <PortfolioImage
           key={current.src}
           src={current.src}
           alt={current.alt}
-          className="h-full w-full object-cover object-top transition duration-300 hover:scale-[1.02]"
+          className="h-full w-full transition duration-300 hover:scale-[1.02]"
           loading={index === 0 ? 'eager' : 'lazy'}
         />
       </button>

@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { ExperienceRoleCard } from '../molecules/ExperienceRoleCard'
-import { Gutter } from '../atoms/Gutter'
+import { Gutter } from '@/components/atomic'
 import { SectionHeading } from '../molecules/SectionHeading'
 import { profile } from '../../content/profile'
 

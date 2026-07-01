@@ -11,7 +11,7 @@ export const profile = {
   name: 'Jerome Lopez Erazo',
   headline: 'Software Engineer • Tech Lead • AI Enthusiast',
   tagline:
-    'I build high-impact web products, scalable platforms, and front-end systems: fast, reliable, and production-ready.',
+    'Full‑Stack Engineer & Tech Lead · 20+ yrs building production platforms across FinTech, HealthTech, and E‑commerce.',
   location: 'Quezon City, Philippines',
   email: 'monx.erazo@me.com',
   phone: '+63 917 621 7351',
@@ -24,7 +24,7 @@ export const profile = {
     { label: 'Focus', value: 'SaaS • Platforms • DX' },
   ],
   aboutBriefSummary:
-    'Tech lead and full-stack engineer with 20+ years shipping web platforms across fintech, SaaS, esports, and B2B. I focus on scalable front-end systems, delivery discipline, and player-coach leadership that turns ambitious roadmaps into production-ready products.',
+    'Tech Lead and full-stack engineer with 20+ years shipping web platforms across fintech, SaaS, esports, and B2B. I lead cross-functional squads, drive technical strategy, and mentor engineers—turning ambitious roadmaps into production-ready products with scalable front-end systems and delivery discipline.',
   aboutQuickFacts: [
     'Based in the Philippines',
     'Available for full-time',
@@ -35,12 +35,18 @@ export const profile = {
     to: '/#contact',
     ariaLabel: "Let's talk — go to the contact form",
   },
+  footerCta: {
+    label: 'Get in Touch',
+    subtext: "Let's discuss how I can add value to your team.",
+    to: '/#contact',
+    ariaLabel: 'Get in touch — go to the contact form',
+  },
   summary: [
-    'Seasoned full-stack engineer and technical leader with 20+ years of experience delivering and scaling web platforms.',
+    'Seasoned full-stack engineer and Tech Lead with 20+ years delivering and scaling web platforms.',
     'Experienced across frontend, backend, and cloud infrastructure with strong CI/CD and observability practices.',
-    'Comfortable as a player-coach: setting standards, mentoring engineers, and aligning delivery with business goals.',
+    'Player-coach by default: leading cross-functional squads, driving technical strategy, mentoring engineers, and aligning delivery with business goals.',
     'I have built and led across fintech, esports, education, B2B, B2C, the wedding industry, SaaS, health & wellness, and analytics. These are domains where the stakes, users, and constraints could not be more different. In fintech, that has meant trust, compliance, and reliability under pressure. In esports, real-time performance and fan engagement at scale. In education, platforms that have to work for institutions and learners alike. B2B and B2C taught me when to optimize for depth versus speed-to-delight. Weddings reminded me that emotion and logistics have to coexist in the product. SaaS sharpened my instincts for retention, multi-tenancy, and shipping in cadence. Health & wellness raised the bar on accessibility, privacy, and outcomes. Analytics turned ambiguity into dashboards and decisions teams actually use.',
-    'That cross-industry range is not a résumé garnish. It is how I ramp fast, borrow proven patterns without forcing them, and bring a point of view that holds up from architecture review to launch day.',
+    'That cross-industry range is not a résumé garnish. It is how I ramp fast, borrow proven patterns without forcing them, and bring a Tech Lead point of view that holds up from technical planning through launch day.',
   ],
   servicesPositioning: [
     'Full‑stack product development (React + Node) with maintainable architecture.',

@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Quote } from 'lucide-react'
 import { linkedInRecommendationsUrl, recommendations } from '../../content/recommendations'
-import { ButtonAnchor } from '../atoms/ButtonAnchor'
-import { Gutter } from '../atoms/Gutter'
-import { Tag } from '../atoms/Tag'
+import { ButtonAnchor, Gutter, Tag } from '@/components/atomic'
 import { SectionHeading } from '../molecules/SectionHeading'
 
 function initials(name: string) {

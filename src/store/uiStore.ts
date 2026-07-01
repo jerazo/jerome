@@ -29,6 +29,9 @@ function persistContactDetailsRevealed() {
   window.sessionStorage.removeItem(LEGACY_STORAGE_KEY)
 }
 
+/** Why the contact-access modal was opened — drives its copy. */
+export type ContactAccessIntent = 'details' | 'cv'
+
 type UiState = {
   mobileNavOpen: boolean
   setMobileNavOpen: (open: boolean) => void
@@ -36,6 +39,8 @@ type UiState = {
   setHomeHeroIndex: (index: number | ((current: number) => number)) => void
   contactDetailsRevealed: boolean
   contactAccessModalOpen: boolean
+  contactAccessIntent: ContactAccessIntent
+  openContactAccess: (intent?: ContactAccessIntent) => void
   setContactAccessModalOpen: (open: boolean) => void
   revealContactDetails: () => void
 }
@@ -50,6 +55,9 @@ export const useUiStore = create<UiState>((set) => ({
     })),
   contactDetailsRevealed: loadContactDetailsRevealed(),
   contactAccessModalOpen: false,
+  contactAccessIntent: 'details',
+  openContactAccess: (intent = 'details') =>
+    set({ contactAccessIntent: intent, contactAccessModalOpen: true }),
   setContactAccessModalOpen: (open) => set({ contactAccessModalOpen: open }),
   revealContactDetails: () => {
     persistContactDetailsRevealed()

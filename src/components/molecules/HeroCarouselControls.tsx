@@ -31,7 +31,7 @@ export function HeroCarouselControls({
         <button
           type="button"
           onClick={onPrev}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-sand/10 bg-white/5 text-sand/80 transition hover:border-gold-500/30 hover:bg-white/10 focus-visible:focus-ring"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gold-500/35 bg-white/5 text-sand/80 transition hover:border-gold-500/55 hover:bg-white/10 focus-visible:focus-ring"
           aria-label={`Previous slide${activeSlide ? `: ${activeSlide.eyebrow}` : ''}`}
         >
           <ArrowLeft size={18} aria-hidden />
@@ -39,7 +39,7 @@ export function HeroCarouselControls({
         <button
           type="button"
           onClick={onNext}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-sand/10 bg-white/5 text-sand/80 transition hover:border-gold-500/30 hover:bg-white/10 focus-visible:focus-ring"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gold-500/35 bg-white/5 text-sand/80 transition hover:border-gold-500/55 hover:bg-white/10 focus-visible:focus-ring"
           aria-label={`Next slide${activeSlide ? `: ${activeSlide.eyebrow}` : ''}`}
         >
           <ArrowRight size={18} aria-hidden />

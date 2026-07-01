@@ -1,7 +1,7 @@
-import type { HTMLAttributes } from 'react'
+import type { ITagProps } from '../atomic/types'
 import { cn } from '../../lib/cn'
 
-export function Tag({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
+export function Tag({ className, ...props }: ITagProps) {
   return (
     <span
       className={cn(
@@ -12,4 +12,3 @@ export function Tag({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
     />
   )
 }
-

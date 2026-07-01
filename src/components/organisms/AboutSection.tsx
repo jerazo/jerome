@@ -1,7 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ButtonLink } from '../atoms/ButtonLink'
-import { Tag } from '../atoms/Tag'
-import { TruncatedText } from '../atoms/TruncatedText'
+import { ButtonLink, Tag, TruncatedText } from '@/components/atomic'
 import { SkillTag } from '../molecules/SkillTag'
 import { MaskedContactValue } from '../molecules/MaskedContactValue'
 import { SkillTierFilters, type SkillTierFilterValue } from '../molecules/SkillTierFilters'
@@ -74,12 +72,12 @@ export function AboutSection() {
           <div className="flex w-52 flex-col items-stretch gap-5 sm:w-56">
             <div className="rounded-full border-2 border-gold-500/40 bg-ink2/40 p-1 shadow-soft">
               <img
-                src="/jerome-portrait-square.webp"
+                src="/jerome-about.webp"
                 alt={`Portrait of ${profile.name}`}
-                width={900}
-                height={900}
+                width={1024}
+                height={682}
                 className="aspect-square w-full rounded-full object-cover"
-                style={{ objectPosition: '55% 16%' }}
+                style={{ objectPosition: '50% 38%' }}
                 loading="lazy"
               />
             </div>
@@ -248,13 +246,13 @@ export function AboutSection() {
               <li className="flex gap-3">
                 <span className="mt-[11px] h-1 w-1 flex-none rounded-full bg-gold-300/90" />
                 <div className="min-w-0">
-                  <p className="font-semibold text-sand">Leadership at scale</p>
+                  <p className="font-semibold text-sand">Tech Lead experience</p>
                   <p className="mt-1">
                     Experience across <span className="text-sand">Unicity</span>,{' '}
                     <span className="text-sand">Tempest House</span>,{' '}
                     <span className="text-sand">Ryze</span>, and{' '}
-                    <span className="text-sand">OneGlobal</span>, including leading and mentoring
-                    large groups of engineers.
+                    <span className="text-sand">OneGlobal</span>, leading cross-functional squads,
+                    driving technical strategy, and mentoring engineers.
                   </p>
                 </div>
               </li>

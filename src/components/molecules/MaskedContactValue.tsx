@@ -28,7 +28,7 @@ export function MaskedContactValue({
   revealedClassName = 'font-semibold text-sand hover:text-gold-200',
 }: MaskedContactValueProps) {
   const contactDetailsRevealed = useUiStore((state) => state.contactDetailsRevealed)
-  const setContactAccessModalOpen = useUiStore((state) => state.setContactAccessModalOpen)
+  const openContactAccess = useUiStore((state) => state.openContactAccess)
 
   const value = getContactValue(field)
   const masked = getMaskedValue(field)
@@ -59,7 +59,7 @@ export function MaskedContactValue({
       className={`${className} underline decoration-dotted underline-offset-4`}
       onClick={() => {
         trackEvent('Contact Access Modal Opened', { field })
-        setContactAccessModalOpen(true)
+        openContactAccess('details')
       }}
     >
       {masked}

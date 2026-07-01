@@ -1,6 +1,6 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { Lock } from 'lucide-react'
-import { Button } from '../atoms/Button'
+import { Button } from '@/components/atomic'
 import { contactPrivacy, contactSuccess } from '../../content/contact'
 import {
   contactFormFields,

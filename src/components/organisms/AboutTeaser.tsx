@@ -1,4 +1,4 @@
-import { Gutter } from '../atoms/Gutter'
+import { Gutter } from '@/components/atomic'
 import { AboutSection } from './AboutSection'
 
 export function AboutTeaser() {

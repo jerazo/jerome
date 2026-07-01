@@ -7,7 +7,7 @@ import {
   Users,
 } from 'lucide-react'
 import { featuredOffer } from '../../content/homeSections'
-import { Gutter } from '../atoms/Gutter'
+import { Gutter } from '@/components/atomic'
 import { SectionHeading } from '../molecules/SectionHeading'
 
 const pillarIcons = [Rocket, Layers3, ShieldCheck, Users, Gauge, Sparkles] as const

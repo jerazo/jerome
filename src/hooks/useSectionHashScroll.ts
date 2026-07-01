@@ -17,8 +17,10 @@ export function useSectionHashScroll() {
 
     let cancelled = false
     const scrollBehavior: ScrollBehavior = reducedMotion ? 'auto' : 'smooth'
+    const preserveHash = location.pathname === '/showcase' && id.startsWith('project-')
 
     const clearHash = () => {
+      if (preserveHash) return
       navigate({ pathname: location.pathname, search: location.search }, { replace: true })
     }
 
@@ -30,6 +32,14 @@ export function useSectionHashScroll() {
         return
       }
 
+      if (preserveHash) {
+        const element = document.getElementById(id)
+        if (element) {
+          element.scrollIntoView({ behavior: scrollBehavior, block: 'center', inline: 'nearest' })
+          return
+        }
+      }
+
       if (attemptsLeft > 0) {
         requestAnimationFrame(() => attemptScroll(attemptsLeft - 1))
         return
@@ -38,7 +48,6 @@ export function useSectionHashScroll() {
       clearHash()
     }
 
-    // Prevent the browser's default hash jump; we control scrolling instead.
     const previousScrollRestoration = window.history.scrollRestoration
     window.history.scrollRestoration = 'manual'
 

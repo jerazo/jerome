@@ -1,10 +1,33 @@
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, TrendingUp } from 'lucide-react'
 import type { PortfolioImpactMetric } from '../../content/portfolio'
 import { cn } from '../../lib/cn'
 
 type ImpactBadgeProps = {
   metrics: PortfolioImpactMetric[]
   className?: string
+  variant?: 'default' | 'summary'
+}
+
+type ImpactMetricHighlightProps = {
+  metric: PortfolioImpactMetric
+  className?: string
+  glow?: boolean
+}
+
+export function ImpactMetricHighlight({ metric, className, glow = false }: ImpactMetricHighlightProps) {
+  return (
+    <span
+      aria-label={`${metric.label}: ${metric.value}`}
+      className={cn(
+        'inline-flex max-w-full items-center rounded-full border border-transparent bg-gold-600 px-3 py-1 text-[11px] font-semibold text-white shadow-soft transition-[border-color,box-shadow,filter] duration-300',
+        glow &&
+          'border-gold-400/70 shadow-gold-glow hero-glow-pulse ring-1 ring-gold-500/35',
+        className,
+      )}
+    >
+      <span className="truncate">{metric.value}</span>
+    </span>
+  )
 }
 
 function ImpactMetricPill({ metric }: { metric: PortfolioImpactMetric }) {
@@ -20,9 +43,39 @@ function ImpactMetricPill({ metric }: { metric: PortfolioImpactMetric }) {
   )
 }
 
-export function ImpactBadge({ metrics, className }: ImpactBadgeProps) {
-  const items = metrics.slice(0, 2)
+function ImpactSummaryBadge({ metric }: { metric: PortfolioImpactMetric }) {
+  return (
+    <span
+      aria-label={`${metric.label}: ${metric.value}`}
+      className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-gold-600 px-3.5 py-2 text-xs font-semibold text-white shadow-soft"
+    >
+      <TrendingUp size={14} className="flex-none text-white/90" aria-hidden />
+      <span className="truncate">{metric.value}</span>
+      <span className="hidden font-normal text-white/80 sm:inline">{metric.label}</span>
+    </span>
+  )
+}
+
+export function ImpactBadge({ metrics, className, variant = 'default' }: ImpactBadgeProps) {
+  const limit = variant === 'summary' ? 3 : 2
+  const items = metrics.slice(0, limit)
   if (items.length === 0) return null
+
+  if (variant === 'summary') {
+    return (
+      <div
+        className={cn('flex flex-wrap gap-2 sm:gap-3', className)}
+        role="list"
+        aria-label="Impact summary"
+      >
+        {items.map((metric) => (
+          <span key={`${metric.label}-${metric.value}`} role="listitem">
+            <ImpactSummaryBadge metric={metric} />
+          </span>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div className={cn('flex flex-wrap justify-center gap-2', className)} role="list">

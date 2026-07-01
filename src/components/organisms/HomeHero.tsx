@@ -1,8 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowRight } from 'lucide-react'
-import { ButtonLink } from '../atoms/ButtonLink'
-import { Gutter } from '../atoms/Gutter'
-import { LogoMark } from '../atoms/LogoMark'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Gutter, LogoMark } from '@/components/atomic'
 import { HeroCarouselControls } from '../molecules/HeroCarouselControls'
 import { HeroSlideCopy } from '../molecules/HeroSlideCopy'
 import { MobileNavToggle } from '../molecules/MobileNavToggle'
@@ -20,34 +17,33 @@ export function HomeHero() {
   const reducedMotion = useReducedMotion()
   const mobileNavOpen = useUiStore((s) => s.mobileNavOpen)
   const setMobileNavOpen = useUiStore((s) => s.setMobileNavOpen)
-  const { menuId, triggerRef, panelRef, toggle, close } = useMobileNav(mobileNavOpen, setMobileNavOpen)
   const heroIndex = useUiStore((s) => s.homeHeroIndex)
   const setHeroIndex = useUiStore((s) => s.setHomeHeroIndex)
+  const { menuId, triggerRef, panelRef, toggle, close } = useMobileNav(mobileNavOpen, setMobileNavOpen)
   const desktopCopyRef = useRef<HTMLDivElement | null>(null)
   const heroParallaxRef = useRef<HTMLDivElement | null>(null)
   const [desktopObjectX, setDesktopObjectX] = useState('54%')
   const [paused, setPaused] = useState(false)
   const [bannerMessage] = useState(pickHeroBannerMessage)
 
-  const slide = useMemo(() => heroSlides[heroIndex % heroSlides.length], [heroIndex])
+  const totalSlides = heroSlides.length
+  const slide = useMemo(() => heroSlides[heroIndex % totalSlides], [heroIndex, totalSlides])
+
+  const goPrev = useCallback(() => {
+    setHeroIndex((index) => (index - 1 + totalSlides) % totalSlides)
+  }, [setHeroIndex, totalSlides])
+
+  const goNext = useCallback(() => {
+    setHeroIndex((index) => (index + 1) % totalSlides)
+  }, [setHeroIndex, totalSlides])
 
   useEffect(() => {
     if (reducedMotion || paused) return
     const id = window.setInterval(() => {
-      setHeroIndex((index) => (index + 1) % heroSlides.length)
+      setHeroIndex((index) => (index + 1) % totalSlides)
     }, SLIDE_INTERVAL_MS)
     return () => window.clearInterval(id)
-  }, [heroIndex, paused, reducedMotion, setHeroIndex])
-
-  const totalSlides = heroSlides.length
-
-  function goPrev() {
-    setHeroIndex((heroIndex - 1 + totalSlides) % totalSlides)
-  }
-
-  function goNext() {
-    setHeroIndex((heroIndex + 1) % totalSlides)
-  }
+  }, [heroIndex, paused, reducedMotion, setHeroIndex, totalSlides])
 
   useEffect(() => {
     const node = desktopCopyRef.current
@@ -145,12 +141,12 @@ export function HomeHero() {
   }, [reducedMotion])
 
   return (
-    <section className="relative min-h-svh bg-black lg:h-svh lg:overflow-hidden">
+    <section className="relative min-h-[72vh] bg-black lg:h-[72vh] lg:overflow-hidden">
       <div className="absolute inset-0 -z-10 vignette" />
 
-      <div ref={heroParallaxRef} className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/25 to-black/80" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(212,175,55,0.08),transparent_55%)] lg:hidden" />
+      <div ref={heroParallaxRef} className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-gold-900/20 via-black/30 to-black/85" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.14),transparent_58%)]" />
         <div
           className="pointer-events-none absolute inset-0 hidden lg:block"
           style={{ clipPath: 'polygon(0 0, 58% 0, 46% 100%, 0 100%)' }}
@@ -239,18 +235,25 @@ export function HomeHero() {
       </div>
 
       <div
-        className="relative z-10 pt-[6.5rem] sm:pt-28 lg:h-full lg:pt-32"
+        className="relative z-10 pt-[6.25rem] sm:pt-[6.75rem] lg:h-full lg:pt-28"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onFocusCapture={() => setPaused(true)}
-        onBlurCapture={() => setPaused(false)}
+        onBlurCapture={(event) => {
+          const next = event.relatedTarget
+          if (next instanceof Node && event.currentTarget.contains(next)) return
+          setPaused(false)
+        }}
       >
         <div className="lg:hidden">
-          <Gutter className="pb-8 pt-3">
-            <div className="relative aspect-[5/6] w-full max-h-[min(72vw,320px)] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/40 shadow-soft">
+          <Gutter className="pb-6 pt-2">
+            <div
+              className="relative aspect-[5/6] w-full max-h-[min(64vw,280px)] overflow-hidden rounded-3xl border border-sand/10 bg-ink2/40 shadow-soft"
+              aria-hidden
+            >
               <img
                 src="/jerome-portrait-square.webp"
-                alt={`Portrait of ${profile.name}, ${profile.headline}`}
+                alt=""
                 width={900}
                 height={900}
                 className="absolute inset-0 h-full w-full object-cover"
@@ -260,42 +263,35 @@ export function HomeHero() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
             </div>
 
-            <div className="mt-6">
+            <div className="mt-2" aria-live="polite">
               <HeroSlideCopy
                 key={heroIndex}
                 slide={slide}
                 animate={!reducedMotion}
-                showCta={false}
                 compact
+                showCta={false}
               />
             </div>
 
-            <div className="mt-6 flex flex-col gap-4 border-t border-sand/10 pt-6">
-              <ButtonLink to={slide.ctaTo} className="w-full justify-center">
-                {slide.ctaLabel} <ArrowRight size={16} />
-              </ButtonLink>
+            <div className="mt-4 border-t border-sand/10 pt-4">
               <HeroCarouselControls
                 slides={heroSlides}
                 activeIndex={heroIndex}
                 onPrev={goPrev}
                 onNext={goNext}
                 onSelect={setHeroIndex}
-                className="justify-between"
               />
             </div>
           </Gutter>
         </div>
 
-        <Gutter className="hidden h-full content-center gap-8 pb-10 lg:grid lg:grid-cols-12 lg:gap-10">
+        <Gutter className="hidden h-full content-center gap-6 pb-6 lg:grid lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-5" />
           <div className="lg:col-span-7 lg:pl-2">
-            <div ref={desktopCopyRef}>
+            <div ref={desktopCopyRef} aria-live="polite">
               <HeroSlideCopy key={heroIndex} slide={slide} animate={!reducedMotion} showCta={false} />
 
-              <div className="mt-6 flex flex-col items-start gap-4 sm:mt-7">
-                <ButtonLink to={slide.ctaTo}>
-                  {slide.ctaLabel} <ArrowRight size={16} />
-                </ButtonLink>
+              <div className="mt-4 border-t border-sand/10 pt-4">
                 <HeroCarouselControls
                   slides={heroSlides}
                   activeIndex={heroIndex}

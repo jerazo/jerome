@@ -1,11 +1,8 @@
-import { useEffect, useRef, useState, type HTMLAttributes } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type { ITruncatedTextProps } from '../atomic/types'
 import { cn } from '../../lib/cn'
 
-type TruncatedTextProps = HTMLAttributes<HTMLSpanElement> & {
-  text: string
-}
-
-export function TruncatedText({ text, className, ...props }: TruncatedTextProps) {
+export function TruncatedText({ text, className, ...props }: ITruncatedTextProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const [isTruncated, setIsTruncated] = useState(false)
 

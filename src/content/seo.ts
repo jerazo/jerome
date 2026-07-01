@@ -3,8 +3,8 @@ import { profile } from './profile'
 export const siteSeo = {
   title: 'Jerome Lopez Erazo – Software Engineer Portfolio',
   description:
-    'Jerome Lopez Erazo is a software engineer and tech lead who builds high-impact web products, scalable platforms, and production-ready front-end systems.',
-  jobTitle: 'Software Engineer & Tech Lead',
+    'Jerome Lopez Erazo is a Full‑Stack Engineer and Tech Lead with 20+ years building production platforms across FinTech, HealthTech, and E‑commerce.',
+  jobTitle: 'Full‑Stack Engineer & Tech Lead',
   locale: 'en_US',
   type: 'website' as const,
   twitterCard: 'summary_large_image' as const,
@@ -43,4 +43,19 @@ export function personJsonLd(siteUrl: string) {
   }
 }
 
-export const sitemapPaths = ['/', '/about', '/services', '/work', '/contact'] as const
+export const showcasePageSeo = {
+  title: 'Live Showcase',
+  description:
+    'Browse interactive live demos of shipped web products — a curated gallery of production-ready sites you can explore directly in the browser.',
+} as const
+
+export const sitemapPaths = [
+  '/',
+  '/about',
+  '/services',
+  '/work',
+  '/contact',
+  '/showcase',
+  '/privacy',
+  '/terms',
+] as const

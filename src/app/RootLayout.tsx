@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { SkipToContent } from '../components/atoms/SkipToContent'
+import { SkipToContent } from '@/components/atomic'
 import { ContactAccessModal } from '../components/molecules/ContactAccessModal'
 import { Footer } from '../components/organisms/Footer'
 import { Header } from '../components/organisms/Header'
@@ -11,8 +11,11 @@ import { ScrollToTop } from './ScrollToTop'
 export default function RootLayout() {
   const location = useLocation()
   const isHome = location.pathname === '/'
+  const isShowcase = location.pathname === '/showcase'
+  const usesEmbeddedNav = isHome || isShowcase
   const mobileNavOpen = useUiStore((state) => state.mobileNavOpen)
-  const lockBackgroundFocus = !isHome && mobileNavOpen
+  const lockBackgroundFocus = !usesEmbeddedNav && mobileNavOpen
+  const hideDefaultHeader = usesEmbeddedNav
 
   useSectionHashScroll()
   useAnalyticsPageView()
@@ -23,14 +26,14 @@ export default function RootLayout() {
       <div className="fixed inset-0 -z-20 bg-black" />
       <div className="fixed inset-0 -z-10 gridlines opacity-50" />
 
-      {isHome ? null : <Header />}
+      {hideDefaultHeader ? null : <Header />}
       <ScrollToTop />
 
       <main
         id="main-content"
         tabIndex={-1}
         inert={lockBackgroundFocus ? true : undefined}
-        className={isHome ? undefined : 'pt-16 sm:pt-20'}
+        className={hideDefaultHeader ? undefined : 'pt-16 sm:pt-20'}
       >
         <Outlet />
       </main>

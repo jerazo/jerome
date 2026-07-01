@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
 import { ArrowRight, Code2, Gauge, Layers3, Shapes } from 'lucide-react'
 import { services } from '../../content/services'
-import { ButtonLink } from '../atoms/ButtonLink'
-import { Gutter } from '../atoms/Gutter'
+import { ButtonLink, Gutter } from '@/components/atomic'
 import { SectionHeading } from '../molecules/SectionHeading'
 
 const icons = [Code2, Shapes, Layers3, Gauge] as const

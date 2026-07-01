@@ -1,15 +1,13 @@
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import type { PortfolioImage, PortfolioImpactMetric } from '../../content/portfolio'
+import type { PortfolioImage } from '../../content/portfolio'
 import { cn } from '../../lib/cn'
-import { ImpactBadge } from './ImpactBadge'
 
 export type PortfolioImageModalState = {
   projectTitle: string
   images: PortfolioImage[]
   index: number
-  impactMetrics?: PortfolioImpactMetric[]
 }
 
 export function PortfolioImageModal({
@@ -88,9 +86,6 @@ function PortfolioImageModalContent({
             <p className="truncate font-display text-lg font-semibold text-sand sm:text-xl">
               {current.label ?? state.projectTitle}
             </p>
-            {state.impactMetrics?.length ? (
-              <ImpactBadge metrics={state.impactMetrics} className="mt-2" />
-            ) : null}
             {total > 1 ? (
               <p className="mt-0.5 font-mono text-xs text-sand/55">
                 {index + 1} of {total}
@@ -112,6 +107,8 @@ function PortfolioImageModalContent({
             src={current.src}
             alt={current.alt}
             className="max-h-[78vh] w-full object-contain"
+            loading="lazy"
+            decoding="async"
           />
 
           {total > 1 ? (
