@@ -155,7 +155,7 @@ export const techStack: SkillCategory[] = [
       { name: 'TypeScript', experience: '~8 yrs' },
       { name: 'JavaScript', experience: '17+ yrs' },
       { name: 'PHP', experience: '15+ yrs' },
-      { name: 'Python', experience: '14+ yrs' },
+      { name: 'Python', experience: '5 years' },
       { name: 'C++', experience: '5+ yrs' },
     ],
   },
