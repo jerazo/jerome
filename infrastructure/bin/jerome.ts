@@ -16,11 +16,18 @@ const sesFromEmail = process.env.SES_FROM_EMAIL?.trim() ?? notifyEmail
 const contactAccessOtpSecret = process.env.CONTACT_ACCESS_OTP_SECRET?.trim() ?? ''
 const siteDomainNames = parseDomainNames(process.env.SITE_DOMAIN_NAMES)
 const certificateArn = process.env.ACM_CERTIFICATE_ARN?.trim() || undefined
+const webAclId = process.env.CLOUDFRONT_WEB_ACL_ARN?.trim() || undefined
 const siteUrl = process.env.SITE_URL?.trim() || undefined
 
 if (!clickupApiToken || !clickupListId) {
   console.warn(
     'Warning: CLICKUP_API_TOKEN and CLICKUP_LIST_ID are not set. The contact Lambda will fail until you redeploy with them.',
+  )
+}
+
+if (!webAclId) {
+  console.warn(
+    'Warning: CLOUDFRONT_WEB_ACL_ARN is not set. If this distribution is on a CloudFront pricing plan, deploy will fail when CloudFormation tries to clear the Web ACL.',
   )
 }
 
@@ -36,5 +43,6 @@ new JeromeStack(app, 'JeromeStack', {
   contactAccessOtpSecret: contactAccessOtpSecret || undefined,
   siteDomainNames,
   certificateArn,
+  webAclId,
   siteUrl,
 })

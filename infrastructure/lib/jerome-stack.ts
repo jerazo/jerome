@@ -24,6 +24,12 @@ export type JeromeStackProps = cdk.StackProps & {
   siteDomainNames?: string[]
   /** ACM certificate ARN in us-east-1 for the custom domain(s). */
   certificateArn?: string
+  /**
+   * WAFv2 Web ACL ARN attached to the distribution.
+   * Required once the distribution is on a CloudFront flat-rate pricing plan
+   * (Free/Pro/Business/Premium) — those plans always keep a Web ACL.
+   */
+  webAclId?: string
   /** Canonical public site URL; defaults to the primary custom domain or CloudFront URL. */
   siteUrl?: string
 }
@@ -124,8 +130,11 @@ export class JeromeStack extends cdk.Stack {
       )
     }
 
+    const webAclId = props.webAclId?.trim() || undefined
+
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       defaultRootObject: 'index.html',
+      ...(webAclId ? { webAclId } : {}),
       ...(hasCustomDomain
         ? {
             domainNames: siteDomainNames,

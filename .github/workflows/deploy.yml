@@ -182,6 +182,7 @@ jobs:
           CONTACT_ACCESS_OTP_SECRET: ${{ secrets.CONTACT_ACCESS_OTP_SECRET }}
           SITE_DOMAIN_NAMES: ${{ vars.SITE_DOMAIN_NAMES }}
           ACM_CERTIFICATE_ARN: ${{ vars.ACM_CERTIFICATE_ARN }}
+          CLOUDFRONT_WEB_ACL_ARN: ${{ vars.CLOUDFRONT_WEB_ACL_ARN }}
           SITE_URL: ${{ vars.SITE_URL }}
         run: npx cdk deploy --require-approval never --outputs-file ../cdk-outputs.json
 

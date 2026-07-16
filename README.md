@@ -172,8 +172,9 @@ Add an ACM certificate in **us-east-1** that covers your domain(s), then set the
 - `SITE_DOMAIN_NAMES` — comma-separated aliases, e.g. `monx.dev,www.monx.dev`
 - `ACM_CERTIFICATE_ARN` — the ACM certificate ARN in `us-east-1`
 - `SITE_URL` — canonical public URL, e.g. `https://monx.dev`
+- `CLOUDFRONT_WEB_ACL_ARN` — WAFv2 Web ACL ARN if the distribution is on a CloudFront flat-rate plan (Free/Pro/…). Pricing plans always attach a Web ACL; CDK must keep it or deploy fails.
 
-CDK applies the certificate and alternate domain names on the CloudFront distribution so infra deploys do not strip console-only SSL settings.
+CDK applies the certificate, alternate domain names, and Web ACL on the CloudFront distribution so infra deploys do not strip console-managed settings.
 
 ## GitHub Actions deploy
 
@@ -249,6 +250,7 @@ The deploy IAM principal still needs permission to create **S3**, **IAM roles**,
 | `SITE_URL` | Public site URL (SEO build + Lambda `SITE_URL`) |
 | `SITE_DOMAIN_NAMES` | CloudFront CNAMEs, comma-separated (requires `ACM_CERTIFICATE_ARN`) |
 | `ACM_CERTIFICATE_ARN` | ACM cert ARN in `us-east-1` for CloudFront custom domain |
+| `CLOUDFRONT_WEB_ACL_ARN` | WAFv2 Web ACL ARN for flat-rate pricing plans (keeps the plan-managed ACL) |
 | `VITE_MIXPANEL_TOKEN` | Mixpanel project token for client analytics (omit to disable) |
 
 **OIDC setup**
