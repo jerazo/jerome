@@ -81,7 +81,7 @@ export function Footer({ inert }: { inert?: boolean }) {
               © {new Date().getFullYear()} {profile.name}. All rights reserved.
             </p>
             <p className="min-w-0 break-words">
-              <BuildVersionLabel /> · Built with React • TypeScript • Tailwind
+              <BuildVersionLabel /> · Built with Love 💕
             </p>
           </Container>
         </div>

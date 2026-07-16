@@ -104,31 +104,9 @@ export class JeromeStack extends cdk.Stack {
 
     const siteOrigin = origins.S3BucketOrigin.withOriginAccessControl(siteBucket)
 
-    const staticAssetCachePolicy = new cloudfront.CachePolicy(this, 'StaticAssetCachePolicy', {
-      cachePolicyName: `${cdk.Stack.of(this).stackName}-StaticAssets`,
-      comment: 'Long-lived cache for fingerprinted build assets',
-      defaultTtl: cdk.Duration.days(365),
-      maxTtl: cdk.Duration.days(365),
-      minTtl: cdk.Duration.days(1),
-      cookieBehavior: cloudfront.CacheCookieBehavior.none(),
-      headerBehavior: cloudfront.CacheHeaderBehavior.none(),
-      queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
-      enableAcceptEncodingBrotli: true,
-      enableAcceptEncodingGzip: true,
-    })
-
-    const htmlCachePolicy = new cloudfront.CachePolicy(this, 'HtmlCachePolicy', {
-      cachePolicyName: `${cdk.Stack.of(this).stackName}-Html`,
-      comment: 'Revalidate HTML and crawl metadata on each request',
-      defaultTtl: cdk.Duration.seconds(0),
-      maxTtl: cdk.Duration.days(1),
-      minTtl: cdk.Duration.seconds(0),
-      cookieBehavior: cloudfront.CacheCookieBehavior.none(),
-      headerBehavior: cloudfront.CacheHeaderBehavior.none(),
-      queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
-      enableAcceptEncodingBrotli: true,
-      enableAcceptEncodingGzip: true,
-    })
+    // Free/Pro flat-rate plans allow AWS-managed cache policies only (no custom policies).
+    // S3 Cache-Control from deploy-site.mjs drives TTLs: assets long-lived, HTML revalidate.
+    const siteCachePolicy = cloudfront.CachePolicy.USE_ORIGIN_CACHE_CONTROL_HEADERS
 
     const siteDomainNames = props.siteDomainNames?.filter(Boolean)
     const certificateArn = props.certificateArn?.trim()
@@ -158,13 +136,13 @@ export class JeromeStack extends cdk.Stack {
       defaultBehavior: {
         origin: siteOrigin,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        cachePolicy: htmlCachePolicy,
+        cachePolicy: siteCachePolicy,
       },
       additionalBehaviors: {
         '/assets/*': {
           origin: siteOrigin,
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          cachePolicy: staticAssetCachePolicy,
+          cachePolicy: siteCachePolicy,
         },
         '/api/*': {
           origin: new origins.HttpOrigin(apiDomain, {
