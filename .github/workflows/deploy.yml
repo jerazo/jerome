@@ -172,6 +172,39 @@ jobs:
           CONTACT_ACCESS_OTP_SECRET: ${{ secrets.CONTACT_ACCESS_OTP_SECRET }}
         run: bash scripts/verify-ses.sh
 
+      - name: Resolve CloudFront Web ACL
+        id: webacl
+        env:
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+          CLOUDFRONT_WEB_ACL_ARN: ${{ vars.CLOUDFRONT_WEB_ACL_ARN }}
+        run: |
+          set -euo pipefail
+          ACL="${CLOUDFRONT_WEB_ACL_ARN:-}"
+          DIST_ID="${CLOUDFRONT_DISTRIBUTION_ID:-}"
+
+          if [ -z "$DIST_ID" ] && [ -f ../cdk-outputs.json ]; then
+            DIST_ID="$(python3 -c "import json; d=json.load(open('../cdk-outputs.json')); print(next((o.get('DistributionId','') for o in d.values() if isinstance(o, dict) and o.get('DistributionId')), ''))")"
+          fi
+          if [ -z "$DIST_ID" ]; then
+            DIST_ID="$(aws cloudformation describe-stacks --stack-name JeromeStack \
+              --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" \
+              --output text 2>/dev/null || true)"
+          fi
+
+          if [ -z "$ACL" ] && [ -n "$DIST_ID" ] && [ "$DIST_ID" != "None" ]; then
+            ACL="$(aws cloudfront get-distribution-config --id "$DIST_ID" \
+              --query 'DistributionConfig.WebACLId' --output text)"
+            if [ "$ACL" = "None" ]; then ACL=""; fi
+          fi
+
+          if [ -z "$ACL" ]; then
+            echo "::error::CloudFront pricing plans require a Web ACL. Set CLOUDFRONT_WEB_ACL_ARN in the jerome environment, or ensure the live distribution still has its plan-managed Web ACL."
+            exit 1
+          fi
+
+          echo "Using Web ACL: $ACL"
+          echo "acl_arn=$ACL" >> "$GITHUB_OUTPUT"
+
       - name: Deploy CDK stack
         working-directory: infrastructure
         env:
@@ -182,7 +215,7 @@ jobs:
           CONTACT_ACCESS_OTP_SECRET: ${{ secrets.CONTACT_ACCESS_OTP_SECRET }}
           SITE_DOMAIN_NAMES: ${{ vars.SITE_DOMAIN_NAMES }}
           ACM_CERTIFICATE_ARN: ${{ vars.ACM_CERTIFICATE_ARN }}
-          CLOUDFRONT_WEB_ACL_ARN: ${{ vars.CLOUDFRONT_WEB_ACL_ARN }}
+          CLOUDFRONT_WEB_ACL_ARN: ${{ steps.webacl.outputs.acl_arn }}
           SITE_URL: ${{ vars.SITE_URL }}
         run: npx cdk deploy --require-approval never --outputs-file ../cdk-outputs.json
 

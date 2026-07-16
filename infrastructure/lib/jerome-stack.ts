@@ -111,8 +111,11 @@ export class JeromeStack extends cdk.Stack {
     const siteOrigin = origins.S3BucketOrigin.withOriginAccessControl(siteBucket)
 
     // Free/Pro flat-rate plans allow AWS-managed cache policies only (no custom policies).
-    // S3 Cache-Control from deploy-site.mjs drives TTLs: assets long-lived, HTML revalidate.
-    const siteCachePolicy = cloudfront.CachePolicy.USE_ORIGIN_CACHE_CONTROL_HEADERS
+    // Do not use UseOriginCacheControlHeaders here: it forwards Host and breaks S3 OAC.
+    // HTML stays uncached; fingerprinted /assets/* use CachingOptimized. S3 Cache-Control
+    // from deploy-site.mjs still applies within those managed TTL bounds.
+    const htmlCachePolicy = cloudfront.CachePolicy.CACHING_DISABLED
+    const staticAssetCachePolicy = cloudfront.CachePolicy.CACHING_OPTIMIZED
 
     const siteDomainNames = props.siteDomainNames?.filter(Boolean)
     const certificateArn = props.certificateArn?.trim()
@@ -145,13 +148,13 @@ export class JeromeStack extends cdk.Stack {
       defaultBehavior: {
         origin: siteOrigin,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        cachePolicy: siteCachePolicy,
+        cachePolicy: htmlCachePolicy,
       },
       additionalBehaviors: {
         '/assets/*': {
           origin: siteOrigin,
           viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          cachePolicy: siteCachePolicy,
+          cachePolicy: staticAssetCachePolicy,
         },
         '/api/*': {
           origin: new origins.HttpOrigin(apiDomain, {

@@ -27,7 +27,7 @@ if (!clickupApiToken || !clickupListId) {
 
 if (!webAclId) {
   console.warn(
-    'Warning: CLOUDFRONT_WEB_ACL_ARN is not set. If this distribution is on a CloudFront pricing plan, deploy will fail when CloudFormation tries to clear the Web ACL.',
+    'Warning: CLOUDFRONT_WEB_ACL_ARN is not set. Flat-rate CloudFront plans require a Web ACL; deploy will fail if CloudFormation tries to clear it. The Deploy workflow resolves this from the live distribution automatically.',
   )
 }
 
