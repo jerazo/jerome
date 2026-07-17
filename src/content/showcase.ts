@@ -35,6 +35,49 @@ export interface ShowcaseItem {
  */
 export const showcaseItems: ShowcaseItem[] = [
   {
+    id: 'thea-studio',
+    title: 'Thea Studio',
+    slug: 'thea-studio',
+    description:
+      'Browser-based DICOM workspace for reading, AI-assisted segmentation, structured reporting, and surgical planning—with encrypted Thea Cloud collaboration and AWS deployment.',
+    liveUrl: 'https://thea.monx.dev/',
+    techStack: [
+      'React',
+      'TypeScript',
+      'Cornerstone3D',
+      'Stencil',
+      'Zustand',
+      'Hono',
+      'AWS',
+      'Terraform',
+      'ONNX',
+      'DICOM',
+      'PWA',
+    ],
+    impactMetrics: [
+      { label: 'Viewer modes', value: '2D · MPR · 3D' },
+      { label: 'AI assist', value: 'In-browser seg' },
+      { label: 'Cloud', value: 'Encrypted storage' },
+    ],
+    images: [
+      {
+        src: '/portfolio/thea-studio/viewer.png',
+        alt: 'Thea Studio DICOM viewer with sample MRI study and report workspace',
+        label: 'DICOM viewer',
+      },
+      {
+        src: '/portfolio/thea-studio/mpr.png',
+        alt: 'Thea Studio multi-planar reconstruction axial, sagittal, and coronal views',
+        label: 'MPR',
+      },
+      {
+        src: '/portfolio/thea-studio/marketing.png',
+        alt: 'Thea Studio marketing site hero with multi-device product mockups',
+        label: 'Product site',
+      },
+    ],
+  },
+  {
     id: 'fire-products-configurator',
     title: 'Fire Products Configurator',
     slug: 'fire-products-configurator',

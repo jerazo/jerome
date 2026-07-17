@@ -39,6 +39,76 @@ const aiWorkflowTags = ['Cursor', 'Codex', 'Gemini', 'RAG', 'MCP'] as const
 
 export const portfolioProjects: PortfolioProject[] = [
   {
+    id: 'thea-studio',
+    title: 'Thea Studio',
+    client: 'Personal project',
+    period: '2026 – Present',
+    summary:
+      'Browser-based DICOM workspace for reading, AI-assisted segmentation, structured reporting, and surgical planning—with encrypted Thea Cloud collaboration and AWS deployment.',
+    tags: [
+      'React',
+      'TypeScript',
+      'Cornerstone3D',
+      'Stencil',
+      'Zustand',
+      'Hono',
+      'AWS',
+      'Terraform',
+      'ONNX',
+      'DICOM',
+      'PWA',
+      ...aiWorkflowTags,
+    ],
+    accent: 'from-sky-500/35 via-indigo-500/20 to-transparent',
+    url: 'https://thea.monx.dev/',
+    impactMetric: { label: 'Imaging workspace', value: 'View → plan → report' },
+    impactMetrics: [
+      { label: 'Viewer modes', value: '2D · MPR · 3D' },
+      { label: 'AI assist', value: 'In-browser segmentation' },
+      { label: 'Cloud', value: 'Encrypted Thea Cloud' },
+    ],
+    impactNarrative: {
+      problem:
+        'Clinicians juggled separate tools for DICOM viewing, sharing, reporting, and procedure planning—often locked to desktop installs or hospital-only networks.',
+      solution:
+        'I built Thea Studio: a web DICOM workspace with Cornerstone3D viewing, AI click-to-segment, structured reports, ablation planning, RBAC, and encrypted cloud collaboration on AWS.',
+      result:
+        'One browser workspace covers open → analyze → report → plan, with a free local tier and paid cloud collaboration—no desktop install required.',
+    },
+    images: [
+      {
+        src: '/portfolio/thea-studio/viewer.png',
+        alt: 'Thea Studio DICOM viewer with sample MRI study and report workspace',
+        label: 'DICOM viewer',
+      },
+      {
+        src: '/portfolio/thea-studio/mpr.png',
+        alt: 'Thea Studio multi-planar reconstruction axial, sagittal, and coronal views',
+        label: 'MPR',
+      },
+      {
+        src: '/portfolio/thea-studio/marketing.png',
+        alt: 'Thea Studio marketing site hero with multi-device product mockups',
+        label: 'Product site',
+      },
+      {
+        src: '/portfolio/thea-studio/plans.png',
+        alt: 'Thea Studio Glimpse, Panorama, and Horizon subscription plans',
+        label: 'Plans',
+      },
+      {
+        src: '/portfolio/thea-studio/admin.png',
+        alt: 'Thea Studio super-admin dashboard with growth and subscription metrics',
+        label: 'Admin',
+      },
+      {
+        src: '/portfolio/thea-studio/workspace.png',
+        alt: 'Thea Studio authenticated viewer shell before opening a study',
+        label: 'Workspace',
+      },
+    ],
+  },
+  {
     id: 'digital-creator',
     title: 'Digital Creator',
     client: 'Personal project',
