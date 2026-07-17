@@ -2,7 +2,7 @@
 
 exports[`profile content > matches profile title snapshot 1`] = `
 {
-  "aboutBriefSummary": "Tech Lead and full-stack engineer with 20+ years shipping web platforms across fintech, SaaS, esports, and B2B. I lead cross-functional squads, drive technical strategy, and mentor engineers—turning ambitious roadmaps into production-ready products with scalable front-end systems and delivery discipline.",
+  "aboutBriefSummary": "Tech Lead and full-stack engineer with 20+ years shipping web platforms across fintech, SaaS, esports, and B2B. I lead cross-functional squads, drive technical strategy, and mentor engineers. I turn ambitious roadmaps into production-ready products with scalable front-end systems and delivery discipline.",
   "headline": "Software Engineer • Tech Lead • AI Enthusiast",
   "tagline": "Full‑Stack Engineer & Tech Lead · 20+ yrs building production platforms across 16 industry domains.",
 }

@@ -23,7 +23,7 @@ export const Default: Story = {
     <>
       <PrefetchProjectImages {...args} />
       <p className="text-sm text-sand/70">
-        Side-effect component — prefetches next portfolio images (renders nothing).
+        Side-effect component that prefetches next portfolio images (renders nothing).
       </p>
     </>
   ),
@@ -48,7 +48,7 @@ export const Accessibility: Story = {
   render: (args) => (
     <>
       <PrefetchProjectImages {...args} />
-      <p className="text-sm text-sand/70">No visible UI — accessibility checks apply to surrounding docs.</p>
+      <p className="text-sm text-sand/70">No visible UI. Accessibility checks apply to surrounding docs.</p>
     </>
   ),
   ...a11yStoryParameters,

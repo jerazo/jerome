@@ -47,7 +47,7 @@ export function personJsonLd(siteUrl: string) {
 export const showcasePageSeo = {
   title: 'Live Showcase',
   description:
-    'Browse interactive live demos of shipped web products — a curated gallery of production-ready sites you can explore directly in the browser.',
+    'Browse interactive live demos of shipped web products. A curated gallery of production-ready sites you can explore directly in the browser.',
 } as const
 
 export const sitemapPaths = [

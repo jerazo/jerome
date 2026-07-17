@@ -39,9 +39,9 @@ export const Variants: Story = {
 
 export const Accessibility: Story = {
   args: {
-    text: 'Fire Products Configurator — enterprise e-commerce platform',
+    text: 'Fire Products Configurator: enterprise e-commerce platform',
     className: 'block max-w-[14rem] text-sm',
-    'aria-label': 'Fire Products Configurator — enterprise e-commerce platform',
+    'aria-label': 'Fire Products Configurator: enterprise e-commerce platform',
   },
   ...a11yStoryParameters,
 }

@@ -62,7 +62,7 @@ export function FeaturedResume() {
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sand/70 sm:text-base">
                 {contactDetailsRevealed
                   ? 'Prefer a quick download? Grab the CV as a PDF, with no embedded preview.'
-                  : 'Share your company and work email to verify you, then the CV download starts automatically — no embedded preview.'}
+                  : 'Share your company and work email to verify you, then the CV download starts automatically. No embedded preview.'}
               </p>
             </div>
 

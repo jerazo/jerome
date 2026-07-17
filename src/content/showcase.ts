@@ -39,7 +39,7 @@ export const showcaseItems: ShowcaseItem[] = [
     title: 'Thea Studio',
     slug: 'thea-studio',
     description:
-      'Browser-based DICOM workspace for reading, AI-assisted segmentation, structured reporting, and surgical planning—with encrypted Thea Cloud collaboration and AWS deployment.',
+      'Browser-based DICOM workspace for reading, AI-assisted segmentation, structured reporting, and surgical planning, with encrypted Thea Cloud collaboration and AWS deployment.',
     liveUrl: 'https://thea.monx.dev/',
     techStack: [
       'React',
@@ -122,7 +122,7 @@ export const showcaseItems: ShowcaseItem[] = [
     title: 'Digital Creator',
     slug: 'digital-creator',
     description:
-      'AI-assisted video creation platform for social channels — from research and scripting through timeline editing, voiceover, and multi-platform export for Facebook, Instagram, YouTube, TikTok, and more.',
+      'AI-assisted video creation platform for social channels, from research and scripting through timeline editing, voiceover, and multi-platform export for Facebook, Instagram, YouTube, TikTok, and more.',
     liveUrl: 'https://digital-creator.monx.dev/',
     techStack: [
       'React',
@@ -196,7 +196,7 @@ export const showcaseItems: ShowcaseItem[] = [
     title: 'Unicity Platform',
     slug: 'unicity-platform',
     description:
-      'Asia product engineering across Growth, Office, and Shop streams — roadmap alignment, release discipline, and cross-team delivery for Unicity’s health and wellness commerce platform.',
+      'Asia product engineering across Growth, Office, and Shop streams: roadmap alignment, release discipline, and cross-team delivery for Unicity’s health and wellness commerce platform.',
     liveUrl: 'https://www.unicity.com/',
     techStack: [
       'React',

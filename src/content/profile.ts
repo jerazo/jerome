@@ -26,7 +26,7 @@ export const profile = {
     { label: 'Focus', value: 'SaaS • Platforms • DX' },
   ],
   aboutBriefSummary:
-    'Tech Lead and full-stack engineer with 20+ years shipping web platforms across fintech, SaaS, esports, and B2B. I lead cross-functional squads, drive technical strategy, and mentor engineers—turning ambitious roadmaps into production-ready products with scalable front-end systems and delivery discipline.',
+    'Tech Lead and full-stack engineer with 20+ years shipping web platforms across fintech, SaaS, esports, and B2B. I lead cross-functional squads, drive technical strategy, and mentor engineers. I turn ambitious roadmaps into production-ready products with scalable front-end systems and delivery discipline.',
   aboutQuickFacts: [
     'Based in the Philippines',
     'Available for full-time',
@@ -35,13 +35,13 @@ export const profile = {
   aboutCta: {
     label: "Let's Talk",
     to: '/#contact',
-    ariaLabel: "Let's talk — go to the contact form",
+    ariaLabel: "Let's talk, go to the contact form",
   },
   footerCta: {
     label: 'Get in Touch',
     subtext: "Let's discuss how I can add value to your team.",
     to: '/#contact',
-    ariaLabel: 'Get in touch — go to the contact form',
+    ariaLabel: 'Get in touch, go to the contact form',
   },
   summary: [
     'Seasoned full-stack engineer and Tech Lead with 20+ years delivering and scaling web platforms.',

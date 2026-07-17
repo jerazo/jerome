@@ -44,7 +44,7 @@ export const portfolioProjects: PortfolioProject[] = [
     client: 'Personal project',
     period: '2026 – Present',
     summary:
-      'Browser-based DICOM workspace for reading, AI-assisted segmentation, structured reporting, and surgical planning—with encrypted Thea Cloud collaboration and AWS deployment.',
+      'Browser-based DICOM workspace for reading, AI-assisted segmentation, structured reporting, and surgical planning, with encrypted Thea Cloud collaboration and AWS deployment.',
     tags: [
       'React',
       'TypeScript',
@@ -69,11 +69,11 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     impactNarrative: {
       problem:
-        'Clinicians juggled separate tools for DICOM viewing, sharing, reporting, and procedure planning—often locked to desktop installs or hospital-only networks.',
+        'Clinicians juggled separate tools for DICOM viewing, sharing, reporting, and procedure planning, often locked to desktop installs or hospital-only networks.',
       solution:
         'I built Thea Studio: a web DICOM workspace with Cornerstone3D viewing, AI click-to-segment, structured reports, ablation planning, RBAC, and encrypted cloud collaboration on AWS.',
       result:
-        'One browser workspace covers open → analyze → report → plan, with a free local tier and paid cloud collaboration—no desktop install required.',
+        'One browser workspace covers open → analyze → report → plan, with a free local tier and paid cloud collaboration. No desktop install required.',
     },
     images: [
       {
@@ -137,7 +137,7 @@ export const portfolioProjects: PortfolioProject[] = [
       problem:
         'Creating short-form video for six social platforms meant juggling separate tools for scripting, voiceover, editing, and export.',
       solution:
-        'I built an AI-assisted pipeline—from research and scripting through timeline editing, voiceover, and multi-platform export—in one React app.',
+        'I built an AI-assisted pipeline in one React app, from research and scripting through timeline editing, voiceover, and multi-platform export.',
       result:
         'Creators ship platform-ready videos from a single workflow, cutting production hops and keeping quality consistent across channels.',
     },
@@ -211,7 +211,7 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     impactNarrative: {
       problem:
-        'Daily context—weather, calendar, repos, flights, music—lived in disconnected apps with no unified command surface.',
+        'Weather, calendar, repos, flights, and music lived in disconnected apps with no unified command surface.',
       solution:
         'I built a HUD-style dashboard that aggregates a dozen live feeds with WebSocket updates and an LLM chat layer for natural-language queries.',
       result:
@@ -265,7 +265,7 @@ export const portfolioProjects: PortfolioProject[] = [
       solution:
         'I delivered a browser configurator with Web USB, feature toggles, splash uploads, and Phase 2 fleet workspaces with auth and audit logging.',
       result:
-        'Technicians configure hardware in the field from one web app—removing install friction and enabling fleet-scale device management.',
+        'Technicians configure hardware in the field from one web app, removing install friction and enabling fleet-scale device management.',
     },
     images: [
       {
@@ -351,7 +351,7 @@ export const portfolioProjects: PortfolioProject[] = [
       problem:
         'Growth, Office, and Shop streams across Asia needed aligned roadmaps, release discipline, and consistent engineering standards.',
       solution:
-        'I led Asia product engineering—planning, estimation, cross-team delivery, and mentorship—while shipping experiments across three platforms.',
+        'I led Asia product engineering across planning, estimation, cross-team delivery, and mentorship, while shipping experiments across three platforms.',
       result:
         'Teams shipped coordinated releases with clearer ownership, faster ramp for new engineers, and measurable progress on business experiments.',
     },
@@ -408,7 +408,7 @@ export const portfolioProjects: PortfolioProject[] = [
       problem:
         'Agency clients needed production-grade React/TypeScript products without sacrificing velocity, accessibility, or long-term maintainability.',
       solution:
-        'I led end-to-end delivery across Ad-juster, DoubleVerify, ZippyCash, and other Tempest House engagements—from UI systems through Node.js services.',
+        'I led end-to-end delivery across Ad-juster, DoubleVerify, ZippyCash, and other Tempest House engagements, from UI systems through Node.js services.',
       result:
         'Multiple client products shipped and maintained over seven years, with reusable patterns that shortened ramp time on each new engagement.',
     },
@@ -459,7 +459,7 @@ export const portfolioProjects: PortfolioProject[] = [
       problem:
         'DoubleVerify’s marketing and product surfaces needed enterprise-grade performance and accessibility without slowing feature delivery.',
       solution:
-        'I led senior frontend delivery—optimizing bundle weight, tightening UX polish, and baking accessibility into Angular/Material UI workflows.',
+        'I led senior frontend delivery: optimizing bundle weight, tightening UX polish, and baking accessibility into Angular/Material UI workflows.',
       result:
         'Lighter pages and more inclusive interactions shipped alongside ongoing product work, raising the quality bar for customer-facing surfaces.',
     },
@@ -499,7 +499,7 @@ export const portfolioProjects: PortfolioProject[] = [
       solution:
         'I built Shadow.gg with draft simulation, filterable team and player stats, plus the Esportify API for shared auth and storage across products.',
       result:
-        'Analysts and fans explore pro-level data interactively—turning raw match history into draft prep and storytelling tools.',
+        'Analysts and fans explore pro-level data interactively, turning raw match history into draft prep and storytelling tools.',
     },
     images: [
       {
@@ -543,7 +543,7 @@ export const portfolioProjects: PortfolioProject[] = [
       problem:
         'Planet3’s explore-play-learn portal needed reliable UI features and API payloads across browsers for students and educators.',
       solution:
-        'I developed and maintained the web portal with Node.js and MongoDB—shipping UI features, API integrations, and cross-browser test coverage.',
+        'I developed and maintained the web portal with Node.js and MongoDB, shipping UI features, API integrations, and cross-browser test coverage.',
       result:
         'The education platform stayed stable through iterative releases, supporting interactive learning experiences at scale.',
     },
@@ -593,7 +593,7 @@ export const portfolioProjects: PortfolioProject[] = [
       problem:
         'Running League of Legends tournaments manually meant brittle brackets, slow updates, and heavy ops overhead for organizers.',
       solution:
-        'I automated tournament flows—brackets, structures, and API-backed consumer features—for Xfire and GGN properties.',
+        'I automated tournament flows for Xfire and GGN properties, including brackets, structures, and API-backed consumer features.',
       result:
         'Organizers run events with less manual work while players get reliable bracket and match visibility on the web.',
     },
@@ -660,7 +660,7 @@ export const portfolioProjects: PortfolioProject[] = [
       solution:
         'I built the marketing site covering forensics, data recovery, usage tracking, timeline reconstruction, and expert analysis offerings.',
       result:
-        'Prospects quickly understand service depth and expertise—supporting lead generation for a specialized forensics firm.',
+        'Prospects quickly understand service depth and expertise, supporting lead generation for a specialized forensics firm.',
     },
     imageSrc: '/portfolio/forensworks.png',
     imageAlt: 'Forensworks digital forensics website homepage',
@@ -682,11 +682,11 @@ export const portfolioProjects: PortfolioProject[] = [
     ],
     impactNarrative: {
       problem:
-        'A large web production org was delivering roughly one page per developer per week—too slow for client demand.',
+        'A large web production org was delivering roughly one page per developer per week, too slow for client demand.',
       solution:
         'I managed the production organization and redesigned process, tooling, and handoffs across PHP/jQuery/MySQL delivery.',
       result:
-        'Throughput rose to one page per developer per day—a 7× improvement that unlocked capacity without adding headcount.',
+        'Throughput rose to one page per developer per day, a 7× improvement that unlocked capacity without adding headcount.',
     },
     imageSrc: '/portfolio/oneglobal-uswebsitebuilder.png',
     imageAlt: 'USWebsitebuilder.com homepage built under One Global Contact Center',
@@ -711,7 +711,7 @@ export const portfolioProjects: PortfolioProject[] = [
       solution:
         'I built and maintained sites across PHP/JavaScript and ASP/IIS stacks, juggling concurrent client launches and shared patterns.',
       result:
-        'Ten-plus product sites shipped and stayed maintained—proving repeatable delivery across different stacks and industries.',
+        'Ten-plus product sites shipped and stayed maintained, proving repeatable delivery across different stacks and industries.',
     },
     images: [
       {
